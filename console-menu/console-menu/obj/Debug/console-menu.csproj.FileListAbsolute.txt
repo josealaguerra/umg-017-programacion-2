@@ -1,0 +1,7 @@
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\bin\Debug\console-menu.exe.config
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\bin\Debug\console-menu.exe
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\bin\Debug\console-menu.pdb
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\obj\Debug\console-menu.csprojAssemblyReference.cache
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\obj\Debug\console-menu.csproj.CoreCompileInputs.cache
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\obj\Debug\console-menu.exe
+C:\jaguerra\src\umg-017-programacion-2\console-menu\console-menu\obj\Debug\console-menu.pdb
