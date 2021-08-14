@@ -54,11 +54,13 @@ public class TablaMultiplicar {
     public static void main(String[] args) {
         
         int numberRequest = getValidInt();
+        System.out.println("\n\n\n");   
         int numeroPromedioFinal = 1;
         for(numeroPromedioFinal = 1; numeroPromedioFinal <= 10; numeroPromedioFinal++){
             System.out.println(numeroPromedioFinal+" x "+numberRequest+" = "+numeroPromedioFinal*numberRequest);
         }
         
+        System.out.println("\n\n\n");
         numeroPromedioFinal=1;
         while (numeroPromedioFinal <= 10){
             System.out.println(numeroPromedioFinal+" x "+numberRequest+" = "+numeroPromedioFinal*numberRequest);
