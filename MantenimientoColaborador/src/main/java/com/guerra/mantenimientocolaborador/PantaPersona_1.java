@@ -5,9 +5,12 @@
  */
 package com.guerra.mantenimientocolaborador;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
- * @author josea
+ * @author josealaguerra
  */
 public class PantaPersona_1 extends javax.swing.JFrame {
 
@@ -16,6 +19,19 @@ public class PantaPersona_1 extends javax.swing.JFrame {
      */
     public PantaPersona_1() {
         initComponents();
+        listadoPersona = new LinkedList<Persona>() ;
+    }
+    
+    private void limpiaPantalla(){
+        txtPrimerNombre.setText("");
+        txtPrimerApellido.setText("");
+        txtFechaNacimiento.setText("");
+        txtSegundoNombre.setText("");
+        txtSegundoApellido.setText("");
+        txtTercerNombre.setText("");        
+        txtApellidoDeCasada.setText("");
+        txtGenero.setText("");
+        txtEstadoCivil.setText("");
     }
 
 
@@ -244,7 +260,7 @@ public class PantaPersona_1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        // TODO add your handling code here:
+        Persona miPersona=null;
         miPersona=new Persona(txtPrimerNombre.getText().toString(), 
                                 txtPrimerApellido.getText().toString(), 
                                 txtFechaNacimiento.getText().toString());
@@ -256,26 +272,20 @@ public class PantaPersona_1 extends javax.swing.JFrame {
         miPersona.setGenero(txtGenero.getText().toString());
         miPersona.setEstadoCivil(txtEstadoCivil.getText().toString());
         
-        
+        listadoPersona.add(miPersona);
         txtArea.setText("");
-        txtArea.setText(miPersona.getPersonaInfo());
-        
-        
+        String texto="";
+        for(Persona item : listadoPersona){
+            texto+=item.getPersonaInfo()+"\n";
+            texto+="***********************************\n\n";
+        }
+        txtArea.setText(texto);
+        limpiaPantalla();        
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        txtPrimerNombre.setText("");
-        txtPrimerApellido.setText("");
-        txtFechaNacimiento.setText("");
-        txtSegundoNombre.setText("");
-        txtSegundoApellido.setText("");
-        txtTercerNombre.setText("");        
-        txtApellidoDeCasada.setText("");
-        txtGenero.setText("");
-        txtEstadoCivil.setText("");
-        txtArea.setText("");
-
-        
+       limpiaPantalla();
+        listadoPersona.removeAll(listadoPersona);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
@@ -313,6 +323,7 @@ public class PantaPersona_1 extends javax.swing.JFrame {
         });
     }
 
+    List<Persona> listadoPersona=null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnNuevo;
@@ -340,5 +351,4 @@ public class PantaPersona_1 extends javax.swing.JFrame {
     private javax.swing.JTextField txtSegundoNombre;
     private javax.swing.JTextField txtTercerNombre;
     // End of variables declaration//GEN-END:variables
-    private Persona miPersona=null;
 }

@@ -5,9 +5,12 @@
  */
 package com.guerra.mantenimientocolaborador;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
- * @author josea
+ * @author josealaguerra
  */
 public class PantalaColaboradorPersona extends javax.swing.JFrame {
 
@@ -16,6 +19,23 @@ public class PantalaColaboradorPersona extends javax.swing.JFrame {
      */
     public PantalaColaboradorPersona() {
         initComponents();
+        listadoColaborador = new LinkedList<Colaborador>() ;
+    }
+    
+    private void limpiarPantalla(){
+        txtPrimerNombre.setText("");
+        txtPrimerApellido.setText("");
+        txtFechaNacimiento.setText("");
+        txtSegundoNombre.setText("");
+        txtTercerNombre.setText("");
+        txtSegundoApellido.setText("");
+        txtApellidoDeCasada.setText("");
+        txtGenero.setText("");
+        txtEstadoCivil.setText("");
+        txtNumeroColaborador.setText("");
+        txtNombreEmpresa.setText("");
+        txtSalario.setText("");
+        txtBono.setText("");
     }
 
 
@@ -293,7 +313,7 @@ public class PantalaColaboradorPersona extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        // TODO add your handling code here:
+        Colaborador miColaborador=null;        
         miColaborador=new Colaborador();
         miColaborador.setPrimerNombre(txtPrimerNombre.getText().toString());
         miColaborador.setSegundoNombre(txtSegundoNombre.getText().toString());
@@ -304,38 +324,26 @@ public class PantalaColaboradorPersona extends javax.swing.JFrame {
         miColaborador.setFechaNacimiento(txtFechaNacimiento.getText().toString());                
         miColaborador.setGenero(txtGenero.getText().toString());
         miColaborador.setEstadoCivil(txtEstadoCivil.getText().toString());
-        
-        
-        miColaborador.setNumeroColaborador( Integer.parseUnsignedInt( txtNumeroColaborador.getText().toString() ) );
+
+        miColaborador.setNumeroColaborador( txtNumeroColaborador.getText().toString() );
         miColaborador.setNombreEmpresa(txtNombreEmpresa.getText().toString());
         miColaborador.setSalario( Double.parseDouble( txtSalario.getText().toString() ));
         miColaborador.setBono( Double.parseDouble( txtBono.getText().toString() ));
         
-        
-        
+        listadoColaborador.add(miColaborador);
         txtArea.setText("");
-        txtArea.setText(miColaborador.getColaboradorInfo());
-
+        String texto="";
+        for(Colaborador item : listadoColaborador){
+            texto+=item.getColaboradorInfo()+"\n";
+            texto+="***********************************\n\n";
+        }
+        txtArea.setText(texto);
+        limpiarPantalla();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        txtPrimerNombre.setText("");
-        txtPrimerApellido.setText("");
-        txtFechaNacimiento.setText("");
-        txtSegundoNombre.setText("");
-        txtTercerNombre.setText("");
-        txtSegundoApellido.setText("");
-        txtApellidoDeCasada.setText("");
-        txtGenero.setText("");
-        txtEstadoCivil.setText("");
-        txtArea.setText("");
-        
-        txtNumeroColaborador.setText("");
-        txtNombreEmpresa.setText("");
-        txtSalario.setText("");
-        txtBono.setText("");
-
-        
+        limpiarPantalla();
+        listadoColaborador.removeAll(listadoColaborador);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
@@ -374,6 +382,9 @@ public class PantalaColaboradorPersona extends javax.swing.JFrame {
         });
     }
 
+    
+    private List<Colaborador> listadoColaborador=null;    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnNuevo;
@@ -409,5 +420,6 @@ public class PantalaColaboradorPersona extends javax.swing.JFrame {
     private javax.swing.JTextField txtSegundoNombre;
     private javax.swing.JTextField txtTercerNombre;
     // End of variables declaration//GEN-END:variables
-    private Colaborador miColaborador=null;
+
+
 }
