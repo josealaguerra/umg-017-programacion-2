@@ -37,6 +37,17 @@ public class Colaborador extends Persona{
     public void setNumeroColaborador(int numeroColaborador) {
         this.numeroColaborador = numeroColaborador;
     }
+    
+    public void setNumeroColaborador(String stringNumeroColaborador) {
+        int colaboradorNumero = 0;
+        try{
+            colaboradorNumero = Integer.parseUnsignedInt( stringNumeroColaborador );
+        }catch(Exception e){
+            
+        }finally{
+            setNumeroColaborador( colaboradorNumero );
+        }
+    }
 
     public String getNombreEmpresa() {
         return nombreEmpresa;
