@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblide_compra_detalle" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblid_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblid_marca_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblid_tipo_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblid_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="txtide_compra_detalle" alignment="0" pref="114" max="32767" attributes="0"/>
+                                      <Component id="txtid_compra" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtid_marca_producto" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtid_tipo_producto" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="txtid_producto" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblprecio_unitario_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblcantidad" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="txtprecio_unitario_compra" max="32767" attributes="0"/>
+                                      <Component id="txtcantidad" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="0" pref="149" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblide_compra_detalle" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtide_compra_detalle" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblid_compra" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtid_compra" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtid_marca_producto" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblid_marca_producto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblid_tipo_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtid_tipo_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblid_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtid_producto" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblprecio_unitario_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtprecio_unitario_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblcantidad" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtcantidad" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="55" max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblide_compra_detalle">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Id compra detalle"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtide_compra_detalle">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblid_compra">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Id compra"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtid_compra">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblid_marca_producto">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Id marca producto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtid_marca_producto">
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jButton1"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblid_tipo_producto">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Id tipo producto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtid_tipo_producto">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblid_producto">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Id producto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtid_producto">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblprecio_unitario_compra">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Precio unitario compra"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtprecio_unitario_compra">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblcantidad">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cantidad"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtcantidad">
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
