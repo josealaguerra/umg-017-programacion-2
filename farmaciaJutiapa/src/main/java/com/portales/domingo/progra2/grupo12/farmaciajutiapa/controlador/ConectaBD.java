@@ -21,7 +21,7 @@ public class ConectaBD {
     public ConectaBD(){
         try{  
             Class.forName("com.mysql.cj.jdbc.Driver");  
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_farmacia_jutiapa","root","123456");  
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_farmacia_jutiapa","root","Edinson");  
         }catch(Exception e){ 
             System.out.println(e);
         }  
