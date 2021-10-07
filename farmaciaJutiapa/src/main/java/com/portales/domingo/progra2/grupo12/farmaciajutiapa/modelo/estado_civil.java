@@ -61,6 +61,7 @@ public class estado_civil {
     }    
     
     public Vector<estado_civil> getListEstadoCivil(){
+        /*
         Vector<estado_civil> lec =null;
         ResultSet rset=null;
         ConectaBD cbd = null;
@@ -85,6 +86,8 @@ public class estado_civil {
         }
 
         return lec;
+*/
+        return null;
     }
 
 }

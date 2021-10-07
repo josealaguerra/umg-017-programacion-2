@@ -119,17 +119,23 @@ public class persona {
     }
 
     public Vector<estado_civil> getListEstadoCivil(){
+        /*
         Vector<estado_civil> lec = null;
         estado_civil ec = new estado_civil();
         lec = ec.getListEstadoCivil();
         return lec;
+*/  
+        return null;        
     }
 
     public List<genero> getListGenero(){
+        /*
         Vector<genero> lec = null;
         genero ec = new genero();
         lec = ec.getListGenero();
         return lec;    
+*/  
+        return null;
     }
     
 }

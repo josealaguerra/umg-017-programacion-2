@@ -8,6 +8,7 @@ package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -26,8 +27,8 @@ public class fpersona extends javax.swing.JFrame {
     public fpersona() {
         initComponents();
         
-        
-        miPersona= new persona();
+
+        clearFields();
         fillCbxGenero();
         fillCbxEstadoCivil();
     }
@@ -93,11 +94,7 @@ public class fpersona extends javax.swing.JFrame {
 
         btnCancelar.setText("Cancelar");
 
-        cbxid_genero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         txtfecha_de_nacimiento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d/M/yy"))));
-
-        cbxid_estado_civil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,28 +111,23 @@ public class fpersona extends javax.swing.JFrame {
                             .addComponent(lblid_persona))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtprimer_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblid_estado_civil))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtsegundo_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblfecha_de_nacimiento))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtprimer_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblid_genero))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(79, 79, 79)
-                                .addComponent(lblsegundo_apellido)))
+                            .addComponent(txtprimer_apellido, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtid_persona, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                                .addComponent(txtprimer_nombre)
+                                .addComponent(txtsegundo_nombre)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxid_genero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxid_estado_civil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblfecha_de_nacimiento, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblid_genero, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblsegundo_apellido, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblid_estado_civil, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(cbxid_estado_civil, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxid_genero, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtsegundo_apellido)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addComponent(btnGrabar)
@@ -239,68 +231,56 @@ public class fpersona extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void fillCbxGenero() {
-        /*
-        Vector<estado_civil> vec = miPersona.getListEstadoCivil();
-        for (estado_civil ecActual : vec){
-            cbxid_estado_civil.addItem(ecActual.getNombre_estado_civil());
-        }
-        */
-        
-        //Vector<estado_civil> lec =null;
-        ResultSet rset=null;
+
         ConectaBD cbd = null;
-        Connection conexion=null;
-        Statement stmt=null;
-        ResultSet rs=null;        
+        
         try{
             cbd = new ConectaBD();
-            
-            //1111lec = new Vector<estado_civil>();
-            rset = cbd.getData(" select id_estado_civil, nombre_estado_civil from estado_civil ");
-            
-            
-             ResultSet obteinData=null;
-            try{  
-                stmt = cbd.createStatement();  
-                obteinData = stmt.executeQuery( sqlStatement );  
-                /*
-                while(obteinData.next())  
-                    System.out.println(obteinData.getInt(1)+"  "+obteinData.getString(2));
-    */
-            }catch(SQLException e){ 
-                System.out.println(e);
-            }  
-
-            return obteinData;
-            
-            
-            
-            
-            
-            
-            
-
-            rset.beforeFirst();
-            if(rset.next()){
+            cbd.getData(" select id_genero, nombre_genero from genero ");
+            this.cbxid_genero.removeAll();
+            if(cbd.getRs().next()){
                 do{
-                    estado_civil ec = new estado_civil(rset.getInt(1), rset.getString(2));
-                    lec.addElement(ec);
-                }while(rset.next());
-                return lec;
+                    this.cbxid_genero.addItem( cbd.getRs().getString(2) );
+                    //new estadoCivilItem(cbd.getRs().getInt(1), cbd.getRs().getString(2)));
+                }while(cbd.getRs().next());
             }else
-                return null;
+                throw new Exception("fillCbxGenero, tabla genero vacia");
             
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
 
-        return lec;
-        
-        
-        
     }
 
     private void fillCbxEstadoCivil() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select id_estado_civil, nombre_estado_civil from estado_civil ");
+            this.cbxid_estado_civil.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxid_estado_civil.addItem( cbd.getRs().getString(2) );
+                    //new estadoCivilItem(cbd.getRs().getInt(1), cbd.getRs().getString(2)));
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("fillCbxGenero, tabla genero vacia");
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
+
+    private void clearFields() {
+        this.txtid_persona.setText("");
+        this.txtprimer_nombre.setText("");
+        this.txtsegundo_nombre.setText("");
+        this.txtprimer_apellido.setText("");
+        this.txtsegundo_apellido.setText("");
+        this.lblfecha_de_nacimiento.setText("");
+        this.txtfecha_de_nacimiento.setText("");
+    }
+
 }

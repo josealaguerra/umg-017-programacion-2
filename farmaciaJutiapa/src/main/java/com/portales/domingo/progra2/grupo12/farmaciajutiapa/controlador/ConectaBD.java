@@ -28,23 +28,40 @@ public class ConectaBD {
     }  
 
     
-    public ResultSet getData(String sqlStatement){
+    public void getData(String sqlStatement){
 
-        ResultSet obteinData=null;
-        try{  
-            stmt = conexion.createStatement();  
-            obteinData = stmt.executeQuery( sqlStatement );  
-            /*
-            while(obteinData.next())  
-                System.out.println(obteinData.getInt(1)+"  "+obteinData.getString(2));
-*/
+        try{
+            stmt = conexion.createStatement();
+            rs = stmt.executeQuery( sqlStatement );
+
         }catch(SQLException e){ 
             System.out.println(e);
         }  
 
-        return obteinData;
-        //return rs;
+    }
 
+    public Connection getConexion() {
+        return conexion;
+    }
+
+    public void setConexion(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+    public Statement getStmt() {
+        return stmt;
+    }
+
+    public void setStmt(Statement stmt) {
+        this.stmt = stmt;
+    }
+
+    public ResultSet getRs() {
+        return rs;
+    }
+
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
     }
 
 
