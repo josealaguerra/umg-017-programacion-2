@@ -5,17 +5,29 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
 /**
  *
  * @author josea
  */
 public class fpersona extends javax.swing.JFrame {
+    
+    private persona miPersona=null;
 
     /**
      * Creates new form fpersona
      */
     public fpersona() {
         initComponents();
+        
+        
+        miPersona= new persona();
         fillCbxGenero();
         fillCbxEstadoCivil();
     }
@@ -227,10 +239,68 @@ public class fpersona extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void fillCbxGenero() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*
+        Vector<estado_civil> vec = miPersona.getListEstadoCivil();
+        for (estado_civil ecActual : vec){
+            cbxid_estado_civil.addItem(ecActual.getNombre_estado_civil());
+        }
+        */
+        
+        //Vector<estado_civil> lec =null;
+        ResultSet rset=null;
+        ConectaBD cbd = null;
+private Connection conexion=null;
+    private Statement stmt=null;
+    private ResultSet rs=null;        
+        try{
+            cbd = new ConectaBD();
+            
+            //1111lec = new Vector<estado_civil>();
+            rset = cbd.getData(" select id_estado_civil, nombre_estado_civil from estado_civil ");
+            
+            
+             ResultSet obteinData=null;
+            try{  
+                stmt = cbd.createStatement();  
+                obteinData = stmt.executeQuery( sqlStatement );  
+                /*
+                while(obteinData.next())  
+                    System.out.println(obteinData.getInt(1)+"  "+obteinData.getString(2));
+    */
+            }catch(SQLException e){ 
+                System.out.println(e);
+            }  
+
+            return obteinData;
+            
+            
+            
+            
+            
+            
+            
+
+            rset.beforeFirst();
+            if(rset.next()){
+                do{
+                    estado_civil ec = new estado_civil(rset.getInt(1), rset.getString(2));
+                    lec.addElement(ec);
+                }while(rset.next());
+                return lec;
+            }else
+                return null;
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return lec;
+        
+        
+        
     }
 
     private void fillCbxEstadoCivil() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

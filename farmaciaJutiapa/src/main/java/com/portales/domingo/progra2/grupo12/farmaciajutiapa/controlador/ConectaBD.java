@@ -20,8 +20,8 @@ public class ConectaBD {
     
     public ConectaBD(){
         try{  
-            Class.forName("com.mysql.jdbc.Driver");  
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");  
+            Class.forName("com.mysql.cj.jdbc.Driver");  
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_farmacia_jutiapa","root","123456");  
         }catch(Exception e){ 
             System.out.println(e);
         }  
@@ -33,15 +33,17 @@ public class ConectaBD {
         ResultSet obteinData=null;
         try{  
             stmt = conexion.createStatement();  
-            rs = stmt.executeQuery( sqlStatement );  
-            while(rs.next())  
-            System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
-
+            obteinData = stmt.executeQuery( sqlStatement );  
+            /*
+            while(obteinData.next())  
+                System.out.println(obteinData.getInt(1)+"  "+obteinData.getString(2));
+*/
         }catch(SQLException e){ 
             System.out.println(e);
         }  
 
         return obteinData;
+        //return rs;
 
     }
 

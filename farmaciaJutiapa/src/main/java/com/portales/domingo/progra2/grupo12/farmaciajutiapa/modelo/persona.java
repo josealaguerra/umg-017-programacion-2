@@ -6,6 +6,8 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -85,6 +87,26 @@ public class persona {
         this.id_estado_civil = id_estado_civil;
     }
 
+    
+    public persona(){
+        limpia();
+    }
+    
+
+
+    public void limpia(){
+        this.id_persona = 0;
+        this.primer_nombre = "";
+        this.segundo_nombre = "";
+        this.primer_apellido = "";
+        this.segundo_apellido = "";
+        this.id_genero = 0;
+        this.fecha_de_nacimiento = null;
+        this.id_estado_civil = 0;
+    }
+
+    
+    
     public persona(int id_persona, String primer_nombre, String segundo_nombre, String primer_apellido, String segundo_apellido, int id_genero, Date fecha_de_nacimiento, int id_estado_civil) {
         this.id_persona = id_persona;
         this.primer_nombre = primer_nombre;
@@ -96,4 +118,18 @@ public class persona {
         this.id_estado_civil = id_estado_civil;
     }
 
+    public Vector<estado_civil> getListEstadoCivil(){
+        Vector<estado_civil> lec = null;
+        estado_civil ec = new estado_civil();
+        lec = ec.getListEstadoCivil();
+        return lec;
+    }
+
+    public List<genero> getListGenero(){
+        Vector<genero> lec = null;
+        genero ec = new genero();
+        lec = ec.getListGenero();
+        return lec;    
+    }
+    
 }
