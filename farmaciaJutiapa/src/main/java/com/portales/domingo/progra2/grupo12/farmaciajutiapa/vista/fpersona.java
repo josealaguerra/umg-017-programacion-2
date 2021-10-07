@@ -249,9 +249,9 @@ public class fpersona extends javax.swing.JFrame {
         //Vector<estado_civil> lec =null;
         ResultSet rset=null;
         ConectaBD cbd = null;
-private Connection conexion=null;
-    private Statement stmt=null;
-    private ResultSet rs=null;        
+        Connection conexion=null;
+        Statement stmt=null;
+        ResultSet rs=null;        
         try{
             cbd = new ConectaBD();
             
