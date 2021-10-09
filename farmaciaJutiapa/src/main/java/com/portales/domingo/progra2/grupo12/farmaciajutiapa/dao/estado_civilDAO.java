@@ -3,91 +3,151 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo;
+package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author josea
  */
-public class estado_civil {
-    private int id_estado_civil;
-    private String abreviatura_estado_civil;
-    private String nombre_estado_civil;    
+public class estado_civilDAO {
+    private ConectaBD cbd = null;
+    private static final String cnSQLTabla="producto";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
 
-    public int getId_estado_civil() {
-        return id_estado_civil;
-    }
-
-    public void setId_estado_civil(int id_estado_civil) {
-        this.id_estado_civil = id_estado_civil;
-    }
-
-    public String getAbreviatura_estado_civil() {
-        return abreviatura_estado_civil;
-    }
-
-    public void setAbreviatura_estado_civil(String abreviatura_estado_civil) {
-        this.abreviatura_estado_civil = abreviatura_estado_civil;
-    }
-
-    public String getNombre_estado_civil() {
-        return nombre_estado_civil;
-    }
-
-    public void setNombre_estado_civil(String nombre_estado_civil) {
-        this.nombre_estado_civil = nombre_estado_civil;
-    }
-
-    public estado_civil() {
-        this.id_estado_civil = 0;
-        this.abreviatura_estado_civil = "";
-        this.nombre_estado_civil = "";
-    }        
     
-    public estado_civil(int id_estado_civil, String nombre_estado_civil) {
-        this.id_estado_civil = id_estado_civil;
-        this.abreviatura_estado_civil = "";
-        this.nombre_estado_civil = nombre_estado_civil;
-    }        
+    public estado_civilDAO() {
+        cbd = new ConectaBD();
+    }
 
-    public estado_civil(int id_estado_civil, String abreviatura_estado_civil, String nombre_estado_civil) {
-        this.id_estado_civil = id_estado_civil;
-        this.abreviatura_estado_civil = abreviatura_estado_civil;
-        this.nombre_estado_civil = nombre_estado_civil;
-    }    
     
-    public Vector<estado_civil> getListEstadoCivil(){
-        /*
-        Vector<estado_civil> lec =null;
-        ResultSet rset=null;
-        ConectaBD cbd = null;
-        try{
-            cbd = new ConectaBD();
-            
-            lec = new Vector<estado_civil>();
-            rset = cbd.getData(" select id_estado_civil, nombre_estado_civil from estado_civil ");
+    public void inserta(producto prod){
+    
+        PreparedStatement ps = null;
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLInserta);
+            ps.setInt(1, prod.getId_producto());
+            ps.setString(2, prod.getNombre_producto());
+            ps.setInt(3, prod.getId_tipo_producto());
+            ps.setInt(4, prod.getId_marca_producto());
 
-            rset.beforeFirst();
-            if(rset.next()){
-                do{
-                    estado_civil ec = new estado_civil(rset.getInt(1), rset.getString(2));
-                    lec.addElement(ec);
-                }while(rset.next());
-                return lec;
-            }else
-                return null;
-            
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+            //rs=ps.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+    }
+        
+    
+    public List<producto> seleccionaTodo(){
+        List<producto> listaProductos=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            listaProductos=new ArrayList<>();
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                listaProductos.add( new producto(   rs.getInt("id_producto"), 
+                                                    rs.getString("nombre_producto"), 
+                                                    rs.getInt("id_tipo_producto"), 
+                                                    rs.getInt("id_marca_producto") ));
+            }
+            
+        } catch (Exception ex) {
+            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaProductos;
+       
+    }
+    
+    
+    public producto seleccionaPorID(int IDProducto){
+        
+        producto nuevoProd=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
+            ps.setInt(1, IDProducto);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevoProd = new producto(   rs.getInt("id_producto"), 
+                                            rs.getString("nombre_producto"), 
+                                            rs.getInt("id_tipo_producto"), 
+                                            rs.getInt("id_marca_producto") );
+            }
+            
+        } catch (Exception ex) {
+            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nuevoProd;
+       
+    }
+    
+    
+    public boolean elimina(int IDProducto){
+        
+        boolean filaEliminada=false;
+        PreparedStatement ps = null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
+            ps.setInt(1, IDProducto);
+            filaEliminada=( ps.executeUpdate() > 0);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return filaEliminada;
+       
+    }
 
-        return lec;
-*/
-        return null;
+    
+    public boolean actualiza(producto prod){
+        boolean filaActualizada=false;
+        PreparedStatement ps = null;
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
+            ps.setString(1, prod.getNombre_producto());
+            ps.setInt(2, prod.getId_tipo_producto());
+            ps.setInt(3, prod.getId_marca_producto());
+            ps.setInt(4, prod.getId_producto());            
+       
+        } catch (SQLException ex) {
+            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return filaActualizada;
+       
+    }
+
+    
+    private void printSQLException(SQLException ex){
+        for(Throwable e:ex){
+            if(e instanceof SQLException){
+                e.printStackTrace(System.err);
+                System.err.println("SQL State");
+                
+            }
+                
+        }
     }
 
 }

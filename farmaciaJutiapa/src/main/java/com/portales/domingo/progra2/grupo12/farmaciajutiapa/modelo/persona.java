@@ -74,7 +74,7 @@ public class persona {
     public Date getFecha_de_nacimiento() {
         return fecha_de_nacimiento;
     }
-
+    
     public void setFecha_de_nacimiento(Date fecha_de_nacimiento) {
         this.fecha_de_nacimiento = fecha_de_nacimiento;
     }
@@ -104,6 +104,9 @@ public class persona {
         this.fecha_de_nacimiento = null;
         this.id_estado_civil = 0;
     }
+    
+    
+
 
     
     

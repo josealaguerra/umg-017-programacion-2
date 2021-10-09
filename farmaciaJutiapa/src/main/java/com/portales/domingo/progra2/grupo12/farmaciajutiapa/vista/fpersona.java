@@ -6,31 +6,38 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.personaDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author josea
  */
 public class fpersona extends javax.swing.JFrame {
-    
+    private personaDAO pDAO = null;
     private persona miPersona=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fpersona
      */
     public fpersona() {
         initComponents();
-        
-
-        clearFields();
-        fillCbxGenero();
-        fillCbxEstadoCivil();
+        llenaListado();
+        limpiaCampos();
+        llenaComboBoxGenero();
+        llenaComboBoxEstadoCivil();
     }
 
     /**
@@ -55,11 +62,16 @@ public class fpersona extends javax.swing.JFrame {
         lblid_genero = new javax.swing.JLabel();
         lblfecha_de_nacimiento = new javax.swing.JLabel();
         lblid_estado_civil = new javax.swing.JLabel();
-        btnGrabar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
         cbxid_genero = new javax.swing.JComboBox<>();
         txtfecha_de_nacimiento = new javax.swing.JFormattedTextField();
         cbxid_estado_civil = new javax.swing.JComboBox<>();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaDatosPersona = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mantenimiento Persona");
@@ -72,6 +84,7 @@ public class fpersona extends javax.swing.JFrame {
 
         lblprimer_apellido.setText("primer_apellido:");
 
+        txtid_persona.setEditable(false);
         txtid_persona.setText("jTextField1");
 
         txtprimer_nombre.setText("jTextField2");
@@ -90,11 +103,68 @@ public class fpersona extends javax.swing.JFrame {
 
         lblid_estado_civil.setText("id_estado_civil:");
 
-        btnGrabar.setText("Grabar");
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        btnCancelar.setText("Cancelar");
+        btnModificar.setText("Modificar");
+        btnModificar.setActionCommand("");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         txtfecha_de_nacimiento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d/M/yy"))));
+
+        TablaDatosPersona.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID persona", "Primer nombre", "Segundo nombre", "Primer apellido", "Segundo apellido", "Genero", "Fecha de nacimiento", "Estado civil"
+            }
+        ));
+        TablaDatosPersona.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosPersonaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosPersona);
+        if (TablaDatosPersona.getColumnModel().getColumnCount() > 0) {
+            TablaDatosPersona.getColumnModel().getColumn(7).setMinWidth(50);
+            TablaDatosPersona.getColumnModel().getColumn(7).setPreferredWidth(50);
+            TablaDatosPersona.getColumnModel().getColumn(7).setMaxWidth(50);
+        }
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(141, Short.MAX_VALUE))
+        );
+
+        btnEliminar.setText("Eliminar");
+
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,67 +182,112 @@ public class fpersona extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtprimer_apellido, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtid_persona, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                                .addComponent(txtprimer_nombre)
-                                .addComponent(txtsegundo_nombre)))
-                        .addGap(18, 18, 18)
+                            .addComponent(txtid_persona, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addComponent(txtprimer_nombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtsegundo_nombre, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblfecha_de_nacimiento, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblid_genero, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblsegundo_apellido, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblid_estado_civil, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblid_genero, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblsegundo_apellido, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblid_estado_civil, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(lblfecha_de_nacimiento)))
+                        .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(txtfecha_de_nacimiento)
                             .addComponent(cbxid_estado_civil, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbxid_genero, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtsegundo_apellido)))
+                            .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
-                        .addComponent(btnGrabar)
+                        .addComponent(btnAgregar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnCancelar)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .addComponent(btnModificar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnNuevo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblid_persona)
-                    .addComponent(txtid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblsegundo_apellido)
-                    .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblprimer_nombre)
-                    .addComponent(txtprimer_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblid_genero)
-                    .addComponent(cbxid_genero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblsegundo_nombre)
-                    .addComponent(txtsegundo_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblfecha_de_nacimiento)
-                    .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblprimer_apellido)
-                        .addComponent(txtprimer_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblid_estado_civil)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblid_persona)
+                            .addComponent(txtid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblsegundo_apellido))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblprimer_nombre)
+                            .addComponent(txtprimer_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblid_genero))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblsegundo_nombre)
+                            .addComponent(txtsegundo_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblfecha_de_nacimiento))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblprimer_apellido)
+                                .addComponent(txtprimer_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblid_estado_civil)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbxid_genero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(cbxid_estado_civil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGrabar)
-                    .addComponent(btnCancelar))
-                .addContainerGap(109, Short.MAX_VALUE))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnNuevo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void TablaDatosPersonaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosPersonaMouseClicked
+        fila = TablaDatosPersona.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(null, "Persona no seleccionada");
+        }else{
+            this.txtid_persona.setText((String)TablaDatosPersona.getValueAt(fila,0));
+            this.txtprimer_nombre.setText((String)TablaDatosPersona.getValueAt(fila,1));
+            this.txtsegundo_nombre.setText((String)TablaDatosPersona.getValueAt(fila,2));
+            this.txtprimer_apellido.setText((String)TablaDatosPersona.getValueAt(fila,3));
+            this.txtsegundo_apellido.setText((String)TablaDatosPersona.getValueAt(fila,4));
+            this.txtfecha_de_nacimiento.setText((String)TablaDatosPersona.getValueAt(fila,5));
+        }
+    }//GEN-LAST:event_TablaDatosPersonaMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,10 +325,15 @@ public class fpersona extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGrabar;
+    private javax.swing.JTable TablaDatosPersona;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox<String> cbxid_estado_civil;
     private javax.swing.JComboBox<String> cbxid_genero;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblfecha_de_nacimiento;
     private javax.swing.JLabel lblid_estado_civil;
     private javax.swing.JLabel lblid_genero;
@@ -230,7 +350,7 @@ public class fpersona extends javax.swing.JFrame {
     private javax.swing.JTextField txtsegundo_nombre;
     // End of variables declaration//GEN-END:variables
 
-    private void fillCbxGenero() {
+    private void llenaComboBoxGenero() {
 
         ConectaBD cbd = null;
         
@@ -241,18 +361,17 @@ public class fpersona extends javax.swing.JFrame {
             if(cbd.getRs().next()){
                 do{
                     this.cbxid_genero.addItem( cbd.getRs().getString(2) );
-                    //new estadoCivilItem(cbd.getRs().getInt(1), cbd.getRs().getString(2)));
                 }while(cbd.getRs().next());
             }else
-                throw new Exception("fillCbxGenero, tabla genero vacia");
+                throw new Exception("llenaComboBoxGenero, tabla genero vacia");
             
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            Util.printException("fpersona.llenaComboBoxGenero", e);
         }
 
     }
 
-    private void fillCbxEstadoCivil() {
+    private void llenaComboBoxEstadoCivil() {
         
         ConectaBD cbd = null;
         
@@ -263,24 +382,138 @@ public class fpersona extends javax.swing.JFrame {
             if(cbd.getRs().next()){
                 do{
                     this.cbxid_estado_civil.addItem( cbd.getRs().getString(2) );
-                    //new estadoCivilItem(cbd.getRs().getInt(1), cbd.getRs().getString(2)));
                 }while(cbd.getRs().next());
             }else
-                throw new Exception("fillCbxGenero, tabla genero vacia");
+                throw new Exception("llenaComboBoxGenero, tabla genero vacia");
             
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            Util.printException("fpersona.llenaComboBoxEstadoCivil", e);
         }
     }
 
-    private void clearFields() {
-        this.txtid_persona.setText("");
-        this.txtprimer_nombre.setText("");
-        this.txtsegundo_nombre.setText("");
-        this.txtprimer_apellido.setText("");
-        this.txtsegundo_apellido.setText("");
-        this.lblfecha_de_nacimiento.setText("");
-        this.txtfecha_de_nacimiento.setText("");
+    private void limpiaCampos() {
+        try{
+            this.txtid_persona.setText("");
+            this.txtprimer_nombre.setText("");
+            this.txtsegundo_nombre.setText("");
+            this.txtprimer_apellido.setText("");
+            this.txtsegundo_apellido.setText("");
+            this.txtfecha_de_nacimiento.setText("");
+        }catch(Exception e){
+            Util.printException("fpersona.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        try{        
+            for(int i=0;i<=TablaDatosPersona.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+            }
+        }catch(Exception e){
+            Util.printException("fpersona.limpiaTabla", e);
+        }        
     }
 
+    private void llenaListado() {
+        List<persona> listaPersona = null;
+        
+        try{
+            pDAO = new personaDAO();
+            listaPersona = new ArrayList<>();
+            listaPersona = pDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[8];
+
+            modelo = (DefaultTableModel)TablaDatosPersona.getModel();
+
+            for(persona p:listaPersona){
+                pObj[0] = p.getId_persona();
+                pObj[1] = p.getPrimer_nombre();
+                pObj[2] = p.getSegundo_nombre();
+                pObj[3] = p.getPrimer_apellido();
+                pObj[4] = p.getSegundo_apellido();
+                pObj[5] = p.getId_genero();
+                //pObj[6] = p.getFecha_de_nacimientoPS();
+                pObj[7] = p.getId_estado_civil();
+                modelo.addRow(pObj);
+
+            }
+            TablaDatosPersona.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fpersona.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miPersona = new persona(Util.str2int(this.txtid_persona.getText()),
+                                    this.txtprimer_nombre.getText(),
+                                    this.txtsegundo_nombre.getText(),
+                                    this.txtprimer_apellido.getText(),
+                                    this.txtsegundo_apellido.getText(),
+                                    this.cbxid_genero.getSelectedIndex(),
+                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
+                                    this.cbxid_estado_civil.getSelectedIndex());
+            
+            if ( pDAO.inserta(miPersona) ){
+                JOptionPane.showMessageDialog(null, "Usuario ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fpersona.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miPersona = new persona(Util.str2int(this.txtid_persona.getText()),
+                                    this.txtprimer_nombre.getText(),
+                                    this.txtsegundo_nombre.getText(),
+                                    this.txtprimer_apellido.getText(),
+                                    this.txtsegundo_apellido.getText(),
+                                    this.cbxid_genero.getSelectedIndex(),
+                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
+                                    this.cbxid_estado_civil.getSelectedIndex());
+            
+            if ( pDAO.actualiza(miPersona) ){
+                JOptionPane.showMessageDialog(null, "Persona actualizada");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fpersona.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosPersona.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( pDAO.elimina( Util.str2int((String)TablaDatosPersona.getValueAt(fila,0)) ) ){
+                    JOptionPane.showMessageDialog(null, "Persona eliminada");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fpersona.eliminar", e);
+        }        
+    }    
+    
 }
