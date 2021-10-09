@@ -24,7 +24,7 @@ public class Util {
      * @return 
      */
     public static String obtieneFechaNac(){
-        DateFormat format = new SimpleDateFormat("DD/MM/YYYY"); //display your format.
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy"); //display your format.
         Date date = new Date();//puts the date in variable.
         return format.format(date); //returns the format to the date variable.
     }

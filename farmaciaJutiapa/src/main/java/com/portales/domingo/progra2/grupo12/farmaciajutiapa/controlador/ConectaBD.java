@@ -18,13 +18,17 @@ public class ConectaBD {
     private Statement stmt=null;
     private ResultSet rs=null;
     
-    public ConectaBD(){
+    public ConectaBD() throws Exception{
         try{  
             Class.forName("com.mysql.cj.jdbc.Driver");  
             conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_farmacia_jutiapa","farmacia","jutiapa");  
-        }catch(Exception e){ 
-            System.out.println(e);
-        }  
+        } catch (SQLException ex) {
+            Util.printSQLException("ConectaBD.ConectaBD", ex);
+            throw new Exception("Imposible conectarse a la BD: bd_farmacia_jutiapa", ex);
+        } catch (Exception e) {
+            Util.printException("ConectaBD.ConectaBD", e);
+            throw new Exception("Imposible conectarse a la BD: bd_farmacia_jutiapa", e);            
+        }
     }  
 
     
@@ -33,11 +37,11 @@ public class ConectaBD {
         try{
             stmt = conexion.createStatement();
             rs = stmt.executeQuery( sqlStatement );
-
-        }catch(SQLException e){ 
-            System.out.println(e);
-        }  
-
+        } catch (SQLException ex) {
+            Util.printSQLException("ConectaBD.getData", ex);
+        } catch (Exception e) {
+            Util.printException("ConectaBD.getData", e);
+        }
     }
 
     public Connection getConexion() {

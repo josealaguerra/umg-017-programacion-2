@@ -118,7 +118,7 @@ public class fpersona extends javax.swing.JFrame {
             }
         });
 
-        txtfecha_de_nacimiento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d/M/yy"))));
+        txtfecha_de_nacimiento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd-MM-yyyy"))));
 
         TablaDatosPersona.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -435,7 +435,7 @@ public class fpersona extends javax.swing.JFrame {
                 pObj[3] = p.getPrimer_apellido();
                 pObj[4] = p.getSegundo_apellido();
                 pObj[5] = p.getId_genero();
-                //pObj[6] = p.getFecha_de_nacimientoPS();
+                pObj[6] = p.getFecha_de_nacimiento();
                 pObj[7] = p.getId_estado_civil();
                 modelo.addRow(pObj);
 
