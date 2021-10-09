@@ -30,7 +30,7 @@ public class estado_civilDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
 
     
-    public estado_civilDAO() {
+    public estado_civilDAO() throws Exception {
         cbd = new ConectaBD();
     }
 

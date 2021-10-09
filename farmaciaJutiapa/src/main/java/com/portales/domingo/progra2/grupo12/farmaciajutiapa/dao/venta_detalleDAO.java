@@ -30,7 +30,7 @@ public class venta_detalleDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
 
     
-    public venta_detalleDAO() {
+    public venta_detalleDAO() throws Exception {
         cbd = new ConectaBD();
     }
 

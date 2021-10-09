@@ -30,7 +30,7 @@ public class rolDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_rol= ? WHERE id_rol = ? ";
 
     
-    public rolDAO() {
+    public rolDAO() throws Exception {
         cbd = new ConectaBD();
     }
 

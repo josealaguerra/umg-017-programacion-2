@@ -29,7 +29,7 @@ public class acceso_rolDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
 
     
-    public acceso_rolDAO() {
+    public acceso_rolDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
