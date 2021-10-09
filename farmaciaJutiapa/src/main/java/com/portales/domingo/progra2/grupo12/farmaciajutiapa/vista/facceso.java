@@ -5,17 +5,38 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.accesoDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class facceso extends javax.swing.JFrame {
+    
+    private accesoDAO aDAO = null;
+    private acceso miAcceso=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form facceso
      */
     public facceso() {
         initComponents();
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -35,12 +56,12 @@ public class facceso extends javax.swing.JFrame {
         txtnombre_acceso = new javax.swing.JTextField();
         lblpagina_acceso = new javax.swing.JLabel();
         txtpagina_acceso = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla_datos_acceso = new javax.swing.JTable();
+        TablaDatosAcceso = new javax.swing.JTable();
 
         jButton2.setText("jButton2");
 
@@ -52,36 +73,65 @@ public class facceso extends javax.swing.JFrame {
 
         lblpagina_acceso.setText("Pagina Acceso");
 
-        jButton1.setText("Agregar");
-
-        jButton3.setText("Modificar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Eliminar");
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Nuevo");
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        Tabla_datos_acceso.setModel(new javax.swing.table.DefaultTableModel(
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        TablaDatosAcceso.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Id acceso", "Nombre Acceso", "Pagina Acceso"
+                "ID Acceso", "Nombre Acceso", "Pagina Acceso"
             }
         ));
-        jScrollPane1.setViewportView(Tabla_datos_acceso);
+        TablaDatosAcceso.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosAccesoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosAcceso);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAgregar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModificar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnNuevo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -95,21 +145,8 @@ public class facceso extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtnombre_acceso, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                             .addComponent(txtid_acceso)
-                            .addComponent(txtpagina_acceso))
-                        .addContainerGap(171, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5)
-                        .addGap(61, 61, 61))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtpagina_acceso))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,12 +163,12 @@ public class facceso extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblpagina_acceso)
                     .addComponent(txtpagina_acceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnNuevo))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -151,9 +188,33 @@ public class facceso extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosAccesoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosAccesoMouseClicked
+        fila = TablaDatosAcceso.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
+        }else{
+            this.txtid_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,0));
+            this.txtnombre_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,1));
+            this.txtpagina_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,2));
+        }
+    }//GEN-LAST:event_TablaDatosAccesoMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -192,12 +253,12 @@ public class facceso extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla_datos_acceso;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTable TablaDatosAcceso;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblId_acceso;
@@ -207,4 +268,114 @@ public class facceso extends javax.swing.JFrame {
     private javax.swing.JTextField txtnombre_acceso;
     private javax.swing.JTextField txtpagina_acceso;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_acceso.setText("");
+            this.txtnombre_acceso.setText("");
+            this.txtpagina_acceso.setText("");
+
+        }catch(Exception e){
+            Util.printException("facceso.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        try{        
+            for(int i=0;i<=TablaDatosAcceso.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+            }
+        }catch(Exception e){
+            Util.printException("facceso.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<acceso> listaAccesos = null;
+        
+        try{
+            aDAO = new accesoDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = aDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[3];
+
+            modelo = (DefaultTableModel)TablaDatosAcceso.getModel();
+
+            for(acceso p:listaAccesos){
+                pObj[0] = p.getId_acceso();
+                pObj[1] = p.getNombre_acceso();
+                pObj[2] = p.getPagina_acceso();
+                modelo.addRow(pObj);
+
+            }
+            TablaDatosAcceso.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("facceso.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miAcceso = new acceso(  Util.str2int(this.txtid_acceso.getText()),
+                                    this.txtnombre_acceso.getText(),
+                                    this.txtpagina_acceso.getText() );
+            
+            if ( aDAO.inserta(miAcceso) ){
+                JOptionPane.showMessageDialog(null, "Usuario ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("facceso.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miAcceso = new acceso(  Util.str2int(this.txtid_acceso.getText()),
+                                    this.txtnombre_acceso.getText(),
+                                    this.txtpagina_acceso.getText() );
+            
+            if ( aDAO.actualiza(miAcceso) ){
+                JOptionPane.showMessageDialog(null, "Acceso actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("facceso.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosAcceso.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( aDAO.elimina( Util.str2int((String)TablaDatosAcceso.getValueAt(fila,0)) ) ){
+                    JOptionPane.showMessageDialog(null, "Acceso eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("facceso.eliminar", e);
+        }        
+    }    
+    
 }
