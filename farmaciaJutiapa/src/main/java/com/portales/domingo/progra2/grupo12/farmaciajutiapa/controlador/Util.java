@@ -19,6 +19,22 @@ import java.util.logging.Logger;
 public class Util {
     
     
+    public static String int2str(int numeroEntero){
+        String nuevaCadenaDeCaracteres=null;
+        try{        
+            nuevaCadenaDeCaracteres = Integer.toString(numeroEntero);
+        }catch(Exception e){
+            Util.printException("Util.int2str", e);
+            nuevaCadenaDeCaracteres = "";
+        }
+        return nuevaCadenaDeCaracteres;
+    }
+    
+
+    
+    
+    
+    
     /***
      * Permite inicializar la fecha de nacimiento
      * @return 

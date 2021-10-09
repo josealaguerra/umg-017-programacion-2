@@ -11,6 +11,8 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.accesoDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,6 +37,18 @@ public class facceso extends javax.swing.JFrame {
      */
     public facceso() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(aDAO!=null)
+                    aDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
         llenaListado();
         limpiaCampos();
     }
@@ -65,9 +79,11 @@ public class facceso extends javax.swing.JFrame {
 
         jButton2.setText("jButton2");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         lblId_acceso.setText("Id Acceso");
+
+        txtid_acceso.setEditable(false);
 
         lblnombre_acceso.setText("Nombre Acceso");
 
@@ -201,18 +217,25 @@ public class facceso extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void TablaDatosAccesoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosAccesoMouseClicked
-        fila = TablaDatosAcceso.getSelectedRow();
-        if(fila == -1){
-            JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
-        }else{
-            this.txtid_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,0));
-            this.txtnombre_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,1));
-            this.txtpagina_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,2));
-        }
+        try{
+            fila = TablaDatosAcceso.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
+            }else{
+                String id=(String)TablaDatosAcceso.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosAcceso.getValueAt(fila,1);
+                String pagina=(String)TablaDatosAcceso.getValueAt(fila,2);
+                this.txtid_acceso.setText(id);
+                this.txtnombre_acceso.setText(nombre);
+                this.txtpagina_acceso.setText(pagina);
+            }
+        }catch(Exception e){
+            Util.printException("facceso.TablaDatosAccesoMouseClicked", e);
+        }                        
     }//GEN-LAST:event_TablaDatosAccesoMouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        limpiaCampos();
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
 
@@ -283,10 +306,15 @@ public class facceso extends javax.swing.JFrame {
     
     
     public void limpiaTabla(){
+        int filaRestante=0;
         try{        
             for(int i=0;i<=TablaDatosAcceso.getRowCount();i++){
                 modelo.removeRow(i);
                 i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
             }
         }catch(Exception e){
             Util.printException("facceso.limpiaTabla", e);
@@ -328,7 +356,7 @@ public class facceso extends javax.swing.JFrame {
                                     this.txtpagina_acceso.getText() );
             
             if ( aDAO.inserta(miAcceso) ){
-                JOptionPane.showMessageDialog(null, "Usuario ingresado");
+                JOptionPane.showMessageDialog(null, "Acceso ingresado");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
@@ -366,7 +394,7 @@ public class facceso extends javax.swing.JFrame {
             if(fila == -1){
                 JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
             }else{
-                if ( aDAO.elimina( Util.str2int((String)TablaDatosAcceso.getValueAt(fila,0)) ) ){
+                if ( aDAO.elimina( Util.str2int((String)TablaDatosAcceso.getValueAt(fila,0).toString()) ) ){
                     JOptionPane.showMessageDialog(null, "Acceso eliminado");
                     limpiaTabla();
                     limpiaCampos();

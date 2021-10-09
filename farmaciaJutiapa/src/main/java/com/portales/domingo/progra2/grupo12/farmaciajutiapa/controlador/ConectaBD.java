@@ -18,6 +18,10 @@ public class ConectaBD {
     private Statement stmt=null;
     private ResultSet rs=null;
     
+    /***
+     * Constructor inicia la conexión a la BD.
+     * @throws Exception 
+     */
     public ConectaBD() throws Exception{
         try{  
             Class.forName("com.mysql.cj.jdbc.Driver");  
@@ -31,7 +35,10 @@ public class ConectaBD {
         }
     }  
 
-    
+    /***
+     * Obtiene datos y los devuelve en un resultSet.
+     * @param sqlStatement 
+     */
     public void getData(String sqlStatement){
 
         try{
@@ -44,6 +51,10 @@ public class ConectaBD {
         }
     }
 
+    /***
+     * Obtiene la conexion activa
+     * @return 
+     */
     public Connection getConexion() {
         return conexion;
     }
@@ -70,10 +81,44 @@ public class ConectaBD {
 
 
     public void closeDB(){
+
+        //Statement
         try {      
-            conexion.close();
+            if(stmt!=null){
+                if(!stmt.isClosed()){
+                    stmt.close();
+                }
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(ConectaBD.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("ConectaBD.closeDB", ex);
+        } catch (Exception e) {
+            Util.printException("ConectaBD.closeDB", e);
+        }    
+        
+        //ResultSet
+        try {      
+            if(rs!=null){
+                if(!rs.isClosed()){
+                    rs.close();
+                }
+            }    
+        } catch (SQLException ex) {
+            Util.printSQLException("ConectaBD.closeDB", ex);
+        } catch (Exception e) {
+            Util.printException("ConectaBD.closeDB", e);
+        }        
+        
+        //Connection
+        try {
+            if(conexion!=null){
+                if(!conexion.isClosed()){
+                    conexion.close();
+                }
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("ConectaBD.closeDB", ex);
+        } catch (Exception e) {
+            Util.printException("ConectaBD.closeDB", e);
         }
     }
 

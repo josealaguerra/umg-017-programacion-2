@@ -29,12 +29,19 @@ public class accesoDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_acceso = ?, pagina_acceso = ? WHERE id_acceso = ? ";
 
-    
+    /***
+     * Constructor accesoDAO
+     * @throws Exception 
+     */
     public accesoDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
+    /***
+     * Inserta un registro en la tabla acceso
+     * @param acc - objeto de la clase "acceso"
+     * @return verdadero, si inserto correctamente en la tabla acceso
+     */
     public boolean inserta(acceso acc){
         boolean filaInsertada=false;
         PreparedStatement ps = null;
@@ -52,7 +59,10 @@ public class accesoDAO {
         return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla acceso
+     * @return 
+     */
     public List<acceso> seleccionaTodo(){
         List<acceso> listaAccesos=null;
         PreparedStatement ps = null;
@@ -75,7 +85,11 @@ public class accesoDAO {
         return listaAccesos;
     }
     
-    
+    /***
+     * Selecciona un acceso, según su ID
+     * @param IDAcceso
+     * @return 
+     */
     public acceso seleccionaPorID(int IDAcceso){
         acceso nuevoAcceso=null;
         PreparedStatement ps = null;
@@ -98,7 +112,11 @@ public class accesoDAO {
         return nuevoAcceso;
     }
     
-    
+    /***
+     * Elimina el acceso con el ID enviado.
+     * @param IDAcceso
+     * @return 
+     */
     public boolean elimina(int IDAcceso){
         boolean filaEliminada=false;
         PreparedStatement ps = null;
@@ -116,7 +134,11 @@ public class accesoDAO {
         return filaEliminada;
     }
 
-    
+    /***
+     * Modifica la informacion del acceso enviado por parametro.
+     * @param acc
+     * @return 
+     */
     public boolean actualiza(acceso acc){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -125,6 +147,7 @@ public class accesoDAO {
             ps.setString(1, acc.getNombre_acceso());
             ps.setString(2, acc.getPagina_acceso());  
             ps.setInt(3, acc.getId_acceso());
+            filaActualizada = ( ps.executeUpdate() > 0);            
        
         } catch (SQLException ex) {
             Util.printSQLException("accesoDAO.actualiza", ex);
@@ -132,6 +155,18 @@ public class accesoDAO {
             Util.printException("accesoDAO.actualiza", e);
         }
         return filaActualizada;
+    }
+
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("accesoDAO.cierra", e);
+        }        
     }
 
 }
