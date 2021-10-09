@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,12 +22,12 @@ import java.util.logging.Logger;
  */
 public class accesoDAO {
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLTabla="acceso";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_acceso, pagina_acceso) values (?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_acceso = ?, pagina_acceso = ? WHERE id_acceso = ? ";
 
     
     public accesoDAO() throws Exception {
@@ -34,119 +35,103 @@ public class accesoDAO {
     }
 
     
-    public void inserta(producto prod){
-    
+    public boolean inserta(acceso acc){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
+        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
-
-            //rs=ps.executeQuery();
+            ps.setString(1, acc.getNombre_acceso());
+            ps.setString(2, acc.getPagina_acceso());
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("accesoDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
     
-    public List<producto> seleccionaTodo(){
-        List<producto> listaProductos=null;
+    public List<acceso> seleccionaTodo(){
+        List<acceso> listaAccesos=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaProductos=new ArrayList<>();
+            listaAccesos=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaProductos.add( new producto(   rs.getInt("id_producto"), 
-                                                    rs.getString("nombre_producto"), 
-                                                    rs.getInt("id_tipo_producto"), 
-                                                    rs.getInt("id_marca_producto") ));
+                listaAccesos.add( new acceso(   rs.getInt("id_acceso"), 
+                                                rs.getString("nombre_acceso"), 
+                                                rs.getString("pagina_acceso")));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaTodo", e);
         }
-        return listaProductos;
-       
+        return listaAccesos;
     }
     
     
-    public producto seleccionaPorID(int IDProducto){
-        
-        producto nuevoProd=null;
+    public acceso seleccionaPorID(int IDAcceso){
+        acceso nuevoAcceso=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDAcceso);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new producto(   rs.getInt("id_producto"), 
-                                            rs.getString("nombre_producto"), 
-                                            rs.getInt("id_tipo_producto"), 
-                                            rs.getInt("id_marca_producto") );
+                nuevoAcceso = new acceso(   rs.getInt("id_acceso"), 
+                                            rs.getString("nombre_acceso"), 
+                                            rs.getString("pagina_acceso"));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaPorID", e);
         }
-        return nuevoProd;
-       
+        return nuevoAcceso;
     }
     
     
-    public boolean elimina(int IDProducto){
-        
+    public boolean elimina(int IDAcceso){
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDAcceso);
             filaEliminada=( ps.executeUpdate() > 0);
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.elimina", e);
         }
         return filaEliminada;
-       
     }
 
     
-    public boolean actualiza(producto prod){
+    public boolean actualiza(acceso acc){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, prod.getNombre_producto());
-            ps.setInt(2, prod.getId_tipo_producto());
-            ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+            ps.setString(1, acc.getNombre_acceso());
+            ps.setString(2, acc.getPagina_acceso());  
+            ps.setInt(3, acc.getId_acceso());
        
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("accesoDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
-    }
-
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
     }
 
 }

@@ -37,9 +37,10 @@ public class personaDAO {
 
     
     public boolean inserta(persona p){
+        
         boolean filaInsertada=false;
-    
         PreparedStatement ps = null;
+
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setString(1, p.getPrimer_nombre());

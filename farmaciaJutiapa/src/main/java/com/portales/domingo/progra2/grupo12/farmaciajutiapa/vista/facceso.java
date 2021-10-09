@@ -74,12 +74,32 @@ public class facceso extends javax.swing.JFrame {
         lblpagina_acceso.setText("Pagina Acceso");
 
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         TablaDatosAcceso.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,9 +128,9 @@ public class facceso extends javax.swing.JFrame {
                         .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEliminar)
-                        .addGap(54, 54, 54)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnNuevo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,10 +192,6 @@ public class facceso extends javax.swing.JFrame {
         agregar();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void TablaDatosPersonaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosPersonaMouseClicked
-        
-    }//GEN-LAST:event_TablaDatosPersonaMouseClicked
-
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
@@ -194,6 +210,11 @@ public class facceso extends javax.swing.JFrame {
             this.txtpagina_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,2));
         }
     }//GEN-LAST:event_TablaDatosAccesoMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -280,19 +301,14 @@ public class facceso extends javax.swing.JFrame {
             listaAccesos = new ArrayList<>();
             listaAccesos = aDAO.seleccionaTodo();
 
-            Object[]pObj=new Object[8];
+            Object[]pObj=new Object[3];
 
             modelo = (DefaultTableModel)TablaDatosAcceso.getModel();
 
             for(acceso p:listaAccesos){
-                pObj[0] = p.getId_persona();
-                pObj[1] = p.getPrimer_nombre();
-                pObj[2] = p.getSegundo_nombre();
-                pObj[3] = p.getPrimer_apellido();
-                pObj[4] = p.getSegundo_apellido();
-                pObj[5] = p.getId_genero();
-                pObj[6] = p.getFecha_de_nacimiento();
-                pObj[7] = p.getId_estado_civil();
+                pObj[0] = p.getId_acceso();
+                pObj[1] = p.getNombre_acceso();
+                pObj[2] = p.getPagina_acceso();
                 modelo.addRow(pObj);
 
             }
@@ -307,14 +323,9 @@ public class facceso extends javax.swing.JFrame {
     private void agregar(){
         
         try{
-            miAcceso = new acceso(Util.str2int(this.txtid_persona.getText()),
-                                    this.txtprimer_nombre.getText(),
-                                    this.txtsegundo_nombre.getText(),
-                                    this.txtprimer_apellido.getText(),
-                                    this.txtsegundo_apellido.getText(),
-                                    Util.int2cbx( this.cbxid_genero.getSelectedIndex() ),
-                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
-                                    Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ));
+            miAcceso = new acceso(  Util.str2int(this.txtid_acceso.getText()),
+                                    this.txtnombre_acceso.getText(),
+                                    this.txtpagina_acceso.getText() );
             
             if ( aDAO.inserta(miAcceso) ){
                 JOptionPane.showMessageDialog(null, "Usuario ingresado");
@@ -331,17 +342,12 @@ public class facceso extends javax.swing.JFrame {
     
     private void modificar(){
         try{
-            miAcceso = new acceso(Util.str2int(this.txtid_persona.getText()),
-                                    this.txtprimer_nombre.getText(),
-                                    this.txtsegundo_nombre.getText(),
-                                    this.txtprimer_apellido.getText(),
-                                    this.txtsegundo_apellido.getText(),
-                                    this.cbxid_genero.getSelectedIndex(),
-                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
-                                    this.cbxid_estado_civil.getSelectedIndex());
+            miAcceso = new acceso(  Util.str2int(this.txtid_acceso.getText()),
+                                    this.txtnombre_acceso.getText(),
+                                    this.txtpagina_acceso.getText() );
             
             if ( aDAO.actualiza(miAcceso) ){
-                JOptionPane.showMessageDialog(null, "Acceso actualizada");
+                JOptionPane.showMessageDialog(null, "Acceso actualizado");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
@@ -361,7 +367,7 @@ public class facceso extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
             }else{
                 if ( aDAO.elimina( Util.str2int((String)TablaDatosAcceso.getValueAt(fila,0)) ) ){
-                    JOptionPane.showMessageDialog(null, "Acceso eliminada");
+                    JOptionPane.showMessageDialog(null, "Acceso eliminado");
                     limpiaTabla();
                     limpiaCampos();
                     llenaListado();
