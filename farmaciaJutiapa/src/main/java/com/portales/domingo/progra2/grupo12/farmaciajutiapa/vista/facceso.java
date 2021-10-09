@@ -8,7 +8,7 @@ package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.accesoDAO;
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
 import java.sql.ResultSet;
@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 public class facceso extends javax.swing.JFrame {
     
     private accesoDAO aDAO = null;
-    private persona miPersona=null;
+    private acceso miAcceso=null;
     private DefaultTableModel modelo=null;
     private int fila = 0;
 
@@ -61,7 +61,7 @@ public class facceso extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDatosAcceso = new javax.swing.JTable();
 
         jButton2.setText("jButton2");
 
@@ -81,7 +81,7 @@ public class facceso extends javax.swing.JFrame {
 
         btnNuevo.setText("Nuevo");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosAcceso.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -89,7 +89,12 @@ public class facceso extends javax.swing.JFrame {
                 "ID Acceso", "Nombre Acceso", "Pagina Acceso"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaDatosAcceso.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosAccesoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosAcceso);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -168,17 +173,7 @@ public class facceso extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void TablaDatosPersonaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosPersonaMouseClicked
-        fila = TablaDatosPersona.getSelectedRow();
-        if(fila == -1){
-            JOptionPane.showMessageDialog(null, "Persona no seleccionada");
-        }else{
-            this.txtid_persona.setText((String)TablaDatosPersona.getValueAt(fila,0));
-            this.txtprimer_nombre.setText((String)TablaDatosPersona.getValueAt(fila,1));
-            this.txtsegundo_nombre.setText((String)TablaDatosPersona.getValueAt(fila,2));
-            this.txtprimer_apellido.setText((String)TablaDatosPersona.getValueAt(fila,3));
-            this.txtsegundo_apellido.setText((String)TablaDatosPersona.getValueAt(fila,4));
-            this.txtfecha_de_nacimiento.setText((String)TablaDatosPersona.getValueAt(fila,5));
-        }
+        
     }//GEN-LAST:event_TablaDatosPersonaMouseClicked
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -188,6 +183,17 @@ public class facceso extends javax.swing.JFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosAccesoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosAccesoMouseClicked
+        fila = TablaDatosAcceso.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
+        }else{
+            this.txtid_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,0));
+            this.txtnombre_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,1));
+            this.txtpagina_acceso.setText((String)TablaDatosAcceso.getValueAt(fila,2));
+        }
+    }//GEN-LAST:event_TablaDatosAccesoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -226,6 +232,7 @@ public class facceso extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaDatosAcceso;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
@@ -233,7 +240,6 @@ public class facceso extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblId_acceso;
     private javax.swing.JLabel lblnombre_acceso;
     private javax.swing.JLabel lblpagina_acceso;
@@ -242,85 +248,43 @@ public class facceso extends javax.swing.JFrame {
     private javax.swing.JTextField txtpagina_acceso;
     // End of variables declaration//GEN-END:variables
 
-    private void llenaComboBoxGenero() {
-
-        ConectaBD cbd = null;
-        
-        try{
-            cbd = new ConectaBD();
-            cbd.getData(" select id_genero, nombre_genero from genero ");
-            this.cbxid_genero.removeAll();
-            if(cbd.getRs().next()){
-                do{
-                    this.cbxid_genero.addItem( cbd.getRs().getString(2) );
-                }while(cbd.getRs().next());
-            }else
-                throw new Exception("llenaComboBoxGenero, tabla genero vacia");
-            
-        }catch(Exception e){
-            Util.printException("fpersona.llenaComboBoxGenero", e);
-        }
-
-    }
-
-    private void llenaComboBoxEstadoCivil() {
-        
-        ConectaBD cbd = null;
-        
-        try{
-            cbd = new ConectaBD();
-            cbd.getData(" select id_estado_civil, nombre_estado_civil from estado_civil ");
-            this.cbxid_estado_civil.removeAll();
-            if(cbd.getRs().next()){
-                do{
-                    this.cbxid_estado_civil.addItem( cbd.getRs().getString(2) );
-                }while(cbd.getRs().next());
-            }else
-                throw new Exception("llenaComboBoxGenero, tabla genero vacia");
-            
-        }catch(Exception e){
-            Util.printException("fpersona.llenaComboBoxEstadoCivil", e);
-        }
-    }
 
     private void limpiaCampos() {
         try{
-            this.txtid_persona.setText("");
-            this.txtprimer_nombre.setText("");
-            this.txtsegundo_nombre.setText("");
-            this.txtprimer_apellido.setText("");
-            this.txtsegundo_apellido.setText("");
-            this.txtfecha_de_nacimiento.setText( Util.obtieneFechaNac() );
+            this.txtid_acceso.setText("");
+            this.txtnombre_acceso.setText("");
+            this.txtpagina_acceso.setText("");
+
         }catch(Exception e){
-            Util.printException("fpersona.limpiaCampos", e);
+            Util.printException("facceso.limpiaCampos", e);
         }                
     }
     
     
     public void limpiaTabla(){
         try{        
-            for(int i=0;i<=TablaDatosPersona.getRowCount();i++){
+            for(int i=0;i<=TablaDatosAcceso.getRowCount();i++){
                 modelo.removeRow(i);
                 i = i - 1;
             }
         }catch(Exception e){
-            Util.printException("fpersona.limpiaTabla", e);
+            Util.printException("facceso.limpiaTabla", e);
         }        
     }
 
     private void llenaListado() {
-        List<persona> listaPersona = null;
+        List<acceso> listaAccesos = null;
         
         try{
             aDAO = new accesoDAO();
-            listaPersona = new ArrayList<>();
-            listaPersona = aDAO.seleccionaTodo();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = aDAO.seleccionaTodo();
 
             Object[]pObj=new Object[8];
 
-            modelo = (DefaultTableModel)TablaDatosPersona.getModel();
+            modelo = (DefaultTableModel)TablaDatosAcceso.getModel();
 
-            for(persona p:listaPersona){
+            for(acceso p:listaAccesos){
                 pObj[0] = p.getId_persona();
                 pObj[1] = p.getPrimer_nombre();
                 pObj[2] = p.getSegundo_nombre();
@@ -332,9 +296,9 @@ public class facceso extends javax.swing.JFrame {
                 modelo.addRow(pObj);
 
             }
-            TablaDatosPersona.setModel(modelo);
+            TablaDatosAcceso.setModel(modelo);
         }catch(Exception e){
-            Util.printException("fpersona.llenaListado", e);
+            Util.printException("facceso.llenaListado", e);
         }
     }
 
@@ -343,7 +307,7 @@ public class facceso extends javax.swing.JFrame {
     private void agregar(){
         
         try{
-            miPersona = new persona(Util.str2int(this.txtid_persona.getText()),
+            miAcceso = new acceso(Util.str2int(this.txtid_persona.getText()),
                                     this.txtprimer_nombre.getText(),
                                     this.txtsegundo_nombre.getText(),
                                     this.txtprimer_apellido.getText(),
@@ -352,7 +316,7 @@ public class facceso extends javax.swing.JFrame {
                                     Util.str2date(this.txtfecha_de_nacimiento.getText()),
                                     Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ));
             
-            if ( aDAO.inserta(miPersona) ){
+            if ( aDAO.inserta(miAcceso) ){
                 JOptionPane.showMessageDialog(null, "Usuario ingresado");
                 limpiaTabla();
                 limpiaCampos();
@@ -361,13 +325,13 @@ public class facceso extends javax.swing.JFrame {
                     
             
         }catch(Exception e){
-            Util.printException("fpersona.agregar", e);
+            Util.printException("facceso.agregar", e);
         }
     }
     
     private void modificar(){
         try{
-            miPersona = new persona(Util.str2int(this.txtid_persona.getText()),
+            miAcceso = new acceso(Util.str2int(this.txtid_persona.getText()),
                                     this.txtprimer_nombre.getText(),
                                     this.txtsegundo_nombre.getText(),
                                     this.txtprimer_apellido.getText(),
@@ -376,15 +340,15 @@ public class facceso extends javax.swing.JFrame {
                                     Util.str2date(this.txtfecha_de_nacimiento.getText()),
                                     this.cbxid_estado_civil.getSelectedIndex());
             
-            if ( aDAO.actualiza(miPersona) ){
-                JOptionPane.showMessageDialog(null, "Persona actualizada");
+            if ( aDAO.actualiza(miAcceso) ){
+                JOptionPane.showMessageDialog(null, "Acceso actualizada");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
             }
 
         }catch(Exception e){
-            Util.printException("fpersona.modificar", e);
+            Util.printException("facceso.modificar", e);
         }
     }
     
@@ -392,19 +356,19 @@ public class facceso extends javax.swing.JFrame {
 
     private void eliminar(){
         try{        
-            fila = TablaDatosPersona.getSelectedRow();
+            fila = TablaDatosAcceso.getSelectedRow();
             if(fila == -1){
                 JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
             }else{
-                if ( aDAO.elimina( Util.str2int((String)TablaDatosPersona.getValueAt(fila,0)) ) ){
-                    JOptionPane.showMessageDialog(null, "Persona eliminada");
+                if ( aDAO.elimina( Util.str2int((String)TablaDatosAcceso.getValueAt(fila,0)) ) ){
+                    JOptionPane.showMessageDialog(null, "Acceso eliminada");
                     limpiaTabla();
                     limpiaCampos();
                     llenaListado();
                 }
             }
         }catch(Exception e){
-            Util.printException("fpersona.eliminar", e);
+            Util.printException("facceso.eliminar", e);
         }        
     }    
     
