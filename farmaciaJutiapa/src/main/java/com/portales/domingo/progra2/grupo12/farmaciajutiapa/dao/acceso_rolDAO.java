@@ -21,12 +21,12 @@ import java.util.logging.Logger;
  */
 public class acceso_rolDAO {
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLTabla="acceso_rol";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_acceso_rol, id_acceso, id_rol) values (?, ?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_acceso = ?, id_rol = ? WHERE id_acceso_rol = ? ";
 
     
     public acceso_rolDAO() throws Exception {
@@ -34,15 +34,15 @@ public class acceso_rolDAO {
     }
 
     
-    public void inserta(producto prod){
+    public void inserta(acceso_rol accRol){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
+            ps.setInt(1, accRol.getId_acceso());
+            ps.setInt(2, accRol.getId_rol());
+            ps.setInt(3, accRol.getId_acceso_rol());
+            
 
             //rs=ps.executeQuery();
         } catch (SQLException ex) {
@@ -52,45 +52,44 @@ public class acceso_rolDAO {
     }
         
     
-    public List<producto> seleccionaTodo(){
-        List<producto> listaProductos=null;
+    public List<acceso_rol> seleccionaTodo(){
+        List<acceso_rol> listadoRol=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaProductos=new ArrayList<>();
+            listadoRol=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaProductos.add( new producto(   rs.getInt("id_producto"), 
-                                                    rs.getString("nombre_producto"), 
-                                                    rs.getInt("id_tipo_producto"), 
-                                                    rs.getInt("id_marca_producto") ));
+                listadoRol.add( new acceso_rol(   rs.getInt("id_acceso_rol"), 
+                                                    rs.getInt("id_acceso"), 
+                                                    rs.getInt("id_rol")));
+                                                   
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaProductos;
+        return listadoRol;
        
     }
     
     
-    public producto seleccionaPorID(int IDProducto){
+    public acceso_rol seleccionaPorID(int IDRol){
         
-        producto nuevoProd=null;
+        acceso_rol nuevoProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDRol);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new producto(   rs.getInt("id_producto"), 
-                                            rs.getString("nombre_producto"), 
-                                            rs.getInt("id_tipo_producto"), 
-                                            rs.getInt("id_marca_producto") );
+                nuevoProd = new acceso_rol(   rs.getInt("id_acceso_rol"), 
+                                                    rs.getInt("id_acceso"), 
+                                                    rs.getInt("id_rol"));
             }
             
         } catch (Exception ex) {
@@ -101,14 +100,14 @@ public class acceso_rolDAO {
     }
     
     
-    public boolean elimina(int IDProducto){
+    public boolean elimina(int IDRol){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDRol);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -119,15 +118,14 @@ public class acceso_rolDAO {
     }
 
     
-    public boolean actualiza(producto prod){
+    public boolean actualiza(acceso_rol accRol){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, prod.getNombre_producto());
-            ps.setInt(2, prod.getId_tipo_producto());
-            ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+             ps.setInt(1, accRol.getId_acceso());
+            ps.setInt(2, accRol.getId_rol());
+            ps.setInt(3, accRol.getId_acceso_rol());          
        
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);

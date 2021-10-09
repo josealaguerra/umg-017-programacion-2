@@ -34,11 +34,16 @@ public class fcompra extends javax.swing.JFrame {
         txtid_proveedor = new javax.swing.JTextField();
         lblfecha_compra = new javax.swing.JLabel();
         txtfecha_compra = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         lblnumero_facctura = new javax.swing.JLabel();
         txtnumero_factura = new javax.swing.JTextField();
         lblmonto_total = new javax.swing.JLabel();
         txtmonto_total = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tabla5 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,11 +53,27 @@ public class fcompra extends javax.swing.JFrame {
 
         lblfecha_compra.setText("Fecha compra");
 
-        jButton1.setText("jButton1");
-
         lblnumero_facctura.setText("Numero factura");
 
         lblmonto_total.setText("Monto total");
+
+        jButton1.setText("Guardar");
+
+        jButton2.setText("Modificar");
+
+        jButton3.setText("Eliminar");
+
+        jButton4.setText("Nuevo");
+
+        Tabla5.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id Compra", "Id Proveedor", "Fecha Compra", "Numero Factura", "Monto Total"
+            }
+        ));
+        jScrollPane1.setViewportView(Tabla5);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -60,9 +81,6 @@ public class fcompra extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,8 +95,20 @@ public class fcompra extends javax.swing.JFrame {
                             .addComponent(txtid_proveedor)
                             .addComponent(txtfecha_compra)
                             .addComponent(txtnumero_factura)
-                            .addComponent(txtmonto_total))))
-                .addContainerGap(128, Short.MAX_VALUE))
+                            .addComponent(txtmonto_total)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,9 +133,15 @@ public class fcompra extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblmonto_total)
                     .addComponent(txtmonto_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
-                .addComponent(jButton1)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(196, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -159,8 +195,13 @@ public class fcompra extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Tabla5;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblfecha_compra;
     private javax.swing.JLabel lblid_compra;
     private javax.swing.JLabel lblid_proveedor;

@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +24,8 @@ import java.util.logging.Logger;
 public class compraDAO {
 
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="persona";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLTabla="compra";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_compra, id_proveedor, fecha_compra, numero_factura, monto_total) values (?, ?, ?, ?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
@@ -36,19 +37,17 @@ public class compraDAO {
     }
 
     
-    public void inserta(persona p){
+    public void inserta(compra com){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-//            ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            //rs=ps.executeQuery();
+            ps.setInt(1, com.getId_proveedor());
+            ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
+            ps.setString(3, com.getNumero_factura());
+            ps.setDouble(4, com.getMonto_total());
+            ps.setInt(5, com.getId_compra());
+//           
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,54 +55,49 @@ public class compraDAO {
     }
         
     
-    public List<persona> seleccionaTodo(){
-        List<persona> listaPersonas=null;
-        persona nuevap=null;
+    public List<compra> seleccionaTodo(){
+        List<compra> listaCompra=null;
+        compra nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaPersonas=new ArrayList<>();
+            listaCompra=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaPersonas.add( new persona(     rs.getInt("id_persona"), 
-                                                    rs.getString("primer_nombre"), 
-                                                    rs.getString("segundo_nombre"), 
-                                                    rs.getString("primer_apellido"), 
-                                                    rs.getString("segundo_apellido"), 
-                                                    rs.getInt("id_genero"), 
-                                                    rs.getDate("Date fecha_de_nacimiento"), 
-                                                    rs.getInt("id_estado_civil") ) );
+                listaCompra.add( new compra(     rs.getInt("id_compra"), 
+                                                    rs.getInt("id_proveedor"), 
+                                                    rs.getDate("fecha_compra"), 
+                                                    rs.getString("numero_factura"), 
+                                                    rs.getDouble("monto_total")));
+                                                    
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaPersonas;
+        return listaCompra;
        
     }
     
     
-    public persona seleccionaPorID(int IDPersona){
+    public compra seleccionaPorID(int IDCompra){
         
-        persona nuevap=null;
+        compra nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDCompra);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new persona(   rs.getInt("id_persona"), 
-                                        rs.getString("primer_nombre"), 
-                                        rs.getString("segundo_nombre"), 
-                                        rs.getString("primer_apellido"), 
-                                        rs.getString("segundo_apellido"), 
-                                        rs.getInt("id_genero"), 
-                                        rs.getDate("Date fecha_de_nacimiento"), 
-                                        rs.getInt("id_estado_civil") );
+                nuevap = new compra(   rs.getInt("id_compra"), 
+                                                    rs.getInt("id_proveedor"), 
+                                                    rs.getDate("fecha_compra"), 
+                                                    rs.getString("numero_factura"), 
+                                                    rs.getDouble("monto_total"));
             }
             
         } catch (Exception ex) {
@@ -114,14 +108,14 @@ public class compraDAO {
     }
     
     
-    public boolean elimina(int IDPersona){
+    public boolean elimina(int IDCompra){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDCompra);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -132,19 +126,15 @@ public class compraDAO {
     }
 
     
-    public boolean actualiza(persona p){
+    public boolean actualiza(compra com){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            ps.setInt(8, p.getId_persona());
+           ps.setInt(1, com.getId_proveedor());
+            ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
+            ps.setString(3, com.getNumero_factura());
+            ps.setDouble(4, com.getMonto_total());
+            ps.setInt(5, com.getId_compra());
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
