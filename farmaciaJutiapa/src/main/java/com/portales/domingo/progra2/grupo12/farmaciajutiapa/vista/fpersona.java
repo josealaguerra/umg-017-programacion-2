@@ -398,7 +398,7 @@ public class fpersona extends javax.swing.JFrame {
             this.txtsegundo_nombre.setText("");
             this.txtprimer_apellido.setText("");
             this.txtsegundo_apellido.setText("");
-            this.txtfecha_de_nacimiento.setText("");
+            this.txtfecha_de_nacimiento.setText( Util.obtieneFechaNac() );
         }catch(Exception e){
             Util.printException("fpersona.limpiaCampos", e);
         }                
@@ -456,9 +456,9 @@ public class fpersona extends javax.swing.JFrame {
                                     this.txtsegundo_nombre.getText(),
                                     this.txtprimer_apellido.getText(),
                                     this.txtsegundo_apellido.getText(),
-                                    this.cbxid_genero.getSelectedIndex(),
+                                    Util.int2cbx( this.cbxid_genero.getSelectedIndex() ),
                                     Util.str2date(this.txtfecha_de_nacimiento.getText()),
-                                    this.cbxid_estado_civil.getSelectedIndex());
+                                    Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ));
             
             if ( pDAO.inserta(miPersona) ){
                 JOptionPane.showMessageDialog(null, "Usuario ingresado");

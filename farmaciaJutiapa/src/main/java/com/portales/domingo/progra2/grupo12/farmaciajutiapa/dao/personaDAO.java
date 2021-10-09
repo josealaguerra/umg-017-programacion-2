@@ -26,7 +26,7 @@ public class personaDAO {
     private static final String cnSQLTabla="persona";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla;
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
 
@@ -46,12 +46,14 @@ public class personaDAO {
             ps.setString(2, p.getSegundo_nombre());
             ps.setString(3, p.getPrimer_apellido());
             ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
+            ps.setInt(5, p.getId_genero() );
             ps.setDate(6, Util.utilDate2sqlDate( p.getFecha_de_nacimiento() )) ;
-            ps.setInt(7, p.getId_estado_civil());
+            ps.setInt(7, p.getId_estado_civil()  );
             filaInsertada= ( ps.executeUpdate() >0) ;
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("personaDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("personaDAO.inserta", e);
         }
         return filaInsertada;
         
@@ -79,8 +81,10 @@ public class personaDAO {
                                                     rs.getInt("id_estado_civil") ) );
             }
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("personaDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("personaDAO.seleccionaTodo", e);
         }
         return listaPersonas;
        
@@ -108,8 +112,10 @@ public class personaDAO {
                                         rs.getInt("id_estado_civil") );
             }
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("personaDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("personaDAO.seleccionaPorID", e);
         }
         return nuevap;
        
@@ -126,8 +132,10 @@ public class personaDAO {
             ps.setInt(1, IDPersona);
             filaEliminada=( ps.executeUpdate() > 0);
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException ex) {
+            Util.printSQLException("personaDAO.elimina", ex);
+        }catch (Exception e) {
+            Util.printException("personaDAO.elimina", e);
         }
         return filaEliminada;
        
@@ -149,8 +157,10 @@ public class personaDAO {
             ps.setInt(8, p.getId_persona());
             filaActualizada = ( ps.executeUpdate() > 0);
             
-        } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (SQLException ex) {
+            Util.printSQLException("personaDAO.actualiza", ex);
+        }catch (Exception e) {
+            Util.printException("personaDAO.actualiza", e);
         }
         
         return filaActualizada;
