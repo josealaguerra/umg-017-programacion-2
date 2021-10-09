@@ -11,6 +11,8 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.personaDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -38,6 +40,17 @@ public class fpersona extends javax.swing.JFrame {
         limpiaCampos();
         llenaComboBoxGenero();
         llenaComboBoxEstadoCivil();
+
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(pDAO!=null)
+                    pDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });        
     }
 
     /**
@@ -73,7 +86,7 @@ public class fpersona extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento Persona");
 
         lblid_persona.setText("ID persona:");
@@ -158,6 +171,11 @@ public class fpersona extends javax.swing.JFrame {
         );
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -268,17 +286,39 @@ public class fpersona extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void TablaDatosPersonaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosPersonaMouseClicked
-        fila = TablaDatosPersona.getSelectedRow();
-        if(fila == -1){
-            JOptionPane.showMessageDialog(null, "Persona no seleccionada");
-        }else{
-            this.txtid_persona.setText((String)TablaDatosPersona.getValueAt(fila,0));
-            this.txtprimer_nombre.setText((String)TablaDatosPersona.getValueAt(fila,1));
-            this.txtsegundo_nombre.setText((String)TablaDatosPersona.getValueAt(fila,2));
-            this.txtprimer_apellido.setText((String)TablaDatosPersona.getValueAt(fila,3));
-            this.txtsegundo_apellido.setText((String)TablaDatosPersona.getValueAt(fila,4));
-            this.txtfecha_de_nacimiento.setText((String)TablaDatosPersona.getValueAt(fila,5));
-        }
+        try{    
+            fila = TablaDatosPersona.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Persona no seleccionada");
+            }else{
+                this.txtid_persona.setText((String)TablaDatosPersona.getValueAt(fila,0).toString());
+                this.txtprimer_nombre.setText((String)TablaDatosPersona.getValueAt(fila,1));
+                this.txtsegundo_nombre.setText((String)TablaDatosPersona.getValueAt(fila,2));
+                this.txtprimer_apellido.setText((String)TablaDatosPersona.getValueAt(fila,3));
+                this.txtsegundo_apellido.setText((String)TablaDatosPersona.getValueAt(fila,4));
+                
+                int generoID = Util.str2int( (String)TablaDatosPersona.getValueAt(fila,5).toString() );
+                int maxIDgenero=this.cbxid_genero.getItemCount()-1;
+                if(generoID >maxIDgenero){
+                    generoID=maxIDgenero;
+                }
+                
+                this.cbxid_genero.setSelectedIndex( generoID );
+                
+                String fecha=(String)TablaDatosPersona.getValueAt(fila,6).toString();
+                
+                this.txtfecha_de_nacimiento.setText(fecha);
+                
+                int estadoCivilID = Util.str2int( (String)TablaDatosPersona.getValueAt(fila,5).toString() );
+                int maxIDestadoCivil=this.cbxid_estado_civil.getItemCount()-1;
+                if(estadoCivilID >maxIDestadoCivil){
+                    estadoCivilID=maxIDestadoCivil;
+                }                
+                this.cbxid_estado_civil.setSelectedIndex( Util.str2int( (String)TablaDatosPersona.getValueAt(fila,7).toString() ) );
+            }
+        }catch(Exception e){
+            Util.printException("fpersona.TablaDatosPersonaMouseClicked", e);
+        }        
     }//GEN-LAST:event_TablaDatosPersonaMouseClicked
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -288,6 +328,10 @@ public class fpersona extends javax.swing.JFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,10 +450,15 @@ public class fpersona extends javax.swing.JFrame {
     
     
     public void limpiaTabla(){
+        int filaRestante=0;        
         try{        
             for(int i=0;i<=TablaDatosPersona.getRowCount();i++){
                 modelo.removeRow(i);
                 i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }                
             }
         }catch(Exception e){
             Util.printException("fpersona.limpiaTabla", e);
@@ -438,7 +487,6 @@ public class fpersona extends javax.swing.JFrame {
                 pObj[6] = p.getFecha_de_nacimiento();
                 pObj[7] = p.getId_estado_civil();
                 modelo.addRow(pObj);
-
             }
             TablaDatosPersona.setModel(modelo);
         }catch(Exception e){
@@ -466,8 +514,7 @@ public class fpersona extends javax.swing.JFrame {
                 limpiaCampos();
                 llenaListado();
             }
-                    
-            
+
         }catch(Exception e){
             Util.printException("fpersona.agregar", e);
         }
@@ -485,7 +532,7 @@ public class fpersona extends javax.swing.JFrame {
                                     this.cbxid_estado_civil.getSelectedIndex());
             
             if ( pDAO.actualiza(miPersona) ){
-                JOptionPane.showMessageDialog(null, "Persona actualizada");
+                 JOptionPane.showMessageDialog(null, "Persona actualizada");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
@@ -504,7 +551,7 @@ public class fpersona extends javax.swing.JFrame {
             if(fila == -1){
                 JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
             }else{
-                if ( pDAO.elimina( Util.str2int((String)TablaDatosPersona.getValueAt(fila,0)) ) ){
+                if ( pDAO.elimina( Util.str2int((String)TablaDatosPersona.getValueAt(fila,0).toString()) ) ){
                     JOptionPane.showMessageDialog(null, "Persona eliminada");
                     limpiaTabla();
                     limpiaCampos();

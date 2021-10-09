@@ -338,7 +338,6 @@ public class facceso extends javax.swing.JFrame {
                 pObj[1] = p.getNombre_acceso();
                 pObj[2] = p.getPagina_acceso();
                 modelo.addRow(pObj);
-
             }
             TablaDatosAcceso.setModel(modelo);
         }catch(Exception e){

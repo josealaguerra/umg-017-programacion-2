@@ -156,5 +156,12 @@ public class Util {
     }
     
             
-            
+    /***
+     * Convierte el ID obtenido de un combo box en STRING (que empieza en cero), en el verdadero ID (ID de la tabla)
+     * @param id_genero - ID obtenido del combo box 
+     * @return ID que se usara para insertar en la tabla
+     */
+    public static int str2cbx(String id_genero) {
+        return int2cbx( str2int( id_genero ) );
+    }            
 }

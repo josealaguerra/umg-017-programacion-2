@@ -28,16 +28,22 @@ public class personaDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla;
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
 
-    
+    /***
+     * Constructor personaDAO
+     * @throws Exception 
+     */    
     public personaDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
+    /***
+     * Inserta un registro en la tabla persona
+     * @param acc - objeto de la clase "acceso"
+     * @return verdadero, si inserto correctamente en la tabla acceso
+     */    
     public boolean inserta(persona p){
-        
         boolean filaInsertada=false;
         PreparedStatement ps = null;
 
@@ -57,10 +63,12 @@ public class personaDAO {
             Util.printException("personaDAO.inserta", e);
         }
         return filaInsertada;
-        
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla persona
+     * @return listado de personas
+     */
     public List<persona> seleccionaTodo(){
         List<persona> listaPersonas=null;
         persona nuevap=null;
@@ -88,12 +96,14 @@ public class personaDAO {
             Util.printException("personaDAO.seleccionaTodo", e);
         }
         return listaPersonas;
-       
     }
     
-    
+    /***
+     * Selecciona una persona, según su ID
+     * @param IDAcceso
+     * @return un objeto de persona
+     */    
     public persona seleccionaPorID(int IDPersona){
-        
         persona nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
@@ -119,12 +129,14 @@ public class personaDAO {
             Util.printException("personaDAO.seleccionaPorID", e);
         }
         return nuevap;
-       
     }
     
-    
+    /***
+     * Elimina una persona según el ID enviado.
+     * @param IDAcceso
+     * @return verdadero si lo logro eliminar
+     */
     public boolean elimina(int IDPersona){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -138,11 +150,14 @@ public class personaDAO {
         }catch (Exception e) {
             Util.printException("personaDAO.elimina", e);
         }
-        return filaEliminada;
-       
+        return filaEliminada;       
     }
 
-    
+    /***
+     * Modifica la informacion de la persona enviado por parametro.
+     * @param acc
+     * @return verdadero si modifico correctamente
+     */
     public boolean actualiza(persona p){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -152,9 +167,9 @@ public class personaDAO {
             ps.setString(2, p.getSegundo_nombre());
             ps.setString(3, p.getPrimer_apellido());
             ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
+            ps.setInt(5, p.getId_genero()-1);
+            ps.setDate(6, Util.utilDate2sqlDate( p.getFecha_de_nacimiento() ));
+            ps.setInt(7, p.getId_estado_civil()-1);
             ps.setInt(8, p.getId_persona());
             filaActualizada = ( ps.executeUpdate() > 0);
             
@@ -168,7 +183,17 @@ public class personaDAO {
        
     }
 
-   
-    
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("personaDAO.cierra", e);
+        }        
+    }
+
 }
     
