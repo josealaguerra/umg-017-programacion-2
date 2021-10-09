@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 public class proveedorDAO {
 
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="persona";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    private static final String cnSQLTabla="proveedor";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_empresa,id_persona) values (?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_proveedor, id_empresa,id_persona FROM "+cnSQLTabla+" WHERE id_proveedor = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_proveedor, id_empresa,id_persona FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_proveedor = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_proveedor= ?, id_empresa= ?, id_persona= ? WHERE id_proveedor = ? ";
 
     
     public proveedorDAO() throws Exception {
@@ -35,19 +35,15 @@ public class proveedorDAO {
     }
 
     
-    public void inserta(persona p){
+    public void inserta(proveedor prov){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            //rs=ps.executeQuery();
+            ps.setInt(1, prov.getId_empresa());
+            ps.setInt(2, prov.getId_persona());
+            ps.setInt(3, prov.getId_proveedor());
+            
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,54 +51,45 @@ public class proveedorDAO {
     }
         
     
-    public List<persona> seleccionaTodo(){
-        List<persona> listaPersonas=null;
-        persona nuevap=null;
+    public List<proveedor> seleccionaTodo(){
+        List<proveedor> listaProveedor=null;
+        proveedor nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaPersonas=new ArrayList<>();
+            listaProveedor=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaPersonas.add( new persona(     rs.getInt("id_persona"), 
-                                                    rs.getString("primer_nombre"), 
-                                                    rs.getString("segundo_nombre"), 
-                                                    rs.getString("primer_apellido"), 
-                                                    rs.getString("segundo_apellido"), 
-                                                    rs.getInt("id_genero"), 
-                                                    rs.getDate("Date fecha_de_nacimiento"), 
-                                                    rs.getInt("id_estado_civil") ) );
+                listaProveedor.add( new proveedor(  rs.getInt("id_proveedor"), 
+                                                    rs.getInt("id_empresa"), 
+                                                    rs.getInt("id_persona")));
+                                                   
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaPersonas;
+        return listaProveedor;
        
     }
     
     
-    public persona seleccionaPorID(int IDPersona){
+    public proveedor seleccionaPorID(int IDProveedor){
         
-        persona nuevap=null;
+        proveedor nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDProveedor);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new persona(   rs.getInt("id_persona"), 
-                                        rs.getString("primer_nombre"), 
-                                        rs.getString("segundo_nombre"), 
-                                        rs.getString("primer_apellido"), 
-                                        rs.getString("segundo_apellido"), 
-                                        rs.getInt("id_genero"), 
-                                        rs.getDate("Date fecha_de_nacimiento"), 
-                                        rs.getInt("id_estado_civil") );
+                nuevap = new proveedor(             rs.getInt("id_proveedor"), 
+                                                    rs.getInt("id_empresa"), 
+                                                    rs.getInt("id_persona"));
             }
             
         } catch (Exception ex) {
@@ -113,14 +100,14 @@ public class proveedorDAO {
     }
     
     
-    public boolean elimina(int IDPersona){
+    public boolean elimina(int IDProveedor){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDProveedor);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -131,19 +118,15 @@ public class proveedorDAO {
     }
 
     
-    public boolean actualiza(persona p){
+    public boolean actualiza(proveedor prov){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            ps.setInt(8, p.getId_persona());
+            ps.setInt(1, prov.getId_empresa());
+            ps.setInt(2, prov.getId_persona());
+            ps.setInt(3, prov.getId_proveedor());
+            
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

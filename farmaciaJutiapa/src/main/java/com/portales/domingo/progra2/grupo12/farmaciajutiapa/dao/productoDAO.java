@@ -23,11 +23,11 @@ public class productoDAO {
     
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_producto= ?, nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
 
     
     public productoDAO() throws Exception {
@@ -40,10 +40,10 @@ public class productoDAO {
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
+            ps.setString(1, prod.getNombre_producto());
+            ps.setInt(2, prod.getId_tipo_producto());
+            ps.setInt(3, prod.getId_marca_producto());
+             ps.setInt(4, prod.getId_producto());
 
             //rs=ps.executeQuery();
         } catch (SQLException ex) {
@@ -128,7 +128,7 @@ public class productoDAO {
             ps.setString(1, prod.getNombre_producto());
             ps.setInt(2, prod.getId_tipo_producto());
             ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+             ps.setInt(4, prod.getId_producto());        
        
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,28 +23,31 @@ import java.util.logging.Logger;
  */
 public class ofertaDAO {
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLTabla="oferta";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_marca_producto, id_tipo_producto, id_producto,porcentaje_descuento,fecha_inicio,fecha_final) values (?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_oferta, id_marca_producto, id_tipo_producto, id_producto,porcentaje_descuento,fecha_inicio,fecha_final FROM "+cnSQLTabla+" WHERE id_oferta = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_oferta, id_marca_producto, id_tipo_producto, id_producto,porcentaje_descuento,fecha_inicio,fecha_final FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_oferta = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_oferta = ?, id_marca_producto = ?, id_tipo_producto = ?, id_producto = ?,porcentaje_descuento = ?, fecha_inicio = ?, fecha_final = ? WHERE id_oferta= ? ";
 
-    
+
     public ofertaDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
     
-    public void inserta(producto prod){
+    public void inserta(oferta of){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
+            ps.setInt(1, of.getId_marca_producto());
+            ps.setInt(2, of.getId_tipo_producto());
+            ps.setInt(3, of.getId_producto());
+            ps.setDouble(4, of.getPorcentaje_descuento());
+            ps.setDate(5,Util.utilDate2sqlDate(of.getFecha_inicio()));
+            ps.setDate(6, Util.utilDate2sqlDate(of.getFecha_final()));
+            ps.setInt(7, of.getId_oferta());
 
             //rs=ps.executeQuery();
         } catch (SQLException ex) {
@@ -53,45 +57,51 @@ public class ofertaDAO {
     }
         
     
-    public List<producto> seleccionaTodo(){
-        List<producto> listaProductos=null;
+    public List<oferta> seleccionaTodo(){
+        List<oferta> listaOferta=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaProductos=new ArrayList<>();
+            listaOferta=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaProductos.add( new producto(   rs.getInt("id_producto"), 
-                                                    rs.getString("nombre_producto"), 
-                                                    rs.getInt("id_tipo_producto"), 
-                                                    rs.getInt("id_marca_producto") ));
+                listaOferta.add( new oferta(       rs.getInt("id_oferta"),
+                                                   rs.getInt(" id_marca_producto"), 
+                                                   rs.getInt("id_tipo_producto"), 
+                                                   rs.getInt("id_producto"), 
+                                                   rs.getDouble("porcentaje_descuent"), 
+                                                   rs.getDate("fecha_inicio"), 
+                                                   rs.getDate("fecha_final")));
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaProductos;
+        return listaOferta;
        
     }
     
     
-    public producto seleccionaPorID(int IDProducto){
+    public oferta seleccionaPorID(int IDOferta){
         
-        producto nuevoProd=null;
+        oferta nuevoProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDOferta);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new producto(   rs.getInt("id_producto"), 
-                                            rs.getString("nombre_producto"), 
-                                            rs.getInt("id_tipo_producto"), 
-                                            rs.getInt("id_marca_producto") );
+                nuevoProd = new oferta(            rs.getInt("id_oferta"),
+                                                   rs.getInt(" id_marca_producto"), 
+                                                   rs.getInt("id_tipo_producto"), 
+                                                   rs.getInt("id_producto"), 
+                                                   rs.getDouble("porcentaje_descuent"), 
+                                                   rs.getDate("fecha_inicio"), 
+                                                   rs.getDate("fecha_final"));
             }
             
         } catch (Exception ex) {
@@ -102,14 +112,14 @@ public class ofertaDAO {
     }
     
     
-    public boolean elimina(int IDProducto){
+    public boolean elimina(int IDOferta){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDOferta);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -120,15 +130,18 @@ public class ofertaDAO {
     }
 
     
-    public boolean actualiza(producto prod){
+    public boolean actualiza(oferta of){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, prod.getNombre_producto());
-            ps.setInt(2, prod.getId_tipo_producto());
-            ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
+            ps.setInt(1, of.getId_marca_producto());
+            ps.setInt(2, of.getId_tipo_producto());
+            ps.setInt(3, of.getId_producto());
+            ps.setDouble(4, of.getPorcentaje_descuento());
+            ps.setDate(5,Util.utilDate2sqlDate(of.getFecha_inicio()));
+            ps.setDate(6, Util.utilDate2sqlDate(of.getFecha_final()));
+            ps.setInt(7, of.getId_oferta());       
        
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);

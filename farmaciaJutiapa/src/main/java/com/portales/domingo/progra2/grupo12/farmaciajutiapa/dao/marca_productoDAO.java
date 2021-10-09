@@ -21,12 +21,12 @@ import java.util.logging.Logger;
  */
 public class marca_productoDAO {
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLTabla="marca_producto";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_marca_producto) values (?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_marca_producto, nombre_marca_producto FROM "+cnSQLTabla+" WHERE id_marca_producto = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_marca_producto, nombre_marca_producto FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_marca_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_marca_producto = ?, nombre_marca_producto = ? WHERE id_marca_producto = ? ";
 
     
     public marca_productoDAO() throws Exception {
@@ -34,15 +34,14 @@ public class marca_productoDAO {
     }
 
     
-    public void inserta(producto prod){
+    public void inserta(marca_producto marc){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
+            ps.setString(1, marc.getNombre_marca_producto());
+            ps.setInt(2, marc.getId_marca_producto());
+           
 
             //rs=ps.executeQuery();
         } catch (SQLException ex) {
@@ -52,45 +51,43 @@ public class marca_productoDAO {
     }
         
     
-    public List<producto> seleccionaTodo(){
-        List<producto> listaProductos=null;
+    public List<marca_producto> seleccionaTodo(){
+        List<marca_producto> listaMarProducto=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaProductos=new ArrayList<>();
+            listaMarProducto=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaProductos.add( new producto(   rs.getInt("id_producto"), 
-                                                    rs.getString("nombre_producto"), 
-                                                    rs.getInt("id_tipo_producto"), 
-                                                    rs.getInt("id_marca_producto") ));
+                listaMarProducto.add( new marca_producto(   rs.getInt("id_marca_producto"), 
+                                                    rs.getString("nombre_marca_producto"))); 
+                                                    
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaProductos;
+        return listaMarProducto;
        
     }
     
     
-    public producto seleccionaPorID(int IDProducto){
+    public marca_producto seleccionaPorID(int IDMarcaProduc){
         
-        producto nuevoProd=null;
+        marca_producto nuevoProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDMarcaProduc);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new producto(   rs.getInt("id_producto"), 
-                                            rs.getString("nombre_producto"), 
-                                            rs.getInt("id_tipo_producto"), 
-                                            rs.getInt("id_marca_producto") );
+                nuevoProd = new marca_producto(   rs.getInt("id_marca_producto"), 
+                                            rs.getString("nombre_marca_producto"));
+                                            
             }
             
         } catch (Exception ex) {
@@ -101,14 +98,14 @@ public class marca_productoDAO {
     }
     
     
-    public boolean elimina(int IDProducto){
+    public boolean elimina(int IDMarcaProduc){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDMarcaProduc);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -119,15 +116,14 @@ public class marca_productoDAO {
     }
 
     
-    public boolean actualiza(producto prod){
+    public boolean actualiza(marca_producto marc){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, prod.getNombre_producto());
-            ps.setInt(2, prod.getId_tipo_producto());
-            ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+            ps.setString(1, marc.getNombre_marca_producto());
+            ps.setInt(2, marc.getId_marca_producto());
+                       
        
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);

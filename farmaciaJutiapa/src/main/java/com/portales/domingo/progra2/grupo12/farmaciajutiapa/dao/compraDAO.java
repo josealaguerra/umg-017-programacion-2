@@ -25,11 +25,11 @@ public class compraDAO {
 
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="compra";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_compra, id_proveedor, fecha_compra, numero_factura, monto_total) values (?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_proveedor, fecha_compra, numero_factura, monto_total) values (?, ?, ?, ?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_compra, id_proveedor, fecha_compra, numero_factura, monto_total FROM "+cnSQLTabla+" WHERE id_cliente = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_compra, id_proveedor, fecha_compra, numero_factura, monto_total FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra= ?, id_proveedor= ?, fecha_compra= ?, numero_factura= ?, monto_total= ? WHERE id_compra = ? ";
 
     
     public compraDAO() throws Exception {

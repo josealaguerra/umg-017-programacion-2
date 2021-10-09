@@ -23,7 +23,7 @@ public class clienteDAO {
 
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="cliente";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_cliente, id_empresa, id_persona) values (?, ?, ?)";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_empresa, id_persona) values (?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_cliente, id_empresa, id_persona FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_cliente, id_empresa, id_persona FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_cliente = ? ";

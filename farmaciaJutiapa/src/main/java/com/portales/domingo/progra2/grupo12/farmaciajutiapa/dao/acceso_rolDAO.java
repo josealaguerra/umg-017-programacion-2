@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class acceso_rolDAO {
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="acceso_rol";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_acceso_rol, id_acceso, id_rol) values (?, ?, ?)";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_acceso, id_rol) values (?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";

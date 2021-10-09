@@ -23,11 +23,11 @@ public class compra_detalleDAO {
 
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="compra_detalle";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad ) values (?, ?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad ) values ( ?, ?, ?, ?, ?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_compra_detalle, id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad FROM "+cnSQLTabla+" WHERE id_compra_detalle = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_compra_detalle, id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_compra_detalle = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra= ?, id_marca_producto= ?, id_tipo_producto= ?, id_producto= ?, precio_unitario_compra= ?, cantidad= ? WHERE id_compra_detalle = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra_detalle = ?, id_compra= ?, id_marca_producto= ?, id_tipo_producto= ?, id_producto= ?, precio_unitario_compra= ?, cantidad= ? WHERE id_compra_detalle = ? ";
 
     
     public compra_detalleDAO() throws Exception {

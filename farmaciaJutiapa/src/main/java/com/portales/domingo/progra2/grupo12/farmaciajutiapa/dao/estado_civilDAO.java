@@ -22,12 +22,12 @@ import java.util.logging.Logger;
  */
 public class estado_civilDAO {
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_producto, nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLTabla="estado_civil";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (abreviatura_estado_civil,nombre_estado_civil) values (?,?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_estado_civil,abreviatura_estado_civil,nombre_estado_civil FROM "+cnSQLTabla+" WHERE id_estado_civil = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_estado_civil,abreviatura_estado_civil,nombre_estado_civil FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_estado_civil = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_estado_civil = ?, abreviatura_estado_civil = ?, nombre_estado_civil = ? WHERE id_estado_civil = ? ";
 
     
     public estado_civilDAO() throws Exception {
@@ -35,15 +35,15 @@ public class estado_civilDAO {
     }
 
     
-    public void inserta(producto prod){
+    public void inserta(estado_civil estado){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, prod.getId_producto());
-            ps.setString(2, prod.getNombre_producto());
-            ps.setInt(3, prod.getId_tipo_producto());
-            ps.setInt(4, prod.getId_marca_producto());
+            ps.setString(1, estado.getAbreviatura_estado_civil());
+            ps.setString(1, estado.getNombre_estado_civil());
+            ps.setInt(2, estado.getId_estado_civil());
+            
 
             //rs=ps.executeQuery();
         } catch (SQLException ex) {
@@ -53,45 +53,43 @@ public class estado_civilDAO {
     }
         
     
-    public List<producto> seleccionaTodo(){
-        List<producto> listaProductos=null;
+    public List<estado_civil> seleccionaTodo(){
+        List<estado_civil> listadoEstadoCivil=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaProductos=new ArrayList<>();
+            listadoEstadoCivil=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaProductos.add( new producto(   rs.getInt("id_producto"), 
-                                                    rs.getString("nombre_producto"), 
-                                                    rs.getInt("id_tipo_producto"), 
-                                                    rs.getInt("id_marca_producto") ));
+                listadoEstadoCivil.add( new estado_civil(   rs.getInt("id_estado_civil"), 
+                                                    rs.getString("abreviatura_estado_civil"),
+                                                    rs.getString("nombre_estado_civil")));
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaProductos;
+        return listadoEstadoCivil;
        
     }
     
     
-    public producto seleccionaPorID(int IDProducto){
+    public estado_civil seleccionaPorID(int IDEstadoCivil){
         
-        producto nuevoProd=null;
+        estado_civil nuevoProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDEstadoCivil);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new producto(   rs.getInt("id_producto"), 
-                                            rs.getString("nombre_producto"), 
-                                            rs.getInt("id_tipo_producto"), 
-                                            rs.getInt("id_marca_producto") );
+                nuevoProd = new estado_civil(   rs.getInt("id_estado_civil"), 
+                                                    rs.getString("abreviatura_estado_civil"),
+                                                    rs.getString("nombre_estado_civil"));
             }
             
         } catch (Exception ex) {
@@ -102,14 +100,14 @@ public class estado_civilDAO {
     }
     
     
-    public boolean elimina(int IDProducto){
+    public boolean elimina(int IDEstadoCivil){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDProducto);
+            ps.setInt(1, IDEstadoCivil);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -120,15 +118,14 @@ public class estado_civilDAO {
     }
 
     
-    public boolean actualiza(producto prod){
+    public boolean actualiza(estado_civil estado){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, prod.getNombre_producto());
-            ps.setInt(2, prod.getId_tipo_producto());
-            ps.setInt(3, prod.getId_marca_producto());
-            ps.setInt(4, prod.getId_producto());            
+           ps.setString(1, estado.getAbreviatura_estado_civil());
+            ps.setString(1, estado.getNombre_estado_civil());
+            ps.setInt(2, estado.getId_estado_civil());           
        
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 public class tipo_productoDAO {
 
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="persona";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    private static final String cnSQLTabla="tipo_producto";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_tipo_producto) values (?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_tipo_producto, nombre_tipo_producto FROM "+cnSQLTabla+" WHERE id_tipo_producto = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_tipo_producto, nombre_tipo_producto FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_tipo_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_tipo_producto= ? WHERE id_tipo_producto = ? ";
 
     
     public tipo_productoDAO() throws Exception {
@@ -35,19 +35,14 @@ public class tipo_productoDAO {
     }
 
     
-    public void inserta(persona p){
+    public void inserta(tipo_producto tipPro){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            //rs=ps.executeQuery();
+            ps.setString(1, tipPro.getNombre_tipo_producto());
+            ps.setInt(2, tipPro.getId_tipo_producto());
+            
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,54 +50,43 @@ public class tipo_productoDAO {
     }
         
     
-    public List<persona> seleccionaTodo(){
-        List<persona> listaPersonas=null;
-        persona nuevap=null;
+    public List<tipo_producto> seleccionaTodo(){
+        List<tipo_producto> listaTipo_pro=null;
+        tipo_producto nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaPersonas=new ArrayList<>();
+            listaTipo_pro=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaPersonas.add( new persona(     rs.getInt("id_persona"), 
-                                                    rs.getString("primer_nombre"), 
-                                                    rs.getString("segundo_nombre"), 
-                                                    rs.getString("primer_apellido"), 
-                                                    rs.getString("segundo_apellido"), 
-                                                    rs.getInt("id_genero"), 
-                                                    rs.getDate("Date fecha_de_nacimiento"), 
-                                                    rs.getInt("id_estado_civil") ) );
+                listaTipo_pro.add( new tipo_producto(     rs.getInt("id_tipo_producto"), 
+                                                          rs.getString("nombre_tipo_producto")));
+                                                    
             }
             
         } catch (Exception ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaPersonas;
+        return listaTipo_pro;
        
     }
     
     
-    public persona seleccionaPorID(int IDPersona){
+    public tipo_producto seleccionaPorID(int IDTipPro){
         
-        persona nuevap=null;
+        tipo_producto nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDTipPro);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new persona(   rs.getInt("id_persona"), 
-                                        rs.getString("primer_nombre"), 
-                                        rs.getString("segundo_nombre"), 
-                                        rs.getString("primer_apellido"), 
-                                        rs.getString("segundo_apellido"), 
-                                        rs.getInt("id_genero"), 
-                                        rs.getDate("Date fecha_de_nacimiento"), 
-                                        rs.getInt("id_estado_civil") );
+                nuevap = new tipo_producto(   rs.getInt("id_tipo_producto"), 
+                                              rs.getString("nombre_tipo_producto"));
             }
             
         } catch (Exception ex) {
@@ -113,14 +97,14 @@ public class tipo_productoDAO {
     }
     
     
-    public boolean elimina(int IDPersona){
+    public boolean elimina(int IDTipPro){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDTipPro);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
@@ -131,19 +115,13 @@ public class tipo_productoDAO {
     }
 
     
-    public boolean actualiza(persona p){
+    public boolean actualiza(tipo_producto tipPro){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            ps.setInt(8, p.getId_persona());
+            ps.setString(1, tipPro.getNombre_tipo_producto());
+            ps.setInt(2, tipPro.getId_tipo_producto());
         } catch (SQLException ex) {
             Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

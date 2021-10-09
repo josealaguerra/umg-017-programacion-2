@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 public class generoDAO {
 
     private ConectaBD cbd = null;
-    private static final String cnSQLTabla="persona";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+"  ";
-    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    private static final String cnSQLTabla="genero";   
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_genero) values (?)";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_genero, nombre_genero FROM "+cnSQLTabla+" WHERE id_genero = ? ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_genero, nombre_genero FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_genero = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_genero= ?, nombre_genero= ?  WHERE id_genero = ? ";
 
     
     public generoDAO() throws Exception {
@@ -35,117 +35,95 @@ public class generoDAO {
     }
 
     
-    public void inserta(persona p){
+    public void inserta(genero p){
     
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            //rs=ps.executeQuery();
+            ps.setString(1, p.getNombre_genero());
+            ps.setInt(2, p.getId_genero());
+            
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(generoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
         
     
-    public List<persona> seleccionaTodo(){
-        List<persona> listaPersonas=null;
-        persona nuevap=null;
+    public List<genero> seleccionaTodo(){
+        List<genero> listaGenero=null;
+        genero nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
-            listaPersonas=new ArrayList<>();
+            listaGenero=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaPersonas.add( new persona(     rs.getInt("id_persona"), 
-                                                    rs.getString("primer_nombre"), 
-                                                    rs.getString("segundo_nombre"), 
-                                                    rs.getString("primer_apellido"), 
-                                                    rs.getString("segundo_apellido"), 
-                                                    rs.getInt("id_genero"), 
-                                                    rs.getDate("Date fecha_de_nacimiento"), 
-                                                    rs.getInt("id_estado_civil") ) );
+                listaGenero.add( new genero(     rs.getInt("id_genero"), 
+                                                    rs.getString("nombre_genero")));
+                                                    
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(generoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listaPersonas;
+        return listaGenero;
        
     }
     
     
-    public persona seleccionaPorID(int IDPersona){
+    public genero seleccionaPorID(int IDGenero){
         
-        persona nuevap=null;
+        genero nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDGenero);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new persona(   rs.getInt("id_persona"), 
-                                        rs.getString("primer_nombre"), 
-                                        rs.getString("segundo_nombre"), 
-                                        rs.getString("primer_apellido"), 
-                                        rs.getString("segundo_apellido"), 
-                                        rs.getInt("id_genero"), 
-                                        rs.getDate("Date fecha_de_nacimiento"), 
-                                        rs.getInt("id_estado_civil") );
+                nuevap = new genero(    rs.getInt("id_genero"), 
+                                                    rs.getString("nombre_genero"));
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(generoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return nuevap;
        
     }
     
     
-    public boolean elimina(int IDPersona){
+    public boolean elimina(int IDGenero){
         
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
-            ps.setInt(1, IDPersona);
+            ps.setInt(1, IDGenero);
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(generoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return filaEliminada;
        
     }
 
     
-    public boolean actualiza(persona p){
+    public boolean actualiza(genero p){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, p.getPrimer_nombre());
-            ps.setString(2, p.getSegundo_nombre());
-            ps.setString(3, p.getPrimer_apellido());
-            ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero());
-            //ps.setDate(6, p.getFecha_de_nacimientoPS());
-            ps.setInt(7, p.getId_estado_civil());
-            ps.setInt(8, p.getId_persona());
+             ps.setString(1, p.getNombre_genero());
+            ps.setInt(2, p.getId_genero());
+            
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(generoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return filaActualizada;

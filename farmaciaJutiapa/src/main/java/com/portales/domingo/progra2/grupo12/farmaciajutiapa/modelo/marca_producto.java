@@ -12,11 +12,8 @@ package com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo;
 public class marca_producto {
     private int id_marca_producto;
     private String nombre_marca_producto;    
-
-    public marca_producto(int id_marca_producto, String nombre_marca_producto) {
-        this.id_marca_producto = id_marca_producto;
-        this.nombre_marca_producto = nombre_marca_producto;
-    }
+   
+    
 
     public int getId_marca_producto() {
         return id_marca_producto;
@@ -34,4 +31,9 @@ public class marca_producto {
         this.nombre_marca_producto = nombre_marca_producto;
     }
 
+
+ public marca_producto(int id_marca_producto, String nombre_marca_producto) {
+        this.id_marca_producto = id_marca_producto;
+        this.nombre_marca_producto = nombre_marca_producto;
+}
 }
