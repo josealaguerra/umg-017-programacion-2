@@ -29,6 +29,8 @@ public class personaDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla;
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
+    boolean actualizaSinFecha=true;
+    private static final String cnSQLActualizaPorIDSinFecha=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, id_estado_civil= ? WHERE id_persona = ? ";    
 
     /***
      * Constructor personaDAO
@@ -161,16 +163,28 @@ public class personaDAO {
     public boolean actualiza(persona p){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
+        String SQLActualizaPersona="";
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
+            if(actualizaSinFecha){
+                SQLActualizaPersona = cnSQLActualizaPorIDSinFecha;
+            }else{
+                SQLActualizaPersona = cnSQLActualizaPorID;
+            }
+            ps = cbd.getConexion().prepareStatement( SQLActualizaPersona );
             ps.setString(1, p.getPrimer_nombre());
             ps.setString(2, p.getSegundo_nombre());
             ps.setString(3, p.getPrimer_apellido());
             ps.setString(4, p.getSegundo_apellido());
-            ps.setInt(5, p.getId_genero()-1);
-            ps.setDate(6, Util.utilDate2sqlDate( p.getFecha_de_nacimiento() ));
-            ps.setInt(7, p.getId_estado_civil()-1);
-            ps.setInt(8, p.getId_persona());
+            ps.setInt(5, p.getId_genero());
+            if(actualizaSinFecha){
+                ps.setInt(6, p.getId_estado_civil());
+                ps.setInt(7, p.getId_persona());
+            }else{
+                ps.setDate(6, Util.utilDate2sqlDate( p.getFecha_de_nacimiento() ));
+                ps.setInt(7, p.getId_estado_civil());
+                ps.setInt(8, p.getId_persona());
+            }
+
             filaActualizada = ( ps.executeUpdate() > 0);
             
         }catch (SQLException ex) {

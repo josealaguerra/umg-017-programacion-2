@@ -297,30 +297,48 @@ public class fpersona extends javax.swing.JFrame {
                 this.txtprimer_apellido.setText((String)TablaDatosPersona.getValueAt(fila,3));
                 this.txtsegundo_apellido.setText((String)TablaDatosPersona.getValueAt(fila,4));
                 
-                int generoID = Util.str2int( (String)TablaDatosPersona.getValueAt(fila,5).toString() );
-                int maxIDgenero=this.cbxid_genero.getItemCount()-1;
-                if(generoID >maxIDgenero){
-                    generoID=maxIDgenero;
-                }
-                
+                //Obtiene el verdadero ID
+                int generoID = convertStr2Cbx((String)TablaDatosPersona.getValueAt(fila,5).toString(), 
+                                                this.cbxid_genero.getItemCount() );
                 this.cbxid_genero.setSelectedIndex( generoID );
                 
+                //Fecha
                 String fecha=(String)TablaDatosPersona.getValueAt(fila,6).toString();
-                
                 this.txtfecha_de_nacimiento.setText(fecha);
                 
-                int estadoCivilID = Util.str2int( (String)TablaDatosPersona.getValueAt(fila,5).toString() );
-                int maxIDestadoCivil=this.cbxid_estado_civil.getItemCount()-1;
-                if(estadoCivilID >maxIDestadoCivil){
-                    estadoCivilID=maxIDestadoCivil;
-                }                
-                this.cbxid_estado_civil.setSelectedIndex( Util.str2int( (String)TablaDatosPersona.getValueAt(fila,7).toString() ) );
+                //Obtiene el verdadero ID
+                int estadoCivilID = convertStr2Cbx( (String)TablaDatosPersona.getValueAt(fila,7).toString(), 
+                                                    this.cbxid_estado_civil.getItemCount() );
+                this.cbxid_estado_civil.setSelectedIndex( estadoCivilID );
             }
         }catch(Exception e){
             Util.printException("fpersona.TablaDatosPersonaMouseClicked", e);
         }        
     }//GEN-LAST:event_TablaDatosPersonaMouseClicked
 
+    
+    
+    private int convertStr2Cbx(String cbxValue, int maxIDCbx){
+        int newID = 0;
+        int newMaxID = 0;
+
+        try{            
+            newID   = Util.str2int( cbxValue ) - 1;
+            newMaxID= maxIDCbx - 1;
+            if(newID < 0){
+                newID = 0;
+            }else if(newID >newMaxID){
+                newID = newMaxID;
+            }        
+        }catch(Exception e){
+            Util.printException("fpersona.TablaDatosPersonaMouseClicked", e);
+        }                
+        
+        return newID;
+    }
+    
+    
+    
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
@@ -527,9 +545,9 @@ public class fpersona extends javax.swing.JFrame {
                                     this.txtsegundo_nombre.getText(),
                                     this.txtprimer_apellido.getText(),
                                     this.txtsegundo_apellido.getText(),
-                                    this.cbxid_genero.getSelectedIndex(),
+                                    Util.int2cbx( this.cbxid_genero.getSelectedIndex() ),
                                     Util.str2date(this.txtfecha_de_nacimiento.getText()),
-                                    this.cbxid_estado_civil.getSelectedIndex());
+                                    Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ) );
             
             if ( pDAO.actualiza(miPersona) ){
                  JOptionPane.showMessageDialog(null, "Persona actualizada");

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * @author josea
  */
 public class Util {
+    private static final String formatDatePrint="yyyy-MM-dd";
     
     
     public static String int2str(int numeroEntero){
@@ -40,7 +41,7 @@ public class Util {
      * @return 
      */
     public static String obtieneFechaNac(){
-        DateFormat format = new SimpleDateFormat("dd-MM-yyyy"); //display your format.
+        DateFormat format = new SimpleDateFormat(formatDatePrint); //display your format.
         Date date = new Date();//puts the date in variable.
         return format.format(date); //returns the format to the date variable.
     }
