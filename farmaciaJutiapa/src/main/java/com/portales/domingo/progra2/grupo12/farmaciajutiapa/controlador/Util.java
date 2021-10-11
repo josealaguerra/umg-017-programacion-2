@@ -165,4 +165,8 @@ public class Util {
     public static int str2cbx(String id_genero) {
         return int2cbx( str2int( id_genero ) );
     }            
+
+    public static double str2double(String text) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

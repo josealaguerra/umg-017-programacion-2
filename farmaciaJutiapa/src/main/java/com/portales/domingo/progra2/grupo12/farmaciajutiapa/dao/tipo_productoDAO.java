@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,33 +30,42 @@ public class tipo_productoDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_tipo_producto = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_tipo_producto= ? WHERE id_tipo_producto = ? ";
 
-    
+    /***
+     * Constructor tipo_productoDAO
+     * @throws Exception 
+     */
     public tipo_productoDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(tipo_producto tipPro){
-    
+    /***
+     * Inserta un registro en la tabla tipo_producto
+     * @param tipPro - objeto de la clase "tipo_producto"
+     * @return verdadero, si inserto correctamente en la tabla tipo_producto
+     */
+    public boolean inserta(tipo_producto tipPro){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setString(1, tipPro.getNombre_tipo_producto());
-            ps.setInt(2, tipPro.getId_tipo_producto());
-            
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("tipo_productoDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla tipo_producto
+     * @return 
+     */
     public List<tipo_producto> seleccionaTodo(){
         List<tipo_producto> listaTipo_pro=null;
-        tipo_producto nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
-        
         try {
             listaTipo_pro=new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
@@ -63,58 +73,65 @@ public class tipo_productoDAO {
             while(rs.next()){
                 listaTipo_pro.add( new tipo_producto(     rs.getInt("id_tipo_producto"), 
                                                           rs.getString("nombre_tipo_producto")));
-                                                    
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("tipo_productoDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.seleccionaTodo", e);
         }
-        return listaTipo_pro;
-       
+        return listaTipo_pro;       
     }
     
-    
+    /***
+     * Selecciona un tipo_producto, según su ID
+     * @param IDTipPro
+     * @return 
+     */
     public tipo_producto seleccionaPorID(int IDTipPro){
-        
-        tipo_producto nuevap=null;
+        tipo_producto nuevoTipoProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
             ps.setInt(1, IDTipPro);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new tipo_producto(   rs.getInt("id_tipo_producto"), 
-                                              rs.getString("nombre_tipo_producto"));
+                nuevoTipoProd = new tipo_producto(  rs.getInt("id_tipo_producto"), 
+                                                    rs.getString("nombre_tipo_producto") );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("tipo_productoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.seleccionaPorID", e);
         }
-        return nuevap;
-       
+        return nuevoTipoProd;
     }
     
-    
+    /***
+     * Elimina el tipo_producto con el ID enviado.
+     * @param IDTipPro
+     * @return 
+     */    
     public boolean elimina(int IDTipPro){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDTipPro);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("tipo_productoDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.elimina", e);
         }
         return filaEliminada;
-       
     }
 
-    
+    /***
+     * Modifica la informacion del tipo_producto enviado por parametro.
+     * @param tipPro
+     * @return 
+     */    
     public boolean actualiza(tipo_producto tipPro){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -122,25 +139,27 @@ public class tipo_productoDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
             ps.setString(1, tipPro.getNombre_tipo_producto());
             ps.setInt(2, tipPro.getId_tipo_producto());
+            filaActualizada = ( ps.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("tipo_productoDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("tipo_productoDAO.cierra", e);
+        }        
     }
-    
+  
 
 }

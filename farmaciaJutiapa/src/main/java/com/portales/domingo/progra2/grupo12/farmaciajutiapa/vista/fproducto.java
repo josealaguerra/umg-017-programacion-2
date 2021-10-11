@@ -5,17 +5,45 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.productoDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.producto;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fproducto extends javax.swing.JFrame {
+    private productoDAO pDAO = null;
+    private producto miProducto=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fproducto
      */
     public fproducto() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(pDAO!=null)
+                    pDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -36,12 +64,12 @@ public class fproducto extends javax.swing.JFrame {
         txtid_tipo_producto = new javax.swing.JTextField();
         lblid_marca_producto = new javax.swing.JLabel();
         txtidmarca_producto = new javax.swing.JTextField();
-        btnAgregar3 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla13 = new javax.swing.JTable();
+        TablaDatosProducto = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,10 +81,10 @@ public class fproducto extends javax.swing.JFrame {
 
         lblid_marca_producto.setText("Id marca producto");
 
-        btnAgregar3.setText("Agregar");
-        btnAgregar3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -81,7 +109,7 @@ public class fproducto extends javax.swing.JFrame {
             }
         });
 
-        Tabla13.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -89,7 +117,12 @@ public class fproducto extends javax.swing.JFrame {
                 " Id Producto", "Nombre Producto", "Id Tipo Producto", "Id Marca Producto"
             }
         ));
-        jScrollPane1.setViewportView(Tabla13);
+        TablaDatosProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosProductoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosProducto);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -113,7 +146,7 @@ public class fproducto extends javax.swing.JFrame {
                                     .addComponent(txtid_tipo_producto)
                                     .addComponent(txtidmarca_producto)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnAgregar3)
+                                .addComponent(btnAgregar)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnModificar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -146,7 +179,7 @@ public class fproducto extends javax.swing.JFrame {
                     .addComponent(txtidmarca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar3)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -169,21 +202,42 @@ public class fproducto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar3ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
 
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosProductoMouseClicked
+        try{
+            fila = TablaDatosProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Producto no seleccionado");
+            }else{
+                String id=(String)TablaDatosProducto.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosProducto.getValueAt(fila,1);
+                String idTipoProd=(String)TablaDatosProducto.getValueAt(fila,2).toString();
+                String idMarcaProd=(String)TablaDatosProducto.getValueAt(fila,3).toString();                
+                this.txtid_producto.setText(id);
+                this.txtnombre_producto.setText(nombre);
+                this.txtid_tipo_producto.setText(idTipoProd);
+                this.txtid_tipo_producto.setText(idMarcaProd);                
+            }
+        }catch(Exception e){
+            Util.printException("fproducto.TablaDatosProductoMouseClicked", e);
+        }  
+    }//GEN-LAST:event_TablaDatosProductoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -222,9 +276,8 @@ public class fproducto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla13;
-    private javax.swing.JButton btnAgregar2;
-    private javax.swing.JButton btnAgregar3;
+    private javax.swing.JTable TablaDatosProducto;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
@@ -239,4 +292,121 @@ public class fproducto extends javax.swing.JFrame {
     private javax.swing.JTextField txtidmarca_producto;
     private javax.swing.JTextField txtnombre_producto;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_producto.setText("");
+            this.txtnombre_producto.setText("");
+            this.txtid_tipo_producto.setText("");
+            this.txtidmarca_producto.setText("");
+        }catch(Exception e){
+            Util.printException("fproducto.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosProducto.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fproducto.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<producto> listaProducto = null;
+        
+        try{
+            pDAO = new productoDAO();
+            listaProducto = new ArrayList<>();
+            listaProducto = pDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[4];
+
+            modelo = (DefaultTableModel)TablaDatosProducto.getModel();
+
+            for(producto p:listaProducto){
+                pObj[0] = p.getId_producto();
+                pObj[1] = p.getNombre_producto();
+                pObj[2] = p.getId_tipo_producto();
+                pObj[3] = p.getId_marca_producto();
+                modelo.addRow(pObj);
+            }
+            TablaDatosProducto.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fproducto.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miProducto = new producto(  Util.str2int( this.txtid_producto.getText()),
+                                        this.txtnombre_producto.getText(),
+                                        Util.str2int( this.txtid_tipo_producto.getText()),
+                                        Util.str2int( this.txtidmarca_producto.getText()) );
+
+            if ( pDAO.inserta(miProducto) ){
+                JOptionPane.showMessageDialog(null, "Producto ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fproducto.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miProducto = new producto(  Util.str2int( this.txtid_producto.getText() ),
+                                        this.txtnombre_producto.getText(),
+                                        Util.str2int( this.txtid_tipo_producto.getText() ),
+                                        Util.str2int( this.txtidmarca_producto.getText() ) );
+            
+            if ( pDAO.actualiza(miProducto) ){
+                JOptionPane.showMessageDialog(null, "Producto actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fproducto.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( pDAO.elimina( Util.str2int((String)TablaDatosProducto.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Producto eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fproducto.eliminar", e);
+        }        
+    }    
+ 
 }

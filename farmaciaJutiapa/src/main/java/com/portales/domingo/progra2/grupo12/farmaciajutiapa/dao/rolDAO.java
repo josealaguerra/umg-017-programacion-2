@@ -6,14 +6,13 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,34 +28,42 @@ public class rolDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_rol = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_rol= ? WHERE id_rol = ? ";
 
-    
+    /***
+     * Constructor rolDAO
+     * @throws Exception 
+     */
     public rolDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(rol paramRol){
-    
+    /***
+     * Inserta un registro en la tabla rol
+     * @param paramRol - objeto de la clase "rol"
+     * @return verdadero, si inserto correctamente en la tabla rol
+     */
+    public boolean inserta(rol paramRol){
+        boolean filaInsertada=false;    
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setString(1, paramRol.getNombre_rol());
-            ps.setInt(2, paramRol.getId_rol());
-
-            //rs=ps.executeQuery();
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("rolDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla rol
+     * @return 
+     */
     public List<rol> seleccionaTodo(){
-        
         List<rol> listaRoles=null;
         PreparedStatement ps = null;
-        ResultSet rs=null;
-        
+        ResultSet rs=null;        
         try {
             listaRoles = new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
@@ -64,17 +71,20 @@ public class rolDAO {
             while(rs.next()){
                 listaRoles.add( new rol( rs.getInt("id_rol"), rs.getString("nombre_rol") ) );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("rolDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.seleccionaTodo", e);
         }
-        return listaRoles;
-       
+        return listaRoles;     
     }
     
-    
+    /***
+     * Selecciona un rol, según su ID
+     * @param IDRol
+     * @return 
+     */
     public rol seleccionaPorID(int IDRol){
-        
         rol nuevoRol=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
@@ -86,33 +96,40 @@ public class rolDAO {
             while(rs.next()){
                 nuevoRol = new rol( rs.getInt("id_rol"), rs.getString("nombre_rol")  );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("rolDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.seleccionaPorID", e);
         }
         return nuevoRol;
        
     }
     
-    
+    /***
+     * Elimina el rol con el ID enviado.
+     * @param IDRol
+     * @return 
+     */
     public boolean elimina(int IDRol){
-        
         boolean filaEliminada=false;
-        PreparedStatement ps = null;
-        
+        PreparedStatement ps = null;        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDRol);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("rolDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.elimina", e);
         }
-        return filaEliminada;
-       
+        return filaEliminada;       
     }
 
-    
+    /***
+     * Modifica la informacion del rol enviado por parametro.
+     * @param paramRol
+     * @return 
+     */
     public boolean actualiza(rol paramRol){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -120,26 +137,26 @@ public class rolDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
             ps.setString(1, paramRol.getNombre_rol());
             ps.setInt(2, paramRol.getId_rol());
-
+            filaActualizada = ( ps.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("rolDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("rolDAO.cierra", e);
+        }        
     }
-    
+  
 
 }

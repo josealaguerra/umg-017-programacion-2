@@ -5,17 +5,52 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.ventaDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.venta;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author josea
  */
 public class fventa_1 extends javax.swing.JFrame {
+    
+    private ventaDAO vDAO = null;
+    private venta miVenta=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fventa
      */
     public fventa_1() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(vDAO!=null)
+                    vDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -38,8 +73,8 @@ public class fventa_1 extends javax.swing.JFrame {
         txtnumero_factura = new javax.swing.JTextField();
         txtmonto_total = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla18 = new javax.swing.JTable();
-        btnAgregar3 = new javax.swing.JButton();
+        TablaDatosVenta = new javax.swing.JTable();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -66,7 +101,7 @@ public class fventa_1 extends javax.swing.JFrame {
 
         txtmonto_total.setText("jTextField5");
 
-        Tabla18.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -74,12 +109,17 @@ public class fventa_1 extends javax.swing.JFrame {
                 "Id Venta", "Id Cliente", "Fecha Venta", "Numero Factura", "Monto Total"
             }
         ));
-        jScrollPane1.setViewportView(Tabla18);
+        TablaDatosVenta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosVentaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosVenta);
 
-        btnAgregar3.setText("Agregar");
-        btnAgregar3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -135,7 +175,7 @@ public class fventa_1 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtmonto_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                        .addComponent(btnAgregar3)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -178,7 +218,7 @@ public class fventa_1 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAgregar3)
+                            .addComponent(btnAgregar)
                             .addComponent(btnModificar)
                             .addComponent(btnEliminar)
                             .addComponent(btnNuevo))))
@@ -188,21 +228,43 @@ public class fventa_1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar3ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosVentaMouseClicked
+       try{
+            fila = TablaDatosVenta.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Venta no seleccionado");
+            }else{
+                String idVenta=(String)TablaDatosVenta.getValueAt(fila,0).toString();
+                String idCliente=(String)TablaDatosVenta.getValueAt(fila,1).toString();
+                String fechaVenta=(String)TablaDatosVenta.getValueAt(fila,2);
+                String numeroFactura=(String)TablaDatosVenta.getValueAt(fila,1);
+                String montoTotal=(String)TablaDatosVenta.getValueAt(fila,2);                
+                this.txtid_venta.setText(idVenta);
+                this.txtid_cliente.setText(idCliente);
+                this.txtfecha_venta.setText(fechaVenta);
+                this.txtnumero_factura.setText(numeroFactura);
+                this.txtmonto_total.setText(montoTotal);
+            }
+        }catch(Exception e){
+            Util.printException("fventa_1.TablaDatosAccesoMouseClicked", e);
+        }      
+    }//GEN-LAST:event_TablaDatosVentaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -241,8 +303,8 @@ public class fventa_1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla18;
-    private javax.swing.JButton btnAgregar3;
+    private javax.swing.JTable TablaDatosVenta;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
@@ -258,4 +320,125 @@ public class fventa_1 extends javax.swing.JFrame {
     private javax.swing.JTextField txtmonto_total;
     private javax.swing.JTextField txtnumero_factura;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_venta.setText("");
+            this.txtid_cliente.setText("");
+            this.txtfecha_venta.setText("");
+            this.txtnumero_factura.setText("");
+            this.txtmonto_total.setText("");
+        }catch(Exception e){
+            Util.printException("fventa_1.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosVenta.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fventa_1.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<venta> listaVentas = null;
+        
+        try{
+            vDAO = new ventaDAO();
+            listaVentas = new ArrayList<>();
+            listaVentas = vDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[5];
+
+            modelo = (DefaultTableModel)TablaDatosVenta.getModel();
+
+            for(venta p:listaVentas){
+                pObj[0] = p.getId_venta();
+                pObj[1] = p.getId_cliente();
+                pObj[2] = p.getFecha_venta();
+                pObj[3] = p.getNumero_factura();
+                pObj[4] = p.getMonto_total();                
+                modelo.addRow(pObj);
+            }
+            TablaDatosVenta.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fventa_1.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miVenta = new venta(Util.str2int( this.txtid_venta.getText() ),
+                                Util.str2int( this.txtid_cliente.getText() ),
+                                Util.str2date( this.txtfecha_venta.getText() ),
+                                this.txtnumero_factura.getText(),
+                                Util.str2double( this.txtmonto_total.getText() ) );
+
+            if ( vDAO.inserta(miVenta) ){
+                JOptionPane.showMessageDialog(null, "Venta ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fventa_1.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miVenta = new venta(Util.str2int( this.txtid_venta.getText() ),
+                                Util.str2int( this.txtid_cliente.getText() ),
+                                Util.str2date( this.txtfecha_venta.getText() ),
+                                this.txtnumero_factura.getText(),
+                                Util.str2double( this.txtmonto_total.getText() ) );
+            
+            if ( vDAO.actualiza(miVenta) ){
+                JOptionPane.showMessageDialog(null, "Venta actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fventa_1.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosVenta.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( vDAO.elimina( Util.str2int((String)TablaDatosVenta.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Venta eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fventa_1.eliminar", e);
+        }        
+    }    
+  
 }

@@ -5,17 +5,47 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.compraDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.compra;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fcompra extends javax.swing.JFrame {
+    
+    private compraDAO cDAO = null;
+    private compra miCompra=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fcompra
      */
     public fcompra() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(cDAO!=null)
+                    cDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -38,12 +68,12 @@ public class fcompra extends javax.swing.JFrame {
         txtnumero_factura = new javax.swing.JTextField();
         lblmonto_total = new javax.swing.JLabel();
         txtmonto_total = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla5 = new javax.swing.JTable();
+        TablaDatosCompra = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,15 +87,35 @@ public class fcompra extends javax.swing.JFrame {
 
         lblmonto_total.setText("Monto total");
 
-        jButton1.setText("Guardar");
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Modificar");
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Eliminar");
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Nuevo");
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
-        Tabla5.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosCompra.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -73,7 +123,15 @@ public class fcompra extends javax.swing.JFrame {
                 "Id Compra", "Id Proveedor", "Fecha Compra", "Numero Factura", "Monto Total"
             }
         ));
-        jScrollPane1.setViewportView(Tabla5);
+        TablaDatosCompra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosCompraMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                TablaDatosCompraMouseEntered(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosCompra);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -98,13 +156,13 @@ public class fcompra extends javax.swing.JFrame {
                             .addComponent(txtmonto_total)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(jButton1)
+                        .addComponent(btnAgregar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btnModificar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                        .addComponent(btnEliminar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4))
+                        .addComponent(btnNuevo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -135,10 +193,10 @@ public class fcompra extends javax.swing.JFrame {
                     .addComponent(txtmonto_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnNuevo))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(196, Short.MAX_VALUE))
@@ -157,6 +215,48 @@ public class fcompra extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void TablaDatosCompraMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosCompraMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TablaDatosCompraMouseEntered
+
+    private void TablaDatosCompraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosCompraMouseClicked
+        try{
+            fila = TablaDatosCompra.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Compra no seleccionado");
+            }else{
+                String idCompra=(String)TablaDatosCompra.getValueAt(fila,0).toString();
+                String idProveedor=(String)TablaDatosCompra.getValueAt(fila,1);
+                String fechaCompra=(String)TablaDatosCompra.getValueAt(fila,2);
+                String numeroFactura=(String)TablaDatosCompra.getValueAt(fila,3);
+                String montoTotal=(String)TablaDatosCompra.getValueAt(fila,4);                
+                this.txtid_compra.setText(idCompra);
+                this.txtid_proveedor.setText(idProveedor);
+                this.txtfecha_compra.setText(fechaCompra);
+                this.txtnumero_factura.setText(numeroFactura);
+                this.txtmonto_total.setText(montoTotal);                
+            }
+        }catch(Exception e){
+            Util.printException("fcompra.TablaDatosCompraMouseClicked", e);
+        }          
+    }//GEN-LAST:event_TablaDatosCompraMouseClicked
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,11 +295,11 @@ public class fcompra extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla5;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTable TablaDatosCompra;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblfecha_compra;
@@ -213,4 +313,125 @@ public class fcompra extends javax.swing.JFrame {
     private javax.swing.JTextField txtmonto_total;
     private javax.swing.JTextField txtnumero_factura;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_compra.setText("");
+            this.txtid_proveedor.setText("");
+            this.txtfecha_compra.setText("");
+            this.txtnumero_factura.setText("");
+            this.txtmonto_total.setText("");
+        }catch(Exception e){
+            Util.printException("fcompra.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosCompra.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcompra.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<compra> listaAccesos = null;
+        
+        try{
+            cDAO = new compraDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = cDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[5];
+
+            modelo = (DefaultTableModel)TablaDatosCompra.getModel();
+
+            for(compra p:listaAccesos){
+                pObj[0] = p.getId_compra();
+                pObj[1] = p.getId_proveedor();
+                pObj[2] = p.getFecha_compra();
+                pObj[3] = p.getNumero_factura();
+                pObj[4] = p.getMonto_total();
+                
+                modelo.addRow(pObj);
+            }            
+            TablaDatosCompra.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fcompra.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miCompra = new compra(  Util.str2int(this.txtid_compra.getText()),
+                                    Util.str2int(this.txtid_proveedor.getText()),
+                                    Util.str2date(this.txtfecha_compra.getText()),
+                                    this.txtnumero_factura.getText(),
+                                    Util.str2double(this.txtmonto_total.getText() ) );
+            
+            if ( cDAO.inserta( miCompra ) ){
+                JOptionPane.showMessageDialog(null, "Compra ingresada");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+ 
+        }catch(Exception e){
+            Util.printException("fcompra.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miCompra = new compra(  Util.str2int(this.txtid_compra.getText()),
+                                    Util.str2int(this.txtid_proveedor.getText()),
+                                    Util.str2date(this.txtfecha_compra.getText()),
+                                    this.txtnumero_factura.getText(),
+                                    Util.str2double(this.txtmonto_total.getText() ) );
+            
+            if ( cDAO.actualiza(miCompra) ){
+                JOptionPane.showMessageDialog(null, "Compra actualizada");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fcompra.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosCompra.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( cDAO.elimina( Util.str2int((String)TablaDatosCompra.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Compra eliminada");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcompra.eliminar", e);
+        }        
+    }    
+ 
 }

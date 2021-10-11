@@ -5,17 +5,46 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.clienteDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.cliente;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Edinson Ruano
  */
 public class fcliente_1 extends javax.swing.JFrame {
+    
+    private clienteDAO cDAO = null;
+    private cliente miCliente=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fcliente
      */
     public fcliente_1() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(cDAO!=null)
+                    cDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -34,12 +63,12 @@ public class fcliente_1 extends javax.swing.JFrame {
         txtid_empresa = new javax.swing.JTextField();
         lblid_persona = new javax.swing.JLabel();
         txtid_persona = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla3 = new javax.swing.JTable();
+        TablaDatosCliente = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,15 +78,35 @@ public class fcliente_1 extends javax.swing.JFrame {
 
         lblid_persona.setText("Id persona");
 
-        jButton1.setText("Guardar");
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Modificar");
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Eliminar");
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Nuevo");
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
-        Tabla3.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -65,7 +114,12 @@ public class fcliente_1 extends javax.swing.JFrame {
                 "Id Cliente", "Id Empresa", "Id Persona"
             }
         ));
-        jScrollPane1.setViewportView(Tabla3);
+        TablaDatosCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosClienteMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosCliente);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,13 +142,13 @@ public class fcliente_1 extends javax.swing.JFrame {
                                     .addComponent(txtid_persona)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
-                                .addComponent(jButton1)
+                                .addComponent(btnAgregar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2)
+                                .addComponent(btnModificar)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton3)
+                                .addComponent(btnEliminar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4)))
+                                .addComponent(btnNuevo)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE))
                 .addContainerGap())
@@ -116,10 +170,10 @@ public class fcliente_1 extends javax.swing.JFrame {
                     .addComponent(lblid_persona))
                 .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnNuevo))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(199, Short.MAX_VALUE))
@@ -141,6 +195,40 @@ public class fcliente_1 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosClienteMouseClicked
+        try{
+            fila = TablaDatosCliente.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Cliente no seleccionado");
+            }else{
+                String idCliente=(String)TablaDatosCliente.getValueAt(fila,0).toString();
+                String idEmpresa=(String)TablaDatosCliente.getValueAt(fila,1).toString();
+                String idPersona=(String)TablaDatosCliente.getValueAt(fila,2).toString();
+                this.txtid_cliente.setText(idCliente);
+                this.txtid_empresa.setText(idEmpresa);
+                this.txtid_persona.setText(idPersona);
+            }
+        }catch(Exception e){
+            Util.printException("fcliente_1.TablaDatosClienteMouseClicked", e);
+        }  
+    }//GEN-LAST:event_TablaDatosClienteMouseClicked
 
     /**
      * @param args the command line arguments
@@ -179,11 +267,11 @@ public class fcliente_1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla3;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTable TablaDatosCliente;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblid_cliente;
@@ -193,4 +281,116 @@ public class fcliente_1 extends javax.swing.JFrame {
     private javax.swing.JTextField txtid_empresa;
     private javax.swing.JTextField txtid_persona;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_cliente.setText("");
+            this.txtid_empresa.setText("");
+            this.txtid_persona.setText("");
+        }catch(Exception e){
+            Util.printException("fcliente_1.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosCliente.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcliente_1.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<cliente> listaCliente = null;
+        
+        try{
+            cDAO = new clienteDAO();
+            listaCliente = new ArrayList<>();
+            listaCliente = cDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[3];
+
+            modelo = (DefaultTableModel)TablaDatosCliente.getModel();
+
+            for(cliente p:listaCliente){
+                pObj[0] = p.getId_cliente();
+                pObj[1] = p.getId_empresa();
+                pObj[2] = p.getId_persona();
+                modelo.addRow(pObj);
+            }
+            TablaDatosCliente.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fcliente_1.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miCliente = new cliente(    Util.str2int(this.txtid_cliente.getText()),
+                                        Util.str2int(this.txtid_empresa.getText()),
+                                        Util.str2int(this.txtid_persona.getText()) );
+            
+            if ( cDAO.inserta( miCliente ) ){
+                JOptionPane.showMessageDialog(null, "Cliente ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fcliente_1.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miCliente = new cliente(    Util.str2int(this.txtid_cliente.getText()),
+                                        Util.str2int(this.txtid_empresa.getText()),
+                                        Util.str2int(this.txtid_persona.getText()) );
+            
+            if ( cDAO.actualiza(miCliente) ){
+                JOptionPane.showMessageDialog(null, "Cliente actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fcliente_1.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosCliente.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( cDAO.elimina( Util.str2int((String)TablaDatosCliente.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Cliente eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcliente_1.eliminar", e);
+        }        
+    }    
+
 }

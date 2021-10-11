@@ -5,17 +5,45 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.acceso_rolDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso_rol;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Edinson Ruano
  */
 public class facceso_rol extends javax.swing.JFrame {
+    
+    private acceso_rolDAO arDAO = null;
+    private acceso_rol miAccesoRol=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form facceso_rol
      */
     public facceso_rol() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(arDAO!=null)
+                    arDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -34,30 +62,52 @@ public class facceso_rol extends javax.swing.JFrame {
         txtid_acceso = new javax.swing.JTextField();
         lblid_rol = new javax.swing.JLabel();
         txtid_rol = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnNuevo = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla2 = new javax.swing.JTable();
+        TablaDatosAccesoRol = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         lblid_acceso_rol.setText("Id acceso rol");
+
+        txtid_acceso_rol.setEditable(false);
 
         lblid_acceso.setText("Id acceso");
 
         lblid_rol.setText("Id rol");
 
-        jButton1.setText("Agregar");
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Modificar");
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Nuevo");
+        btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Eliminar");
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
-        Tabla2.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosAccesoRol.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -65,7 +115,12 @@ public class facceso_rol extends javax.swing.JFrame {
                 "Id Acceso Rol", "Id Acceso", "Id Rol"
             }
         ));
-        jScrollPane1.setViewportView(Tabla2);
+        TablaDatosAccesoRol.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosAccesoRolMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosAccesoRol);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -86,13 +141,13 @@ public class facceso_rol extends javax.swing.JFrame {
                             .addComponent(txtid_rol)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
-                        .addComponent(jButton1)
+                        .addComponent(btnAgregar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(btnModificar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                        .addComponent(btnEliminar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4))
+                        .addComponent(btnNuevo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -115,10 +170,10 @@ public class facceso_rol extends javax.swing.JFrame {
                     .addComponent(lblid_rol))
                 .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnNuevo))
                 .addGap(33, 33, 33)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(195, Short.MAX_VALUE))
@@ -141,6 +196,40 @@ public class facceso_rol extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        limpiaCampos();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosAccesoRolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosAccesoRolMouseClicked
+        try{
+            fila = TablaDatosAccesoRol.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
+            }else{
+                String idAccesoRol=(String)TablaDatosAccesoRol.getValueAt(fila,0).toString();
+                String idAcceso=(String)TablaDatosAccesoRol.getValueAt(fila,1).toString();
+                String idRol=(String)TablaDatosAccesoRol.getValueAt(fila,2).toString();
+                this.txtid_acceso_rol.setText(idAccesoRol);
+                this.txtid_acceso.setText(idAcceso);
+                this.txtid_rol.setText(idRol);
+            }
+        }catch(Exception e){
+            Util.printException("facceso_rol.TablaDatosAccesoRolMouseClicked", e);
+        }     
+    }//GEN-LAST:event_TablaDatosAccesoRolMouseClicked
 
     /**
      * @param args the command line arguments
@@ -179,11 +268,11 @@ public class facceso_rol extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla2;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTable TablaDatosAccesoRol;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblid_acceso;
@@ -193,4 +282,116 @@ public class facceso_rol extends javax.swing.JFrame {
     private javax.swing.JTextField txtid_acceso_rol;
     private javax.swing.JTextField txtid_rol;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_acceso_rol.setText("");
+            this.txtid_acceso.setText("");
+            this.txtid_rol.setText("");
+        }catch(Exception e){
+            Util.printException("facceso_rol.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosAccesoRol.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("facceso_rol.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<acceso_rol> listaAccesos = null;
+        
+        try{
+            arDAO = new acceso_rolDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = arDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[3];
+
+            modelo = (DefaultTableModel)TablaDatosAccesoRol.getModel();
+
+            for(acceso_rol p:listaAccesos){
+                pObj[0] = p.getId_acceso_rol();
+                pObj[1] = p.getId_acceso();
+                pObj[2] = p.getId_rol();
+                modelo.addRow(pObj);
+            }
+            TablaDatosAccesoRol.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("facceso_rol.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
+                                            Util.str2int(this.txtid_acceso.getText()),
+                                            Util.str2int(this.txtid_rol.getText()) );
+            
+            if ( arDAO.inserta( miAccesoRol ) ){
+                JOptionPane.showMessageDialog(null, "Acceso Rol ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("facceso_rol.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
+                                            Util.str2int(this.txtid_acceso.getText()),
+                                            Util.str2int(this.txtid_rol.getText() ));
+            
+            if ( arDAO.actualiza( miAccesoRol ) ){
+                JOptionPane.showMessageDialog(null, "Acceso Rol actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("facceso_rol.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosAccesoRol.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( arDAO.elimina( Util.str2int((String)TablaDatosAccesoRol.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Acceso Rol eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("facceso_rol.eliminar", e);
+        }        
+    }    
+    
 }

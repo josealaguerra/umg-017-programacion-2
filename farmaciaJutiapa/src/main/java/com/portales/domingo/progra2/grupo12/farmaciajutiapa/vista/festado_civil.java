@@ -5,17 +5,46 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.estado_civilDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class festado_civil extends javax.swing.JFrame {
+    
+    private estado_civilDAO ecDAO = null;
+    private estado_civil miEstadoCivil=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form festado_civil
      */
     public festado_civil() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(ecDAO!=null)
+                    ecDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -34,12 +63,12 @@ public class festado_civil extends javax.swing.JFrame {
         txtabreviatura_estado = new javax.swing.JTextField();
         txtnombre_estado_civil = new javax.swing.JTextField();
         lblnombre_estado_civil = new javax.swing.JLabel();
-        btnAgregar2 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla7 = new javax.swing.JTable();
+        TablaDatosEstadoCivil = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,10 +78,10 @@ public class festado_civil extends javax.swing.JFrame {
 
         lblnombre_estado_civil.setText("Nombre estado civil");
 
-        btnAgregar2.setText("Agregar");
-        btnAgregar2.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar2ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -77,7 +106,7 @@ public class festado_civil extends javax.swing.JFrame {
             }
         });
 
-        Tabla7.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosEstadoCivil.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -85,7 +114,12 @@ public class festado_civil extends javax.swing.JFrame {
                 "Id Estado Civil", "Abreviatura Estado Civil", "Nombre Estado Civil"
             }
         ));
-        jScrollPane1.setViewportView(Tabla7);
+        TablaDatosEstadoCivil.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosEstadoCivilMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosEstadoCivil);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -105,7 +139,7 @@ public class festado_civil extends javax.swing.JFrame {
                             .addComponent(txtabreviatura_estado)
                             .addComponent(txtnombre_estado_civil)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAgregar2)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -132,7 +166,7 @@ public class festado_civil extends javax.swing.JFrame {
                     .addComponent(lblnombre_estado_civil))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar2)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -155,21 +189,39 @@ public class festado_civil extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar2ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosEstadoCivilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosEstadoCivilMouseClicked
+        try{
+            fila = TablaDatosEstadoCivil.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Estado civil no seleccionado");
+            }else{
+                String idEstadoCivil=(String)TablaDatosEstadoCivil.getValueAt(fila,0).toString();
+                String abreviatura=(String)TablaDatosEstadoCivil.getValueAt(fila,1);
+                String nombre=(String)TablaDatosEstadoCivil.getValueAt(fila,2);
+                this.txtid_estado_civil.setText(idEstadoCivil);
+                this.txtabreviatura_estado.setText(abreviatura);
+                this.txtnombre_estado_civil.setText(nombre);
+            }
+        }catch(Exception e){
+            Util.printException("festado_civil.TablaDatosEstadoCivilMouseClicked", e);
+        }      
+    }//GEN-LAST:event_TablaDatosEstadoCivilMouseClicked
 
     /**
      * @param args the command line arguments
@@ -208,8 +260,8 @@ public class festado_civil extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla7;
-    private javax.swing.JButton btnAgregar2;
+    private javax.swing.JTable TablaDatosEstadoCivil;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
@@ -222,4 +274,117 @@ public class festado_civil extends javax.swing.JFrame {
     private javax.swing.JTextField txtid_estado_civil;
     private javax.swing.JTextField txtnombre_estado_civil;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_estado_civil.setText("");
+            this.txtabreviatura_estado.setText("");
+            this.txtnombre_estado_civil.setText("");
+        }catch(Exception e){
+            Util.printException("festado_civil.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosEstadoCivil.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("festado_civil.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<estado_civil> listaAccesos = null;
+        
+        try{
+            ecDAO = new estado_civilDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = ecDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[3];
+
+            modelo = (DefaultTableModel)TablaDatosEstadoCivil.getModel();
+
+            for(estado_civil p:listaAccesos){
+                pObj[0] = p.getId_estado_civil();
+                pObj[1] = p.getAbreviatura_estado_civil();
+                pObj[2] = p.getNombre_estado_civil();
+                modelo.addRow(pObj);
+            }
+            TablaDatosEstadoCivil.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("festado_civil.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miEstadoCivil = new estado_civil(   Util.str2int(this.txtid_estado_civil.getText()),
+                                                this.txtabreviatura_estado.getText(),
+                                                this.txtnombre_estado_civil.getText() );
+            
+            if ( ecDAO.inserta( miEstadoCivil ) ){
+                JOptionPane.showMessageDialog(null, "Estado civil ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("festado_civil.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miEstadoCivil = new estado_civil(   Util.str2int(this.txtid_estado_civil.getText()),
+                                                this.txtabreviatura_estado.getText(),
+                                                this.txtnombre_estado_civil.getText() );
+            
+            if ( ecDAO.actualiza(miEstadoCivil) ){
+                JOptionPane.showMessageDialog(null, "Estado civil actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("festado_civil.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosEstadoCivil.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( ecDAO.elimina( Util.str2int((String)TablaDatosEstadoCivil.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Estado civil eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("festado_civil.eliminar", e);
+        }        
+    }    
+  
 }

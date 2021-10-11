@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,98 +30,115 @@ public class usuarioDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_usuario = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_persona= ?, contraseña= ?, id_rol= ? WHERE id_usuario = ? ";
 
-    
+    /***
+     * Constructor usuarioDAO
+     * @throws Exception 
+     */
     public usuarioDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(usuario us){
-    
+    /***
+     * Inserta un registro en la tabla usuario
+     * @param us - objeto de la clase "usuario"
+     * @return verdadero, si inserto correctamente en la tabla usuario
+     */
+    public boolean inserta(usuario us){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setInt(1, us.getId_persona());
             ps.setString(2, us.getContraseña());
             ps.setInt(3, us.getId_rol());
-            ps.setInt(4, us.getId_usuario());
-            
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("usuarioDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla usuario
+     * @return 
+     */
     public List<usuario> seleccionaTodo(){
         List<usuario> listaUsuario=null;
-        usuario nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
-        
         try {
-            listaUsuario=new ArrayList<>();
+            listaUsuario = new ArrayList<>();
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
-            rs=ps.executeQuery();
+            rs = ps.executeQuery();
             while(rs.next()){
-                listaUsuario.add( new usuario(     rs.getInt("id_usuario"), 
-                                                    rs.getInt("id_persona"), 
-                                                    rs.getString("contraseña"), 
-                                                    rs.getInt("id_rol")));
-                                                    
+                listaUsuario.add( new usuario(  rs.getInt("id_usuario"), 
+                                                rs.getInt("id_persona"), 
+                                                rs.getString("contraseña"), 
+                                                rs.getInt("id_rol")));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("usuarioDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.seleccionaTodo", e);
         }
         return listaUsuario;
-       
     }
     
-    
+    /***
+     * Selecciona un usuario, según su ID
+     * @param IDUsuario
+     * @return 
+     */
     public usuario seleccionaPorID(int IDUsuario){
-        
-        usuario nuevap=null;
+        usuario nuevoUsuario=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
             ps.setInt(1, IDUsuario);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new usuario(   rs.getInt("id_usuario"), 
-                                                    rs.getInt("id_persona"), 
-                                                    rs.getString("contraseña"), 
-                                                    rs.getInt("id_rol"));
+                nuevoUsuario = new usuario( rs.getInt("id_usuario"), 
+                                            rs.getInt("id_persona"), 
+                                            rs.getString("contraseña"), 
+                                            rs.getInt("id_rol") );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("usuarioDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.seleccionaPorID", e);
         }
-        return nuevap;
-       
+        return nuevoUsuario;
     }
     
-    
+    /***
+     * Elimina el usuario con el ID enviado.
+     * @param IDUsuario
+     * @return 
+     */
     public boolean elimina(int IDUsuario){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDUsuario);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("usuarioDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.elimina", e);
         }
         return filaEliminada;
        
     }
 
-    
+    /***
+     * Modifica la informacion del usuario enviado por parametro.
+     * @param us
+     * @return 
+     */
     public boolean actualiza(usuario us){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -129,25 +147,28 @@ public class usuarioDAO {
             ps.setString(2, us.getContraseña());
             ps.setInt(3, us.getId_rol());
             ps.setInt(4, us.getId_usuario());
+            filaActualizada = ( ps.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("usuarioDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
     
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("usuarioDAO.cierra", e);
+        }        
     }
-    
+
 
 }

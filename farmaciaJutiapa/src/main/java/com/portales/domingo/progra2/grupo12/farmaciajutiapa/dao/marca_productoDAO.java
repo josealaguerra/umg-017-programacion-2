@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,29 +29,38 @@ public class marca_productoDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_marca_producto = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_marca_producto = ?, nombre_marca_producto = ? WHERE id_marca_producto = ? ";
 
-    
+    /***
+     * Constructor marca_productoDAO
+     * @throws Exception 
+     */
     public marca_productoDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(marca_producto marc){
-    
+    /***
+     * Inserta un registro en la tabla marca_producto
+     * @param acc - objeto de la clase "marca_producto"
+     * @return verdadero, si inserto correctamente en la tabla marca_producto
+     */
+    public boolean inserta(marca_producto paramMarcaProd){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setString(1, marc.getNombre_marca_producto());
-            ps.setInt(2, marc.getId_marca_producto());
-           
-
-            //rs=ps.executeQuery();
+            ps.setString(1, paramMarcaProd.getNombre_marca_producto());
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("marca_productoDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla marca_producto
+     * @return 
+     */
     public List<marca_producto> seleccionaTodo(){
         List<marca_producto> listaMarProducto=null;
         PreparedStatement ps = null;
@@ -62,21 +72,24 @@ public class marca_productoDAO {
             rs=ps.executeQuery();
             while(rs.next()){
                 listaMarProducto.add( new marca_producto(   rs.getInt("id_marca_producto"), 
-                                                    rs.getString("nombre_marca_producto"))); 
-                                                    
+                                                            rs.getString("nombre_marca_producto")) ); 
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("marca_productoDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.seleccionaTodo", e);
         }
         return listaMarProducto;
        
     }
     
-    
+    /***
+     * Selecciona un marca_producto, según su ID
+     * @param IDMarcaProduc
+     * @return 
+     */
     public marca_producto seleccionaPorID(int IDMarcaProduc){
-        
-        marca_producto nuevoProd=null;
+        marca_producto nuevaMarcaProd=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -85,21 +98,23 @@ public class marca_productoDAO {
             ps.setInt(1, IDMarcaProduc);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new marca_producto(   rs.getInt("id_marca_producto"), 
-                                            rs.getString("nombre_marca_producto"));
-                                            
+                nuevaMarcaProd = new marca_producto(    rs.getInt("id_marca_producto"), 
+                                                        rs.getString("nombre_marca_producto") );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("marca_productoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.seleccionaPorID", e);
         }
-        return nuevoProd;
-       
+        return nuevaMarcaProd;
     }
     
-    
+    /***
+     * Elimina el marca_producto con el ID enviado.
+     * @param IDMarcaProduc
+     * @return 
+     */
     public boolean elimina(int IDMarcaProduc){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -107,42 +122,46 @@ public class marca_productoDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDMarcaProduc);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("marca_productoDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.elimina", e);
         }
-        return filaEliminada;
-       
+        return filaEliminada;       
     }
 
-    
-    public boolean actualiza(marca_producto marc){
+    /***
+     * Modifica la informacion del marca_producto enviado por parametro.
+     * @param paramMarcaProd
+     * @return 
+     */
+    public boolean actualiza(marca_producto paramMarcaProd){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
+        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-            ps.setString(1, marc.getNombre_marca_producto());
-            ps.setInt(2, marc.getId_marca_producto());
-                       
-       
+            ps.setString(1, paramMarcaProd.getNombre_marca_producto());
+            ps.setInt(2, paramMarcaProd.getId_marca_producto());
+            filaActualizada = ( ps.executeUpdate() > 0);            
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("marca_productoDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("marca_productoDAO.cierra", e);
+        }        
     }
 
 }

@@ -5,17 +5,46 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.marca_productoDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.marca_producto;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fmarca_producto extends javax.swing.JFrame {
+   
+    private marca_productoDAO mpDAO = null;
+    private marca_producto miMarcaProducto=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fmarca_producto
      */
     public fmarca_producto() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(mpDAO!=null)
+                    mpDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -37,7 +66,7 @@ public class fmarca_producto extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDatosMarcaProducto = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,7 +102,7 @@ public class fmarca_producto extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosMarcaProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -81,7 +110,12 @@ public class fmarca_producto extends javax.swing.JFrame {
                 "Id Marca Producto", "Nombre Marca Producto"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaDatosMarcaProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosMarcaProductoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosMarcaProducto);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,20 +184,38 @@ public class fmarca_producto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
+        agregar();
 
     }//GEN-LAST:event_btnAgregar2ActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
 
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosMarcaProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosMarcaProductoMouseClicked
+        try{
+            fila = TablaDatosMarcaProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Marca producto no seleccionado");
+            }else{
+                String id=(String)TablaDatosMarcaProducto.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosMarcaProducto.getValueAt(fila,1);
+                this.txtid_marca_producto.setText(id);
+                this.txtnombre_marca_producto.setText(nombre);
+            }
+        }catch(Exception e){
+            Util.printException("fmarca_producto.TablaDatosMarcaProductoMouseClicked", e);
+        }         
+    }//GEN-LAST:event_TablaDatosMarcaProductoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -202,16 +254,122 @@ public class fmarca_producto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaDatosMarcaProducto;
     private javax.swing.JButton btnAgregar2;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblid_marca_producto;
     private javax.swing.JLabel lblnombre_marca_producto;
     private javax.swing.JTextField txtid_marca_producto;
     private javax.swing.JTextField txtnombre_marca_producto;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_marca_producto.setText("");
+            this.txtnombre_marca_producto.setText("");
+        }catch(Exception e){
+            Util.printException("fmarca_producto.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosMarcaProducto.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fmarca_producto.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<marca_producto> listaMarcaProd = null;
+        
+        try{
+            mpDAO = new marca_productoDAO();
+            listaMarcaProd = new ArrayList<>();
+            listaMarcaProd = mpDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[2];
+
+            modelo = (DefaultTableModel)TablaDatosMarcaProducto.getModel();
+
+            for(marca_producto p:listaMarcaProd){
+                pObj[0] = p.getId_marca_producto();
+                pObj[1] = p.getNombre_marca_producto();
+                modelo.addRow(pObj);
+            }
+            TablaDatosMarcaProducto.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fmarca_producto.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miMarcaProducto = new marca_producto(   Util.str2int(this.txtid_marca_producto.getText()),
+                                                    this.txtnombre_marca_producto.getText());
+            
+            if ( mpDAO.inserta( miMarcaProducto ) ){
+                JOptionPane.showMessageDialog(null, "Marca producto ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+        }catch(Exception e){
+            Util.printException("fmarca_producto.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miMarcaProducto = new marca_producto(   Util.str2int(this.txtid_marca_producto.getText()),
+                                                    this.txtnombre_marca_producto.getText());
+            
+            if ( mpDAO.actualiza( miMarcaProducto ) ){
+                JOptionPane.showMessageDialog(null, "Marca producto actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+        }catch(Exception e){
+            Util.printException("fmarca_producto.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosMarcaProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( mpDAO.elimina( Util.str2int((String)TablaDatosMarcaProducto.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Marca producto eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fmarca_producto.eliminar", e);
+        }        
+    }    
+   
 }

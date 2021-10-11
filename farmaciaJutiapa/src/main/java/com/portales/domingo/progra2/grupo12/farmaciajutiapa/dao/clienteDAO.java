@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,32 +30,42 @@ public class clienteDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_cliente = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_empresa= ?, id_persona WHERE id_cliente = ? ";
 
-    
+    /***
+     * Constructor clienteDAO
+     * @throws Exception 
+     */
     public clienteDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(cliente c){
-    
+    /***
+     * Inserta un registro en la tabla cliente
+     * @param c - objeto de la clase "cliente"
+     * @return verdadero, si inserto correctamente en la tabla cliente
+     */
+    public boolean inserta(cliente c){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setInt(1, c.getId_empresa());
             ps.setInt(2, c.getId_persona());
-            ps.setInt(3, c.getId_cliente());
-           
-            //rs=ps.executeQuery();
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("clienteDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("clienteDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla cliente
+     * @return 
+     */
     public List<cliente> seleccionaTodo(){
         List<cliente> listaCliente=null;
-        cliente nuevap=null;
+        cliente nuevoCliente=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -63,23 +74,29 @@ public class clienteDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaCliente.add( new cliente(     rs.getInt("id_cliente"), 
-                                                    rs.getInt("id_empresa"), 
-                                                    rs.getInt("id_persona")));
+                listaCliente.add( new cliente(  rs.getInt("id_cliente"), 
+                                                rs.getInt("id_empresa"), 
+                                                rs.getInt("id_persona")) );
                                                    
             }
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("clienteDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("clienteDAO.seleccionaTodo", e);
         }
         return listaCliente;
        
     }
     
-    
+    /***
+     * Selecciona un cliente, según su ID
+     * @param IDCliente
+     * @return 
+     */
     public cliente seleccionaPorID(int IDCliente){
         
-        cliente nuevap=null;
+        cliente nuevoCliente=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -88,21 +105,27 @@ public class clienteDAO {
             ps.setInt(1, IDCliente);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new cliente(   rs.getInt("id_cliente"), 
-                                                    rs.getInt("id_empresa"), 
-                                                    rs.getInt("id_persona"));
+                nuevoCliente = new cliente( rs.getInt("id_cliente"), 
+                                            rs.getInt("id_empresa"), 
+                                            rs.getInt("id_persona") );
             }
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("clienteDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("clienteDAO.seleccionaPorID", e);
         }
-        return nuevap;
+        return nuevoCliente;
        
     }
     
     
+    /***
+     * Elimina el cliente con el ID enviado.
+     * @param IDCliente
+     * @return 
+     */
     public boolean elimina(int IDCliente){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -111,14 +134,20 @@ public class clienteDAO {
             ps.setInt(1, IDCliente);
             filaEliminada=( ps.executeUpdate() > 0);
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("clienteDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("clienteDAO.elimina", e);
         }
         return filaEliminada;
        
     }
 
-    
+    /***
+     * Modifica la informacion del cliente enviado por parametro.
+     * @param c
+     * @return 
+     */
     public boolean actualiza(cliente c){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -135,17 +164,16 @@ public class clienteDAO {
        
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("clienteDAO.cierra", e);
+        }        
     }
-    
-    
+
 }

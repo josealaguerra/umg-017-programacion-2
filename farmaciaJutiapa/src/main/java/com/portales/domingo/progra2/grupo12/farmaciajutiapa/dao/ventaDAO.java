@@ -31,14 +31,21 @@ public class ventaDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_venta = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_cliente= ?, fecha_venta= ?, numero_factura= ?, monto_total= ?  WHERE id_venta = ? ";
 
-    
+    /***
+     * Constructor ventaDAO
+     * @throws Exception 
+     */
     public ventaDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(venta v){
-    
+    /***
+     * Inserta un registro en la tabla venta
+     * @param v - objeto de la clase "venta"
+     * @return verdadero, si inserto correctamente en la tabla venta
+     */
+    public boolean inserta(venta v){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
@@ -46,18 +53,21 @@ public class ventaDAO {
             ps.setDate(2,Util.utilDate2sqlDate(v.getFecha_venta()));
             ps.setString(3, v.getNumero_factura());
             ps.setDouble(4, v.getMonto_total());
-            ps.setInt(5, v.getId_venta());
-           
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+            Util.printSQLException("ventaDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("ventaDAO.inserta", e);
+        } 
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla venta
+     * @return 
+     */
     public List<venta> seleccionaTodo(){
         List<venta> listaVentas=null;
-        venta nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -66,66 +76,75 @@ public class ventaDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaVentas.add( new venta(     rs.getInt("id_venta"), 
-                                                    rs.getInt("id_cliente"), 
-                                                    rs.getDate("fecha_venta"), 
-                                                    rs.getString("numero_factura"), 
-                                                    rs.getDouble("monto_total")));
+                listaVentas.add( new venta( rs.getInt("id_venta"), 
+                                            rs.getInt("id_cliente"), 
+                                            rs.getDate("fecha_venta"), 
+                                            rs.getString("numero_factura"), 
+                                            rs.getDouble("monto_total")));
                                                     
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ventaDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("ventaDAO.seleccionaTodo", e);
         }
         return listaVentas;
        
     }
     
-    
+    /***
+     * Selecciona un venta, según su ID
+     * @param IDVentas
+     * @return 
+     */
     public venta seleccionaPorID(int IDVentas){
-        
-        venta nuevap=null;
+        venta nuevaVenta=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorID);
             ps.setInt(1, IDVentas);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new venta(   rs.getInt("id_venta"), 
+                nuevaVenta = new venta(   rs.getInt("id_venta"), 
                                                     rs.getInt("id_cliente"), 
                                                     rs.getDate("fecha_venta"), 
                                                     rs.getString("numero_factura"), 
                                                     rs.getDouble("monto_total"));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ventaDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("ventaDAO.seleccionaPorID", e);
         }
-        return nuevap;
-       
+        return nuevaVenta;
     }
     
-    
+    /***
+     * Elimina el venta con el ID enviado.
+     * @param IDVentas
+     * @return 
+     */
     public boolean elimina(int IDVentas){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
-        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDVentas);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ventaDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("ventaDAO.elimina", e);
         }
         return filaEliminada;
-       
     }
 
-    
+    /***
+     * Modifica la informacion del venta enviado por parametro.
+     * @param acc
+     * @return 
+     */
     public boolean actualiza(venta v){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -136,25 +155,26 @@ public class ventaDAO {
             ps.setString(3, v.getNumero_factura());
             ps.setDouble(4, v.getMonto_total());
             ps.setInt(5, v.getId_venta());
+            filaActualizada = ( ps.executeUpdate() > 0);            
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("ventaDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("ventaDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("ventaDAO.cierra", e);
+        }        
     }
-    
+  
 
 }

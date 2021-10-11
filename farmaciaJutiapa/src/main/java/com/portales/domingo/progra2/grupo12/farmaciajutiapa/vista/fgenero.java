@@ -5,17 +5,45 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.generoDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.genero;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fgenero extends javax.swing.JFrame {
+    private generoDAO gDAO = null;
+    private genero miGenero=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fgenero
      */
     public fgenero() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(gDAO!=null)
+                    gDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -32,12 +60,12 @@ public class fgenero extends javax.swing.JFrame {
         txtid_genero = new javax.swing.JTextField();
         lblnombre_genero = new javax.swing.JLabel();
         txtnombre_genero = new javax.swing.JTextField();
-        btnAgregar2 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDatosGenero = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,10 +73,10 @@ public class fgenero extends javax.swing.JFrame {
 
         lblnombre_genero.setText("Nombre genero");
 
-        btnAgregar2.setText("Agregar");
-        btnAgregar2.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar2ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -73,7 +101,7 @@ public class fgenero extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosGenero.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -81,7 +109,12 @@ public class fgenero extends javax.swing.JFrame {
                 "Id Genero", "Nombre Genero"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaDatosGenero.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosGeneroMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosGenero);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -99,7 +132,7 @@ public class fgenero extends javax.swing.JFrame {
                             .addComponent(txtid_genero, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                             .addComponent(txtnombre_genero)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAgregar2)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -122,7 +155,7 @@ public class fgenero extends javax.swing.JFrame {
                     .addComponent(lblnombre_genero))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar2)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -147,21 +180,38 @@ public class fgenero extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar2ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        modificar();
 
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosGeneroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosGeneroMouseClicked
+        try{
+            fila = TablaDatosGenero.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Genero no seleccionado");
+            }else{
+                String idGenero=(String)TablaDatosGenero.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosGenero.getValueAt(fila,1);
+                this.txtid_genero.setText(idGenero);
+                this.txtnombre_genero.setText(nombre);
+            }
+        }catch(Exception e){
+            Util.printException("fgenero.TablaDatosGeneroMouseClicked", e);
+        }                
+    }//GEN-LAST:event_TablaDatosGeneroMouseClicked
 
     /**
      * @param args the command line arguments
@@ -200,16 +250,122 @@ public class fgenero extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregar2;
+    private javax.swing.JTable TablaDatosGenero;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblid_genero;
     private javax.swing.JLabel lblnombre_genero;
     private javax.swing.JTextField txtid_genero;
     private javax.swing.JTextField txtnombre_genero;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_genero.setText("");
+            this.txtnombre_genero.setText("");
+        }catch(Exception e){
+            Util.printException("fgenero.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosGenero.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fgenero.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<genero> listaAccesos = null;
+        
+        try{
+            gDAO = new generoDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = gDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[2];
+
+            modelo = (DefaultTableModel)TablaDatosGenero.getModel();
+
+            for(genero p:listaAccesos){
+                pObj[0] = p.getId_genero();
+                pObj[1] = p.getNombre_genero();
+                modelo.addRow(pObj);
+            }
+            TablaDatosGenero.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fgenero.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miGenero = new genero(  Util.str2int(this.txtid_genero.getText()),
+                                    this.txtnombre_genero.getText() );
+
+            if ( gDAO.inserta( miGenero ) ){
+                JOptionPane.showMessageDialog(null, "Genero ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+        }catch(Exception e){
+            Util.printException("fgenero.agregar", e);
+        }  
+    }
+    
+    private void modificar(){
+        try{
+            miGenero = new genero(  Util.str2int(this.txtid_genero.getText()),
+                                    this.txtnombre_genero.getText() );
+            
+            if ( gDAO.actualiza( miGenero ) ){
+                JOptionPane.showMessageDialog(null, "Genero actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+        }catch(Exception e){
+            Util.printException("fgenero.modificar", e);
+        }  
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosGenero.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( gDAO.elimina( Util.str2int((String)TablaDatosGenero.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Genero eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fgenero.eliminar", e);
+        }         
+    }    
+ 
 }

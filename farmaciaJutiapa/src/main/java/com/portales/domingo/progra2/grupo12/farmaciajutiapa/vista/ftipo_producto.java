@@ -5,17 +5,46 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.tipo_productoDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.tipo_producto;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class ftipo_producto extends javax.swing.JFrame {
+    
+    private tipo_productoDAO tpDAO = null;
+    private tipo_producto miTipoProducto=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form ftipo_producto
      */
     public ftipo_producto() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(tpDAO!=null)
+                    tpDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -32,12 +61,12 @@ public class ftipo_producto extends javax.swing.JFrame {
         txttipo_producto = new javax.swing.JTextField();
         lblnombre_tipo_producto = new javax.swing.JLabel();
         txtnombre_tipo_producto = new javax.swing.JTextField();
-        btnAgregar3 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla15 = new javax.swing.JTable();
+        TablaDatosTipoProducto = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,10 +74,10 @@ public class ftipo_producto extends javax.swing.JFrame {
 
         lblnombre_tipo_producto.setText("Nombre tipo producto");
 
-        btnAgregar3.setText("Agregar");
-        btnAgregar3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -73,7 +102,7 @@ public class ftipo_producto extends javax.swing.JFrame {
             }
         });
 
-        Tabla15.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosTipoProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -81,7 +110,12 @@ public class ftipo_producto extends javax.swing.JFrame {
                 "Id Tipo Producto", "Nombre Tipo Producto"
             }
         ));
-        jScrollPane1.setViewportView(Tabla15);
+        TablaDatosTipoProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosTipoProductoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosTipoProducto);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,7 +134,7 @@ public class ftipo_producto extends javax.swing.JFrame {
                             .addComponent(txtnombre_tipo_producto)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addComponent(btnAgregar3)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -125,7 +159,7 @@ public class ftipo_producto extends javax.swing.JFrame {
                     .addComponent(lblnombre_tipo_producto))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar3)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -151,21 +185,37 @@ public class ftipo_producto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar3ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosTipoProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosTipoProductoMouseClicked
+        try{
+            fila = TablaDatosTipoProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Tipo de producto no seleccionado");
+            }else{
+                String id=(String)TablaDatosTipoProducto.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosTipoProducto.getValueAt(fila,1);
+                this.txttipo_producto.setText(id);
+                this.txtnombre_tipo_producto.setText(nombre);
+            }
+        }catch(Exception e){
+            Util.printException("ftipo_producto.TablaDatosAccesoMouseClicked", e);
+        }   
+    }//GEN-LAST:event_TablaDatosTipoProductoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -204,8 +254,8 @@ public class ftipo_producto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla15;
-    private javax.swing.JButton btnAgregar3;
+    private javax.swing.JTable TablaDatosTipoProducto;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
@@ -216,4 +266,113 @@ public class ftipo_producto extends javax.swing.JFrame {
     private javax.swing.JTextField txtnombre_tipo_producto;
     private javax.swing.JTextField txttipo_producto;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txttipo_producto.setText("");
+            this.txtnombre_tipo_producto.setText("");
+        }catch(Exception e){
+            Util.printException("ftipo_producto.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosTipoProducto.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("ftipo_producto.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<tipo_producto> listaTipoProd = null;
+        
+        try{
+            tpDAO = new tipo_productoDAO();
+            listaTipoProd = new ArrayList<>();
+            listaTipoProd = tpDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[2];
+
+            modelo = (DefaultTableModel)TablaDatosTipoProducto.getModel();
+
+            for(tipo_producto p:listaTipoProd){
+                pObj[0] = p.getId_tipo_producto();
+                pObj[1] = p.getNombre_tipo_producto();
+                modelo.addRow(pObj);
+            }
+            TablaDatosTipoProducto.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("ftipo_producto.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miTipoProducto = new tipo_producto( Util.str2int(this.txttipo_producto.getText()),
+                                                this.txtnombre_tipo_producto.getText() );
+            
+            if ( tpDAO.inserta(miTipoProducto) ){
+                JOptionPane.showMessageDialog(null, "Tipo de producto ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("ftipo_producto.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miTipoProducto = new tipo_producto( Util.str2int(this.txttipo_producto.getText()),
+                                                this.txtnombre_tipo_producto.getText() );
+            
+            if ( tpDAO.actualiza(miTipoProducto) ){
+                JOptionPane.showMessageDialog(null, "Tipo de producto actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("ftipo_producto.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosTipoProducto.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( tpDAO.elimina( Util.str2int((String)TablaDatosTipoProducto.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Tipo de producto eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("ftipo_producto.eliminar", e);
+        }        
+    }    
+ 
 }

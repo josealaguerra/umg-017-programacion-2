@@ -5,17 +5,45 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.empresaDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.empresa;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fempresa_1 extends javax.swing.JFrame {
+    private empresaDAO eDAO = null;
+    private empresa miEmpresa=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fempresa
      */
     public fempresa_1() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(eDAO!=null)
+                    eDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -36,12 +64,12 @@ public class fempresa_1 extends javax.swing.JFrame {
         txtrazon_social = new javax.swing.JTextField();
         lblfecha_constitucion = new javax.swing.JLabel();
         txtfecha_constitucion = new javax.swing.JTextField();
-        btnAgregar2 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Tabla6 = new javax.swing.JTable();
+        TablaDatosEmpresa = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,10 +81,10 @@ public class fempresa_1 extends javax.swing.JFrame {
 
         lblfecha_constitucion.setText("Fecha de constirucion");
 
-        btnAgregar2.setText("Agregar");
-        btnAgregar2.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar2ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -81,7 +109,7 @@ public class fempresa_1 extends javax.swing.JFrame {
             }
         });
 
-        Tabla6.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosEmpresa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -89,7 +117,12 @@ public class fempresa_1 extends javax.swing.JFrame {
                 "Id empresa", "Nit", "Razon Social", "Fecha de Constitución"
             }
         ));
-        jScrollPane1.setViewportView(Tabla6);
+        TablaDatosEmpresa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosEmpresaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosEmpresa);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -112,7 +145,7 @@ public class fempresa_1 extends javax.swing.JFrame {
                             .addComponent(txtfecha_constitucion)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addComponent(btnAgregar2)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -145,7 +178,7 @@ public class fempresa_1 extends javax.swing.JFrame {
                     .addComponent(txtfecha_constitucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar2)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -168,21 +201,41 @@ public class fempresa_1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
-       
-    }//GEN-LAST:event_btnAgregar2ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-       
+       eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosEmpresaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosEmpresaMouseClicked
+        try{
+                fila = TablaDatosEmpresa.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Empresa no seleccionado");
+            }else{
+                String id_empresa=(String)TablaDatosEmpresa.getValueAt(fila,0).toString();
+                String nit=(String)TablaDatosEmpresa.getValueAt(fila,1);
+                String razonSocial=(String)TablaDatosEmpresa.getValueAt(fila,2);
+                String fechaDeConstitucion=(String)TablaDatosEmpresa.getValueAt(fila,3);
+                this.txtid_empresa.setText(id_empresa);
+                this.txtnit.setText(nit);
+                this.txtrazon_social.setText(razonSocial);
+                this.txtfecha_constitucion.setText(fechaDeConstitucion);
+            }
+        }catch(Exception e){
+            Util.printException("fempresa_1.TablaDatosEmpresaMouseClicked", e);
+        }                  
+    }//GEN-LAST:event_TablaDatosEmpresaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -221,10 +274,8 @@ public class fempresa_1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Tabla6;
+    private javax.swing.JTable TablaDatosEmpresa;
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JButton btnAgregar1;
-    private javax.swing.JButton btnAgregar2;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
@@ -239,4 +290,121 @@ public class fempresa_1 extends javax.swing.JFrame {
     private javax.swing.JTextField txtnit;
     private javax.swing.JTextField txtrazon_social;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_empresa.setText("");
+            this.txtnit.setText("");
+            this.txtrazon_social.setText("");
+            this.txtfecha_constitucion.setText("");
+        }catch(Exception e){
+            Util.printException("fempresa_1.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosEmpresa.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fempresa_1.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<empresa> listaEmpresa = null;
+        
+        try{
+            eDAO = new empresaDAO();
+            listaEmpresa = new ArrayList<>();
+            listaEmpresa = eDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[4];
+
+            modelo = (DefaultTableModel)TablaDatosEmpresa.getModel();
+
+            for(empresa p:listaEmpresa){
+                pObj[0] = p.getId_empresa();
+                pObj[1] = p.getNit();
+                pObj[2] = p.getRazonSocial();
+                pObj[3] = p.getFechaDeConstitucion();
+                modelo.addRow(pObj);
+            }
+            TablaDatosEmpresa.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fempresa_1.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miEmpresa = new empresa(Util.str2int( this.txtid_empresa.getText() ),
+                                    this.txtnit.getText(),
+                                    this.txtrazon_social.getText(),
+                                    Util.str2date(this.txtfecha_constitucion.getText()) );
+            
+            if ( eDAO.inserta( miEmpresa ) ){
+                JOptionPane.showMessageDialog(null, "Empresa ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fempresa_1.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miEmpresa = new empresa(Util.str2int( this.txtid_empresa.getText() ),
+                                    this.txtnit.getText(),
+                                    this.txtrazon_social.getText(),
+                                    Util.str2date(this.txtfecha_constitucion.getText()) );
+            
+            if ( eDAO.actualiza(miEmpresa) ){
+                JOptionPane.showMessageDialog(null, "Empresa actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fempresa_1.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosEmpresa.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( eDAO.elimina( Util.str2int((String)TablaDatosEmpresa.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Empresa eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fempresa_1.eliminar", e);
+        }        
+    }    
+   
 }

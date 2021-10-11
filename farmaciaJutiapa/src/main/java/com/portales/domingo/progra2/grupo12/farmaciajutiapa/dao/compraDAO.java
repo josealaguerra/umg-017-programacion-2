@@ -31,14 +31,21 @@ public class compraDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra= ?, id_proveedor= ?, fecha_compra= ?, numero_factura= ?, monto_total= ? WHERE id_compra = ? ";
 
-    
+    /***
+     * Constructor accesoDAO
+     * @throws Exception 
+     */    
     public compraDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(compra com){
-    
+     /***
+     * Inserta un registro en la tabla acceso
+     * @param acc - objeto de la clase "acceso"
+     * @return verdadero, si inserto correctamente en la tabla acceso
+     */   
+    public boolean inserta(compra com){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
@@ -46,18 +53,21 @@ public class compraDAO {
             ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
             ps.setString(3, com.getNumero_factura());
             ps.setDouble(4, com.getMonto_total());
-            ps.setInt(5, com.getId_compra());
-//           
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("accesoDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla acceso
+     * @return 
+     */
     public List<compra> seleccionaTodo(){
         List<compra> listaCompra=null;
-        compra nuevap=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -66,25 +76,28 @@ public class compraDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaCompra.add( new compra(     rs.getInt("id_compra"), 
-                                                    rs.getInt("id_proveedor"), 
-                                                    rs.getDate("fecha_compra"), 
-                                                    rs.getString("numero_factura"), 
-                                                    rs.getDouble("monto_total")));
-                                                    
+                listaCompra.add( new compra(    rs.getInt("id_compra"), 
+                                                rs.getInt("id_proveedor"), 
+                                                rs.getDate("fecha_compra"), 
+                                                rs.getString("numero_factura"), 
+                                                rs.getDouble("monto_total")));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaTodo", e);
         }
         return listaCompra;
        
     }
     
-    
+    /***
+     * Selecciona un acceso, según su ID
+     * @param IDAcceso
+     * @return 
+     */    
     public compra seleccionaPorID(int IDCompra){
-        
-        compra nuevap=null;
+        compra nuevaCompra=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -93,23 +106,28 @@ public class compraDAO {
             ps.setInt(1, IDCompra);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevap = new compra(   rs.getInt("id_compra"), 
-                                                    rs.getInt("id_proveedor"), 
-                                                    rs.getDate("fecha_compra"), 
-                                                    rs.getString("numero_factura"), 
-                                                    rs.getDouble("monto_total"));
+                nuevaCompra = new compra(   rs.getInt("id_compra"), 
+                                            rs.getInt("id_proveedor"), 
+                                            rs.getDate("fecha_compra"), 
+                                            rs.getString("numero_factura"), 
+                                            rs.getDouble("monto_total"));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaPorID", e);
         }
-        return nuevap;
+        return nuevaCompra;
        
     }
     
     
+    /***
+     * Elimina el acceso con el ID enviado.
+     * @param IDAcceso
+     * @return 
+     */    
     public boolean elimina(int IDCompra){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -118,14 +136,20 @@ public class compraDAO {
             ps.setInt(1, IDCompra);
             filaEliminada=( ps.executeUpdate() > 0);
             
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.elimina", e);
         }
         return filaEliminada;
        
     }
 
-    
+    /***
+     * Modifica la informacion del acceso enviado por parametro.
+     * @param acc
+     * @return 
+     */
     public boolean actualiza(compra com){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
@@ -136,24 +160,26 @@ public class compraDAO {
             ps.setDouble(4, com.getMonto_total());
             ps.setInt(5, com.getId_compra());
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("accesoDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.actualiza", e);
         }
         
         return filaActualizada;
        
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("accesoDAO.cierra", e);
+        }        
     }
-    
+  
 
 }

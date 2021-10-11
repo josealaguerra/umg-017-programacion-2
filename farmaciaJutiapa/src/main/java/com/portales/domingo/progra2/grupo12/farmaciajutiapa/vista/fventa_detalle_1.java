@@ -5,17 +5,51 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.venta_detalleDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.venta_detalle;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class fventa_detalle_1 extends javax.swing.JFrame {
+    private venta_detalleDAO vdDAO = null;
+    private venta_detalle miVentaDet=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form fventa_detalle
      */
     public fventa_detalle_1() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(vdDAO!=null)
+                    vdDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -43,8 +77,8 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
         lblcantidad_venta = new javax.swing.JLabel();
         txtcantidad_venta = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        btnAgregar3 = new javax.swing.JButton();
+        TablaDatosVentaDetalle = new javax.swing.JTable();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -65,7 +99,7 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
 
         lblcantidad_venta.setText("Cantidad");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosVentaDetalle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -73,12 +107,17 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
                 "Id Venta Detalle", "Id Venta", "Id Marca Producto", "Id Tipo Producto", "Id Producto", "Precio Unitario Venta", "Cantidad"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaDatosVentaDetalle.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosVentaDetalleMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosVentaDetalle);
 
-        btnAgregar3.setText("Agregar");
-        btnAgregar3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -136,7 +175,7 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAgregar3)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -184,7 +223,7 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAgregar3)
+                            .addComponent(btnAgregar)
                             .addComponent(btnModificar)
                             .addComponent(btnEliminar)
                             .addComponent(btnNuevo))))
@@ -205,21 +244,47 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar3ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosVentaDetalleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosVentaDetalleMouseClicked
+        try{
+            fila = TablaDatosVentaDetalle.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Venta detalle no seleccionado");
+            }else{
+                String idVentaDetalle=(String)TablaDatosVentaDetalle.getValueAt(fila,0).toString();
+                String idVenta=(String)TablaDatosVentaDetalle.getValueAt(fila,1);
+                String idMarcaProd=(String)TablaDatosVentaDetalle.getValueAt(fila,2);
+                String idTipoProd=(String)TablaDatosVentaDetalle.getValueAt(fila,3).toString();
+                String idProd=(String)TablaDatosVentaDetalle.getValueAt(fila,4);
+                String precioUnitarioVenta=(String)TablaDatosVentaDetalle.getValueAt(fila,5);
+                String cantidad=(String)TablaDatosVentaDetalle.getValueAt(fila,6);
+                this.txtide_venta_detalle.setText(idVentaDetalle);
+                this.txtid_venta.setText(idVenta);
+                this.txtid_marca_producto_venta.setText(idMarcaProd);
+                this.txtid_tipo_producto_venta.setText(idTipoProd);
+                this.txtid_producto_venta.setText(idProd);
+                this.txtprecio_unitario_venta.setText(precioUnitarioVenta);                
+                this.txtcantidad_venta.setText(cantidad);                                
+            }
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.TablaDatosAccesoMouseClicked", e);
+        } 
+    }//GEN-LAST:event_TablaDatosVentaDetalleMouseClicked
 
     /**
      * @param args the command line arguments
@@ -258,13 +323,13 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregar3;
+    private javax.swing.JTable TablaDatosVentaDetalle;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblcantidad_venta;
     private javax.swing.JLabel lblid_marca_producto_venta;
     private javax.swing.JLabel lblid_producto_venta;
@@ -280,4 +345,133 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
     private javax.swing.JTextField txtide_venta_detalle;
     private javax.swing.JTextField txtprecio_unitario_venta;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtide_venta_detalle.setText("");
+            this.txtid_venta.setText("");
+            this.txtid_marca_producto_venta.setText("");
+            this.txtid_tipo_producto_venta.setText("");
+            this.txtid_producto_venta.setText("");
+            this.txtprecio_unitario_venta.setText("");             
+            this.txtcantidad_venta.setText("");
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosVentaDetalle.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<venta_detalle> listaAccesos = null;
+        
+        try{
+            vdDAO = new venta_detalleDAO();
+            listaAccesos = new ArrayList<>();
+            listaAccesos = vdDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[7];
+
+            modelo = (DefaultTableModel)TablaDatosVentaDetalle.getModel();
+
+            for(venta_detalle p:listaAccesos){
+                pObj[0] = p.getId_venta_detalle();
+                pObj[1] = p.getId_venta();
+                pObj[2] = p.getId_marca_producto();
+                pObj[3] = p.getId_tipo_producto();
+                pObj[4] = p.getId_producto();
+                pObj[5] = p.getPrecio_unitario_venta();
+                pObj[6] = p.getCantidad();                
+                modelo.addRow(pObj);
+            }
+            TablaDatosVentaDetalle.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miVentaDet = new venta_detalle( Util.str2int( this.txtide_venta_detalle.getText() ),
+                                            Util.str2int( this.txtid_venta.getText() ),
+                                            Util.str2int( this.txtid_marca_producto_venta.getText() ),
+                                            Util.str2int( this.txtid_tipo_producto_venta.getText() ),
+                                            Util.str2int( this.txtid_producto_venta.getText() ),
+                                            Util.str2double(this.txtprecio_unitario_venta.getText() ),       
+                                            Util.str2int( this.txtcantidad_venta.getText() ) );
+            
+            if ( vdDAO.inserta(miVentaDet) ){
+                JOptionPane.showMessageDialog(null, "Venta detalle ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miVentaDet = new venta_detalle( Util.str2int( this.txtide_venta_detalle.getText() ),
+                                            Util.str2int( this.txtid_venta.getText() ),
+                                            Util.str2int( this.txtid_marca_producto_venta.getText() ),
+                                            Util.str2int( this.txtid_tipo_producto_venta.getText() ),
+                                            Util.str2int( this.txtid_producto_venta.getText() ),
+                                            Util.str2double(this.txtprecio_unitario_venta.getText() ),       
+                                            Util.str2int( this.txtcantidad_venta.getText() ) );
+            
+            if ( vdDAO.actualiza(miVentaDet) ){
+                JOptionPane.showMessageDialog(null, "Venta detalle actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosVentaDetalle.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( vdDAO.elimina( Util.str2int((String)TablaDatosVentaDetalle.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Venta detalle eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fventa_detalle_1.eliminar", e);
+        }        
+    }    
+  
 }

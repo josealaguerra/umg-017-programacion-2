@@ -5,17 +5,45 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.rolDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.rol;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Edinson Ruano
  */
 public class frol_1 extends javax.swing.JFrame {
+    private rolDAO rDAO = null;
+    private rol miRol=null;
+    private DefaultTableModel modelo=null;
+    private int fila = 0;
 
     /**
      * Creates new form frol
      */
     public frol_1() {
         initComponents();
+        
+        //Permite cerrar la BD cuando se cierra la ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                if(rDAO!=null)
+                    rDAO.cierra();
+                    dispose();
+                    System.exit(0);
+            }
+        });
+
+        llenaListado();
+        limpiaCampos();
     }
 
     /**
@@ -33,11 +61,11 @@ public class frol_1 extends javax.swing.JFrame {
         lblnombre_rol = new javax.swing.JLabel();
         txtnombre_rol = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
-        btnAgregar3 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDatosRol = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,10 +80,10 @@ public class frol_1 extends javax.swing.JFrame {
             }
         });
 
-        btnAgregar3.setText("Agregar");
-        btnAgregar3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
 
@@ -73,7 +101,7 @@ public class frol_1 extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosRol.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -81,7 +109,12 @@ public class frol_1 extends javax.swing.JFrame {
                 "Id Rol", "Nombre Rol"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        TablaDatosRol.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaDatosRolMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TablaDatosRol);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -92,7 +125,7 @@ public class frol_1 extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAgregar3)
+                        .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -122,7 +155,7 @@ public class frol_1 extends javax.swing.JFrame {
                     .addComponent(txtnombre_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar3)
+                    .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
@@ -149,20 +182,36 @@ public class frol_1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+        eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar3ActionPerformed
-
-    }//GEN-LAST:event_btnAgregar3ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        agregar();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
+        modificar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-
+        limpiaCampos();
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void TablaDatosRolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosRolMouseClicked
+        try{
+            fila = TablaDatosRol.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Rol no seleccionado");
+            }else{
+                String id=(String)TablaDatosRol.getValueAt(fila,0).toString();
+                String nombre=(String)TablaDatosRol.getValueAt(fila,1);
+                this.txtid_rol.setText(id);
+                this.txtnombre_rol.setText(nombre);
+            }
+        }catch(Exception e){
+            Util.printException("frol_1.TablaDatosRolMouseClicked", e);
+        }
+    }//GEN-LAST:event_TablaDatosRolMouseClicked
 
     /**
      * @param args the command line arguments
@@ -201,16 +250,125 @@ public class frol_1 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregar3;
+    private javax.swing.JTable TablaDatosRol;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblId_rol;
     private javax.swing.JLabel lblnombre_rol;
     private javax.swing.JTextField txtid_rol;
     private javax.swing.JTextField txtnombre_rol;
     // End of variables declaration//GEN-END:variables
+
+
+    private void limpiaCampos() {
+        try{
+            this.txtid_rol.setText("");
+            this.txtnombre_rol.setText("");
+        }catch(Exception e){
+            Util.printException("frol_1.limpiaCampos", e);
+        }                
+    }
+    
+    
+    public void limpiaTabla(){
+        int filaRestante=0;
+        try{        
+            for(int i=0;i<=TablaDatosRol.getRowCount();i++){
+                modelo.removeRow(i);
+                i = i - 1;
+                filaRestante=modelo.getRowCount();
+                if(filaRestante==0){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            Util.printException("frol_1.limpiaTabla", e);
+        }        
+    }
+
+    private void llenaListado() {
+        List<rol> listaRoles = null;
+        
+        try{
+            rDAO = new rolDAO();
+            listaRoles = new ArrayList<>();
+            listaRoles = rDAO.seleccionaTodo();
+
+            Object[]pObj=new Object[2];
+
+            modelo = (DefaultTableModel)TablaDatosRol.getModel();
+
+            for(rol p:listaRoles){
+                pObj[0] = p.getId_rol();
+                pObj[1] = p.getNombre_rol();
+                modelo.addRow(pObj);
+            }
+            TablaDatosRol.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("frol_1.llenaListado", e);
+        }
+    }
+
+    
+    
+    private void agregar(){
+        
+        try{
+            miRol = new rol(    Util.str2int(this.txtid_rol.getText()),
+                                this.txtnombre_rol.getText() );
+            
+            if ( rDAO.inserta(miRol) ){
+                JOptionPane.showMessageDialog(null, "Rol ingresado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("frol_1.agregar", e);
+        }
+    }
+    
+    private void modificar(){
+        try{
+            miRol = new rol(    Util.str2int(this.txtid_rol.getText()),
+                                this.txtnombre_rol.getText() );
+            
+            if ( rDAO.actualiza(miRol) ){
+                JOptionPane.showMessageDialog(null, "Rol actualizado");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+            }
+
+        }catch(Exception e){
+            Util.printException("frol_1.modificar", e);
+        }
+    }
+    
+    
+
+    private void eliminar(){
+        try{        
+            fila = TablaDatosRol.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( rDAO.elimina( Util.str2int((String)TablaDatosRol.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Rol eliminado");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                }
+            }
+        }catch(Exception e){
+            Util.printException("frol_1.eliminar", e);
+        }        
+    }    
+    
 }

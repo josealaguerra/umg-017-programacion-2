@@ -31,31 +31,40 @@ public class empresaDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_empresa = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_empresa = ?, nit = ?,razonSocial = ?, fechaDeConstitucion = ? WHERE id_empresa = ? ";
 
-    
+    /***
+     * Constructor empresaDAO
+     * @throws Exception 
+     */
     public empresaDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(empresa em){
-    
+    /***
+     * Inserta un registro en la tabla empresa
+     * @param em - objeto de la clase "empresa"
+     * @return verdadero, si inserto correctamente en la tabla empresa
+     */
+    public boolean inserta(empresa em){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
             ps.setString(1, em.getNit());
             ps.setString(2, em.getRazonSocial());
             ps.setDate(3, Util.utilDate2sqlDate(em.getFechaDeConstitucion()));
-            ps.setInt(1, em.getId_empresa());
-            
-
-            //rs=ps.executeQuery();
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("empresaDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla empresa
+     * @return 
+     */
     public List<empresa> seleccionaTodo(){
         List<empresa> listaEmpresa=null;
         PreparedStatement ps = null;
@@ -66,24 +75,27 @@ public class empresaDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
             rs=ps.executeQuery();
             while(rs.next()){
-                listaEmpresa.add( new empresa(   rs.getInt("id_empresa"), 
-                                                    rs.getString("nit"), 
-                                                    rs.getString("razonSocial"),
-                                                    rs.getDate("fechaDeConstitucion")));
-                                                   
+                listaEmpresa.add( new empresa(  rs.getInt("id_empresa"), 
+                                                rs.getString("nit"), 
+                                                rs.getString("razonSocial"),
+                                                rs.getDate("fechaDeConstitucion")));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("empresaDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.seleccionaTodo", e);
         }
         return listaEmpresa;
        
     }
     
-    
+    /***
+     * Selecciona un empresa, según su ID
+     * @param IDEmpresa
+     * @return 
+     */
     public empresa seleccionaPorID(int IDEmpresa){
-        
-        empresa nuevoProd=null;
+        empresa nuevaEmpresa=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -92,22 +104,25 @@ public class empresaDAO {
             ps.setInt(1, IDEmpresa);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new empresa(   rs.getInt("id_empresa"), 
-                                                    rs.getString("nit"), 
-                                                    rs.getString("razonSocial"),
-                                                    rs.getDate("fechaDeConstitucion"));
+                nuevaEmpresa = new empresa( rs.getInt("id_empresa"), 
+                                            rs.getString("nit"), 
+                                            rs.getString("razonSocial"),
+                                            rs.getDate("fechaDeConstitucion"));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("empresaDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.seleccionaPorID", e);
         }
-        return nuevoProd;
-       
+        return nuevaEmpresa;
     }
     
-    
+    /***
+     * Elimina el empresa con el ID enviado.
+     * @param IDEmpresa
+     * @return 
+     */    
     public boolean elimina(int IDEmpresa){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -115,43 +130,47 @@ public class empresaDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDEmpresa);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("empresaDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.elimina", e);
         }
         return filaEliminada;
-       
     }
 
-    
+    /***
+     * Modifica la informacion del empresa enviado por parametro.
+     * @param em
+     * @return 
+     */
     public boolean actualiza(empresa em){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
+        
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
-             ps.setString(1, em.getNit());
+            ps.setString(1, em.getNit());
             ps.setString(2, em.getRazonSocial());
             ps.setDate(3, Util.utilDate2sqlDate(em.getFechaDeConstitucion()));
-            ps.setInt(1, em.getId_empresa());        
-       
+            ps.setInt(4, em.getId_empresa());        
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("empresaDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("empresaDAO.cierra", e);
+        }        
     }
 
 }

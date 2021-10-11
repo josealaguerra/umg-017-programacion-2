@@ -30,33 +30,43 @@ public class ofertaDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_oferta = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_oferta = ?, id_marca_producto = ?, id_tipo_producto = ?, id_producto = ?,porcentaje_descuento = ?, fecha_inicio = ?, fecha_final = ? WHERE id_oferta= ? ";
 
-
+    /***
+     * Constructor ofertaDAO
+     * @throws Exception 
+     */
     public ofertaDAO() throws Exception {
         cbd = new ConectaBD();
     }
 
-    
-    public void inserta(oferta of){
-    
+    /***
+     * Inserta un registro en la tabla oferta
+     * @param paramOferta - objeto de la clase "oferta"
+     * @return verdadero, si inserto correctamente en la tabla oferta
+     */
+    public boolean inserta(oferta paramOferta){
+        boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, of.getId_marca_producto());
-            ps.setInt(2, of.getId_tipo_producto());
-            ps.setInt(3, of.getId_producto());
-            ps.setDouble(4, of.getPorcentaje_descuento());
-            ps.setDate(5,Util.utilDate2sqlDate(of.getFecha_inicio()));
-            ps.setDate(6, Util.utilDate2sqlDate(of.getFecha_final()));
-            ps.setInt(7, of.getId_oferta());
-
-            //rs=ps.executeQuery();
+            ps.setInt(1, paramOferta.getId_marca_producto());
+            ps.setInt(2, paramOferta.getId_tipo_producto());
+            ps.setInt(3, paramOferta.getId_producto());
+            ps.setDouble(4, paramOferta.getPorcentaje_descuento());
+            ps.setDate(5, Util.utilDate2sqlDate( paramOferta.getFecha_inicio() ));
+            ps.setDate(6, Util.utilDate2sqlDate( paramOferta.getFecha_final() ));
+            filaInsertada= ( ps.executeUpdate() >0) ;          
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("ofertaDAO.inserta", ex);
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.inserta", e);
         }
-        
+        return filaInsertada;
     }
         
-    
+    /***
+     * Selecciona todos los registros de la tabla oferta
+     * @return 
+     */
     public List<oferta> seleccionaTodo(){
         List<oferta> listaOferta=null;
         PreparedStatement ps = null;
@@ -75,18 +85,22 @@ public class ofertaDAO {
                                                    rs.getDate("fecha_inicio"), 
                                                    rs.getDate("fecha_final")));
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ofertaDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.seleccionaTodo", e);
         }
         return listaOferta;
        
     }
     
-    
+    /***
+     * Selecciona un oferta, según su ID
+     * @param IDOferta
+     * @return 
+     */
     public oferta seleccionaPorID(int IDOferta){
-        
-        oferta nuevoProd=null;
+        oferta nuevaOferta=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
@@ -95,25 +109,28 @@ public class ofertaDAO {
             ps.setInt(1, IDOferta);
             rs=ps.executeQuery();
             while(rs.next()){
-                nuevoProd = new oferta(            rs.getInt("id_oferta"),
-                                                   rs.getInt(" id_marca_producto"), 
-                                                   rs.getInt("id_tipo_producto"), 
-                                                   rs.getInt("id_producto"), 
-                                                   rs.getDouble("porcentaje_descuent"), 
-                                                   rs.getDate("fecha_inicio"), 
-                                                   rs.getDate("fecha_final"));
+                nuevaOferta = new oferta(   rs.getInt("id_oferta"),
+                                            rs.getInt(" id_marca_producto"), 
+                                            rs.getInt("id_tipo_producto"), 
+                                            rs.getInt("id_producto"), 
+                                            rs.getDouble("porcentaje_descuent"), 
+                                            rs.getDate("fecha_inicio"), 
+                                            rs.getDate("fecha_final") );
             }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ofertaDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.seleccionaPorID", e);
         }
-        return nuevoProd;
-       
+        return nuevaOferta;
     }
     
-    
+    /***
+     * Elimina el oferta con el ID enviado.
+     * @param IDOferta
+     * @return 
+     */    
     public boolean elimina(int IDOferta){
-        
         boolean filaEliminada=false;
         PreparedStatement ps = null;
         
@@ -121,46 +138,52 @@ public class ofertaDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLEliminaPorID);
             ps.setInt(1, IDOferta);
             filaEliminada=( ps.executeUpdate() > 0);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Util.printSQLException("ofertaDAO.elimina", ex);
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.elimina", e);
         }
         return filaEliminada;
        
     }
 
-    
-    public boolean actualiza(oferta of){
+    /***
+     * Modifica la informacion del oferta enviado por parametro.
+     * @param paramOferta
+     * @return 
+     */
+    public boolean actualiza(oferta paramOferta){
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
-             ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, of.getId_marca_producto());
-            ps.setInt(2, of.getId_tipo_producto());
-            ps.setInt(3, of.getId_producto());
-            ps.setDouble(4, of.getPorcentaje_descuento());
-            ps.setDate(5,Util.utilDate2sqlDate(of.getFecha_inicio()));
-            ps.setDate(6, Util.utilDate2sqlDate(of.getFecha_final()));
-            ps.setInt(7, of.getId_oferta());       
+            ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
+            ps.setInt(1, paramOferta.getId_marca_producto());
+            ps.setInt(2, paramOferta.getId_tipo_producto());
+            ps.setInt(3, paramOferta.getId_producto());
+            ps.setDouble(4, paramOferta.getPorcentaje_descuento());
+            ps.setDate(5,Util.utilDate2sqlDate(paramOferta.getFecha_inicio()));
+            ps.setDate(6, Util.utilDate2sqlDate(paramOferta.getFecha_final()));
+            ps.setInt(7, paramOferta.getId_oferta());       
+            filaActualizada = ( ps.executeUpdate() > 0);            
        
         } catch (SQLException ex) {
-            Logger.getLogger(personaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printSQLException("ofertaDAO.actualiza", ex);
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.actualiza", e);
         }
-        
         return filaActualizada;
-       
     }
 
-    
-    private void printSQLException(SQLException ex){
-        for(Throwable e:ex){
-            if(e instanceof SQLException){
-                e.printStackTrace(System.err);
-                System.err.println("SQL State");
-                
-            }
-                
-        }
+    /***
+     * Cierra las conexiones a BD
+     */
+    public void cierra() {
+        try {
+            if(cbd!=null)
+                cbd.closeDB();
+        } catch (Exception e) {
+            Util.printException("ofertaDAO.cierra", e);
+        }        
     }
 
 }

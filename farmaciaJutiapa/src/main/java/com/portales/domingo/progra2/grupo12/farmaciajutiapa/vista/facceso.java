@@ -5,19 +5,13 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.accesoDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso;
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
