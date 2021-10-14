@@ -71,6 +71,8 @@ public class fgenero extends javax.swing.JFrame {
 
         lblid_genero.setText("Id genero");
 
+        txtid_genero.setEditable(false);
+
         lblnombre_genero.setText("Nombre genero");
 
         btnAgregar.setText("Agregar");

@@ -104,6 +104,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtid_genero">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblnombre_genero">
           <Properties>

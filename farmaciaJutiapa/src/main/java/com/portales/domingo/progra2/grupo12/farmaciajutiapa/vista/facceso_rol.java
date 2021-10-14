@@ -70,6 +70,7 @@ public class facceso_rol extends javax.swing.JFrame {
         TablaDatosAccesoRol = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento Acceso Rol");
 
         lblid_acceso_rol.setText("Id acceso rol");
 

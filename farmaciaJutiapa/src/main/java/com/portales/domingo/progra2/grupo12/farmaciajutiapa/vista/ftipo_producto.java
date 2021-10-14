@@ -68,9 +68,12 @@ public class ftipo_producto extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosTipoProducto = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de tipo de productos");
 
         lbltipo_producto.setText("Id tipo producto");
+
+        txttipo_producto.setEditable(false);
 
         lblnombre_tipo_producto.setText("Nombre tipo producto");
 

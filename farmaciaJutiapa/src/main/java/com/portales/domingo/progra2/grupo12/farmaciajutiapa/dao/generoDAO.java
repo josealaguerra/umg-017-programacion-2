@@ -28,7 +28,7 @@ public class generoDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_genero, nombre_genero FROM "+cnSQLTabla+" WHERE id_genero = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_genero, nombre_genero FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_genero = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_genero= ?, nombre_genero= ?  WHERE id_genero = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_genero= ?  WHERE id_genero = ? ";
 
     /***
      * Constructor generoDAO

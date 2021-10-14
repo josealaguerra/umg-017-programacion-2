@@ -98,7 +98,6 @@ public class fpersona extends javax.swing.JFrame {
         lblprimer_apellido.setText("primer_apellido:");
 
         txtid_persona.setEditable(false);
-        txtid_persona.setText("jTextField1");
 
         txtprimer_nombre.setText("jTextField2");
 

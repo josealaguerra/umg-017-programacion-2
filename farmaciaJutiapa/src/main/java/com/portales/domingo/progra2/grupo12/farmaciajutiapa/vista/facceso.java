@@ -74,6 +74,7 @@ public class facceso extends javax.swing.JFrame {
         jButton2.setText("jButton2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento  Acceso");
 
         lblId_acceso.setText("Id Acceso");
 
