@@ -68,9 +68,12 @@ public class fmarca_producto extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosMarcaProducto = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento Marca Producto");
 
         lblid_marca_producto.setText("Id marca producto");
+
+        txtid_marca_producto.setEditable(false);
 
         lblnombre_marca_producto.setText("Nombre marca producto");
 

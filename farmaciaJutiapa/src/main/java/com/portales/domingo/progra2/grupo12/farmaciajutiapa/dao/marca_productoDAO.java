@@ -27,7 +27,7 @@ public class marca_productoDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_marca_producto, nombre_marca_producto FROM "+cnSQLTabla+" WHERE id_marca_producto = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_marca_producto, nombre_marca_producto FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_marca_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_marca_producto = ?, nombre_marca_producto = ? WHERE id_marca_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_marca_producto = ? WHERE id_marca_producto = ? ";
 
     /***
      * Constructor marca_productoDAO

@@ -28,7 +28,7 @@ public class estado_civilDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_estado_civil,abreviatura_estado_civil,nombre_estado_civil FROM "+cnSQLTabla+" WHERE id_estado_civil = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_estado_civil,abreviatura_estado_civil,nombre_estado_civil FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_estado_civil = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_estado_civil = ?, abreviatura_estado_civil = ?, nombre_estado_civil = ? WHERE id_estado_civil = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set abreviatura_estado_civil = ?, nombre_estado_civil = ? WHERE id_estado_civil = ? ";
 
     /***
      * Constructor estado_civilDAO

@@ -75,9 +75,12 @@ public class fcompra extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosCompra = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento Compra");
 
         lblid_compra.setText("Id compra");
+
+        txtid_compra.setEditable(false);
 
         lblid_proveedor.setText("Id proveedor");
 

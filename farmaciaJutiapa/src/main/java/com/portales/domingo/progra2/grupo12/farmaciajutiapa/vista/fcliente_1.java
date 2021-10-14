@@ -70,9 +70,12 @@ public class fcliente_1 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosCliente = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento Cliente");
 
         lblid_cliente.setText("Id cliente ");
+
+        txtid_cliente.setEditable(false);
 
         lblid_empresa.setText("Id empresa");
 

@@ -67,7 +67,8 @@ public class fgenero extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosGenero = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento Genero");
 
         lblid_genero.setText("Id genero");
 

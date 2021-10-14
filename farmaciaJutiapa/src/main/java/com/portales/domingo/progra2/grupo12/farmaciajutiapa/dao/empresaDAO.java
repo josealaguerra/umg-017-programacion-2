@@ -29,7 +29,7 @@ public class empresaDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_empresa, nit, razonSocial, fechaDeConstitucion FROM "+cnSQLTabla+" WHERE id_empresa = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_empresa, nit, razonSocial, fechaDeConstitucion FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_empresa = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_empresa = ?, nit = ?,razonSocial = ?, fechaDeConstitucion = ? WHERE id_empresa = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nit = ?,razonSocial = ?, fechaDeConstitucion = ? WHERE id_empresa = ? ";
 
     /***
      * Constructor empresaDAO
