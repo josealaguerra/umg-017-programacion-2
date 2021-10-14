@@ -67,9 +67,12 @@ public class frol_1 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosRol = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de roles");
 
         lblId_rol.setText("Id rol");
+
+        txtid_rol.setEditable(false);
 
         lblnombre_rol.setText("Nombre rol");
 

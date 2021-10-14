@@ -155,9 +155,12 @@ public class fusuario_1 extends javax.swing.JFrame {
                 .addContainerGap(61, Short.MAX_VALUE))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de usuario");
 
         lblid_usuario.setText("Id usuario");
+
+        txtid_usuario.setEditable(false);
 
         lblid_persona.setText("Id persona");
 

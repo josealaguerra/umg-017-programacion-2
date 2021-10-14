@@ -69,9 +69,12 @@ public class fproveedores extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosProveedores = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de proveedores");
 
         lblid_proveedores.setText("Id proveedores");
+
+        txtid_proveedores.setEditable(false);
 
         lblid_empresa.setText("Id empresa");
 

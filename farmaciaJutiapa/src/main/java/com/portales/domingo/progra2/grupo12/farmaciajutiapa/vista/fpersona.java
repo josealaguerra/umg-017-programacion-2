@@ -87,7 +87,7 @@ public class fpersona extends javax.swing.JFrame {
         btnNuevo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Mantenimiento Persona");
+        setTitle("Mantenimiento de persona");
 
         lblid_persona.setText("ID persona:");
 

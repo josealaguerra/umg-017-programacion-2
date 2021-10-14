@@ -79,7 +79,8 @@ public class fventa_1 extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de venta");
 
         lblid_venta.setText("Id Venta");
 
@@ -91,6 +92,7 @@ public class fventa_1 extends javax.swing.JFrame {
 
         lblmonto_total.setText("Monto Total");
 
+        txtid_venta.setEditable(false);
         txtid_venta.setText("jTextField1");
 
         txtid_cliente.setText("jTextField2");
