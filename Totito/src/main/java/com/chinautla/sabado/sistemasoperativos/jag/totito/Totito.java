@@ -1,3 +1,15 @@
+/***
+ * José Alfredo Guerra Gomez
+ * Carné: 5990-19-887
+ * Juego de Totito 
+ * Universidad Mariano Galvez
+ * Curso: Programación II
+ * Catedratico: Luis Enrique Toledo Ortiz
+ * 
+ */
+
+
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,6 +17,7 @@
  */
 package com.chinautla.sabado.sistemasoperativos.jag.totito;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -40,7 +53,7 @@ public class Totito extends javax.swing.JFrame {
     
     private void reiniciaTablero(){
         creaJButtones(3, 3);
-        this.turno.setText("1");
+        this.turno.setText(cnTextoJ1);
         marcadorJ1.setText( Integer.toString( ganadoJ1 ) );
         marcadorJ2.setText( Integer.toString( ganadoJ2 ) );
     }
@@ -311,10 +324,12 @@ public class Totito extends javax.swing.JFrame {
                             if(turno.getText().equals(cnTextoJ1)){
                                 turno.setText(cnTextoJ2);
                                 btn.setText("O");
+                                btn.setBackground(Color.green);
                                 gano= ( validaFilas() || validaColumnas() || validaDiagonales() );
                             }else{
                                 turno.setText(cnTextoJ1);
                                 btn.setText("X");
+                                btn.setBackground(Color.blue);
                                 gano= ( validaFilas() || validaColumnas() || validaDiagonales() );
                             }
                             if( gano ){
