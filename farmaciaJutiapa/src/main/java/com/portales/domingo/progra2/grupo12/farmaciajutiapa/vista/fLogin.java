@@ -45,6 +45,11 @@ public class fLogin extends javax.swing.JFrame {
         txtPass.setText("jTextField2");
 
         btnLogin.setText("Entrar");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         btnCreaCta.setText("Crear cuenta");
         btnCreaCta.setActionCommand("Crear alias");
@@ -93,6 +98,11 @@ public class fLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        fPrincipal fec= new fPrincipal();
+        fec.setVisible(true);
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
