@@ -10,12 +10,22 @@ package com.chinautla.sabado.sistemasoperativos.jag.totito;
  * @author josea
  */
 public class Totito extends javax.swing.JFrame {
+    private static boolean esJugador01=true;
+
+    public static boolean isEsJugador01() {
+        return esJugador01;
+    }
+
+    public static void setEsJugador01(boolean esJugador01) {
+        Totito.esJugador01 = esJugador01;
+    }
 
     /**
      * Creates new form Totito
      */
     public Totito() {
         initComponents();
+        creaBotones(3, 3);
     }
 
     /**
@@ -31,19 +41,31 @@ public class Totito extends javax.swing.JFrame {
         Acciones = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
         Marcador = new javax.swing.JPanel();
+        lblJ1 = new javax.swing.JLabel();
+        lblJ2 = new javax.swing.JLabel();
+        txtJ1 = new javax.swing.JLabel();
+        txtJ2 = new javax.swing.JLabel();
+        marcadorJ1 = new javax.swing.JLabel();
+        marcadorJ2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Totito");
+
+        tablero.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout tableroLayout = new javax.swing.GroupLayout(tablero);
         tablero.setLayout(tableroLayout);
         tableroLayout.setHorizontalGroup(
             tableroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 357, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         tableroLayout.setVerticalGroup(
             tableroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 221, Short.MAX_VALUE)
         );
+
+        Acciones.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Acciones.setToolTipText("Aquí se rrealizaran las acciones");
 
         btnNuevo.setText("Nuevo");
 
@@ -61,18 +83,70 @@ public class Totito extends javax.swing.JFrame {
             .addGroup(AccionesLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(btnNuevo)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
+
+        Marcador.setBorder(new javax.swing.border.MatteBorder(null));
+
+        lblJ1.setForeground(new java.awt.Color(0, 0, 204));
+        lblJ1.setText("Jugador #1:");
+
+        lblJ2.setForeground(new java.awt.Color(0, 153, 0));
+        lblJ2.setText("Jugador #2:");
+
+        txtJ1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtJ1.setForeground(new java.awt.Color(0, 0, 204));
+        txtJ1.setText("Jugador #1:");
+
+        txtJ2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtJ2.setForeground(new java.awt.Color(0, 153, 0));
+        txtJ2.setText("Jugador #2:");
+
+        marcadorJ1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        marcadorJ1.setForeground(new java.awt.Color(0, 0, 204));
+        marcadorJ1.setText("MarcadorJugador #1:");
+
+        marcadorJ2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        marcadorJ2.setForeground(new java.awt.Color(0, 153, 0));
+        marcadorJ2.setText("MarcadorJugador #2:");
 
         javax.swing.GroupLayout MarcadorLayout = new javax.swing.GroupLayout(Marcador);
         Marcador.setLayout(MarcadorLayout);
         MarcadorLayout.setHorizontalGroup(
             MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 216, Short.MAX_VALUE)
+            .addGroup(MarcadorLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(MarcadorLayout.createSequentialGroup()
+                        .addComponent(lblJ1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblJ2))
+                    .addGroup(MarcadorLayout.createSequentialGroup()
+                        .addComponent(txtJ1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addComponent(txtJ2))
+                    .addGroup(MarcadorLayout.createSequentialGroup()
+                        .addComponent(marcadorJ1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                        .addComponent(marcadorJ2)))
+                .addGap(63, 63, 63))
         );
         MarcadorLayout.setVerticalGroup(
             MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 223, Short.MAX_VALUE)
+            .addGroup(MarcadorLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblJ1)
+                    .addComponent(lblJ2))
+                .addGap(22, 22, 22)
+                .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtJ1)
+                    .addComponent(txtJ2))
+                .addGap(22, 22, 22)
+                .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(marcadorJ1)
+                    .addComponent(marcadorJ2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -81,24 +155,24 @@ public class Totito extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Acciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tablero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71)
-                        .addComponent(Marcador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tablero, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Acciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(Marcador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Acciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(Marcador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tablero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(48, 48, 48))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Acciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(tablero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
@@ -143,6 +217,55 @@ public class Totito extends javax.swing.JFrame {
     private javax.swing.JPanel Acciones;
     private javax.swing.JPanel Marcador;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JLabel lblJ1;
+    private javax.swing.JLabel lblJ2;
+    private javax.swing.JLabel marcadorJ1;
+    private javax.swing.JLabel marcadorJ2;
     private javax.swing.JPanel tablero;
+    private javax.swing.JLabel txtJ1;
+    private javax.swing.JLabel txtJ2;
     // End of variables declaration//GEN-END:variables
+
+
+ 
+    /**
+     * Permite crear dinamicamente botones
+     * @param filas, botones ordenados en filas
+     * @param columnas, botones ordenados en collumnas
+     */
+    public void creaBotones(int filas, int columnas){
+    
+        int ancho= 60*2;
+        int alto= 30*2;
+		
+        //Eliminamos los anteriores botones
+        this.tablero.removeAll();
+
+        //Se crea una matriz de botones segun las filas y columnas entrantes
+        Boton [][] botones = new Boton[ filas ][ columnas ];
+        
+        //Se recorren las filas
+        for( int fila = 0 ; fila < filas; fila++ )
+        {
+            //Estando en la fila se recorrer las columnas
+            for( int columna = 0 ; columna < columnas; columna++ )
+            {
+                //Se crea el boton y se agrega a las celda de la matriz
+                botones[fila][columna] = new Boton( ancho * columna, alto * fila, ancho, alto );
+                
+                //Se da el nombre en forma de coordenada enviando la fila y columna
+                botones[fila][columna].setNombre(fila, columna);
+                
+                //Se agrega el boton al PBotones
+                this.tablero.add( botones[fila][columna] );
+            }
+        }
+        
+        //Se actualiza el PBotones para que se vean los botones
+        this.tablero.updateUI();
+    }
+    
+    
+
+
 }
