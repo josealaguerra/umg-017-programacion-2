@@ -342,3 +342,14 @@ insert into acceso_rol (id_acceso, id_rol) values
 (2, 2), 
 (3, 2);
 
+
+
+
+
+/*alias*/
+create table alias(
+id_alias int NOT NULL AUTO_INCREMENT,
+alias varchar(30) NOT NULL,
+pass varchar(30) NOT NULL,
+primary key (id_alias),
+);
