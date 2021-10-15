@@ -7,7 +7,7 @@ package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
 /**
  *
- * @author josea
+ * @author josealaguerra
  */
 public class fPrincipal extends javax.swing.JFrame {
 
