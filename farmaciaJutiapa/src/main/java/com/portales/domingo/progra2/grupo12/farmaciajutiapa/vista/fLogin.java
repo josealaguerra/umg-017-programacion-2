@@ -5,9 +5,14 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.aliasDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.alias;
+import javax.swing.JOptionPane;
+
 /**
  *
- * @author josea
+ * @author josealaguerra
  */
 public class fLogin extends javax.swing.JFrame {
 
@@ -16,6 +21,7 @@ public class fLogin extends javax.swing.JFrame {
      */
     public fLogin() {
         initComponents();
+        limpiaCampos();
     }
 
     /**
@@ -35,6 +41,7 @@ public class fLogin extends javax.swing.JFrame {
         btnCreaCta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login Farmacia Jutiapa");
 
         lblUsuario.setText("Alias:");
 
@@ -53,6 +60,11 @@ public class fLogin extends javax.swing.JFrame {
 
         btnCreaCta.setText("Crear cuenta");
         btnCreaCta.setActionCommand("Crear alias");
+        btnCreaCta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreaCtaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,12 +109,46 @@ public class fLogin extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        fPrincipal fec= new fPrincipal();
-        fec.setVisible(true);
+        fPrincipal fec= null;
+        alias aObj = null;
+        aliasDAO aDAO = null;
+        try{
+            aObj = new alias(this.txtUsuario.getText(), this.txtPass.getText());
+            aDAO = new aliasDAO();
+            if( aDAO.seleccionaPorCredenciales(aObj) ){
+                fec= new fPrincipal();
+                fec.setVisible(true);
+            }else
+                JOptionPane.showMessageDialog(null, "Credenciales no encontradas");
+
+        }catch(Exception e){
+            Util.printException("fLogin.btnLoginActionPerformed", e);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnCreaCtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreaCtaActionPerformed
+        alias aObj = null;
+        aliasDAO aDAO = null;
+        try{
+            aObj = new alias(this.txtUsuario.getText(), this.txtPass.getText());
+            aDAO = new aliasDAO();
+            if( aDAO.seleccionaPorCredenciales(aObj) ){            
+                JOptionPane.showMessageDialog(null, "Credenciales ya ingresadas, selecciona otra");
+            }else if( aDAO.inserta(aObj) ){
+                JOptionPane.showMessageDialog(null, "Se creo el usuario: "+this.txtUsuario.getText());
+            }else
+                JOptionPane.showMessageDialog(null, "Error al crear el usuario");
+            
+            limpiaCampos();
+
+        }catch(Exception e){
+            Util.printException("fLogin.btnCreaCtaActionPerformed", e);
+        }
+    }//GEN-LAST:event_btnCreaCtaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,4 +193,12 @@ public class fLogin extends javax.swing.JFrame {
     private javax.swing.JTextField txtPass;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
+
+    private void limpiaCampos() {
+        this.txtUsuario.setText("");
+        this.txtPass.setText("");
+    }
+    
+    
+        
 }

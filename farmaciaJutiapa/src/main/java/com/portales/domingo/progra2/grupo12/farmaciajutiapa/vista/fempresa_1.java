@@ -38,7 +38,6 @@ public class fempresa_1 extends javax.swing.JFrame {
                 if(eDAO!=null)
                     eDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -202,6 +201,7 @@ public class fempresa_1 extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed

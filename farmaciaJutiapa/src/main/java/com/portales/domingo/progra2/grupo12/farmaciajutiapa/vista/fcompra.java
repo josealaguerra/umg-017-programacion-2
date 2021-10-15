@@ -40,7 +40,6 @@ public class fcompra extends javax.swing.JFrame {
                 if(cDAO!=null)
                     cDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -76,7 +75,7 @@ public class fcompra extends javax.swing.JFrame {
         TablaDatosCompra = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Mantenimiento Compra");
+        setTitle("Mantenimiento de compra");
 
         lblid_compra.setText("Id compra");
 
@@ -217,6 +216,7 @@ public class fcompra extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TablaDatosCompraMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosCompraMouseEntered

@@ -39,7 +39,6 @@ public class ftipo_producto extends javax.swing.JFrame {
                 if(tpDAO!=null)
                     tpDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -186,6 +185,7 @@ public class ftipo_producto extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
