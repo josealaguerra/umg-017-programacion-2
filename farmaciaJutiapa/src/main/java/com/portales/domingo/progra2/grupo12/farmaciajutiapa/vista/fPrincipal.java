@@ -245,7 +245,8 @@ public class fPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_miClienteActionPerformed
 
     private void miCompra_detalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCompra_detalleActionPerformed
-        // TODO add your handling code here:
+        fcompra_detalle fcd= new fcompra_detalle();
+        fcd.setVisible(true);
     }//GEN-LAST:event_miCompra_detalleActionPerformed
 
     private void miEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpresaActionPerformed

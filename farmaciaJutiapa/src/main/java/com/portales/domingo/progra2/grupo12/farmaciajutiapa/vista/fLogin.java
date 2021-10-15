@@ -16,6 +16,7 @@ public class fLogin extends javax.swing.JFrame {
      */
     public fLogin() {
         initComponents();
+        limpiaCampos();
     }
 
     /**
@@ -147,4 +148,9 @@ public class fLogin extends javax.swing.JFrame {
     private javax.swing.JTextField txtPass;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
+
+    private void limpiaCampos() {
+        this.txtUsuario.setText("");
+        this.txtPass.setText("");
+    }
 }
