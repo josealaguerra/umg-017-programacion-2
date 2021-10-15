@@ -32,8 +32,22 @@ public class fPrincipal extends javax.swing.JFrame {
         miEstadoCivil = new javax.swing.JMenuItem();
         miGenero = new javax.swing.JMenuItem();
         miAcceso = new javax.swing.JMenuItem();
+        miAcceso_rol = new javax.swing.JMenuItem();
+        miEmpresa = new javax.swing.JMenuItem();
+        miMarca_producto = new javax.swing.JMenuItem();
+        miRol = new javax.swing.JMenuItem();
+        miTipo_Producto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         miPersona = new javax.swing.JMenuItem();
+        miCliente = new javax.swing.JMenuItem();
+        miCompra_detalle = new javax.swing.JMenuItem();
+        miOferta = new javax.swing.JMenuItem();
+        miProducto = new javax.swing.JMenuItem();
+        miProveedor = new javax.swing.JMenuItem();
+        miUsuario = new javax.swing.JMenuItem();
+        miVenta = new javax.swing.JMenuItem();
+        miVenta_detalle = new javax.swing.JMenuItem();
+        miCompra = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,6 +77,46 @@ public class fPrincipal extends javax.swing.JFrame {
         });
         jMenu1.add(miAcceso);
 
+        miAcceso_rol.setText("Acceso Rol");
+        miAcceso_rol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAcceso_rolActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miAcceso_rol);
+
+        miEmpresa.setText("Empresa");
+        miEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miEmpresaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miEmpresa);
+
+        miMarca_producto.setText("Marca Producto");
+        miMarca_producto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMarca_productoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miMarca_producto);
+
+        miRol.setText("Rol");
+        miRol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miRolActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miRol);
+
+        miTipo_Producto.setText("Tipo Producto");
+        miTipo_Producto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miTipo_ProductoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miTipo_Producto);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Mantenimientos Complejos");
@@ -74,6 +128,78 @@ public class fPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(miPersona);
+
+        miCliente.setText("Cliente");
+        miCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miClienteActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miCliente);
+
+        miCompra_detalle.setText("Compra Detalle");
+        miCompra_detalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCompra_detalleActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miCompra_detalle);
+
+        miOferta.setText("Oferta");
+        miOferta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOfertaActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miOferta);
+
+        miProducto.setText("Producto");
+        miProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miProductoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miProducto);
+
+        miProveedor.setText("Proveedores");
+        miProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miProveedorActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miProveedor);
+
+        miUsuario.setText("Usuario");
+        miUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miUsuarioActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miUsuario);
+
+        miVenta.setText("Venta");
+        miVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miVentaActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miVenta);
+
+        miVenta_detalle.setText("Venta Detalle");
+        miVenta_detalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miVenta_detalleActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miVenta_detalle);
+
+        miCompra.setText("Compra");
+        miCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miCompraActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miCompra);
 
         jMenuBar1.add(jMenu2);
 
@@ -112,6 +238,75 @@ public class fPrincipal extends javax.swing.JFrame {
         facceso fa= new facceso();
         fa.setVisible(true);
     }//GEN-LAST:event_miAccesoActionPerformed
+
+    private void miClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miClienteActionPerformed
+        fcliente_1 cli= new fcliente_1();
+        cli.setVisible(true);
+    }//GEN-LAST:event_miClienteActionPerformed
+
+    private void miCompra_detalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCompra_detalleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miCompra_detalleActionPerformed
+
+    private void miEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpresaActionPerformed
+        fempresa_1 em= new fempresa_1();
+        em.setVisible(true);
+    }//GEN-LAST:event_miEmpresaActionPerformed
+
+    private void miMarca_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMarca_productoActionPerformed
+       fmarca_producto mar= new fmarca_producto();
+        mar.setVisible(true);
+    }//GEN-LAST:event_miMarca_productoActionPerformed
+
+    private void miOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOfertaActionPerformed
+       foferta_1 of= new foferta_1();
+        of.setVisible(true);
+    }//GEN-LAST:event_miOfertaActionPerformed
+
+    private void miAcceso_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAcceso_rolActionPerformed
+        facceso_rol ar= new  facceso_rol();
+        ar.setVisible(true);
+    }//GEN-LAST:event_miAcceso_rolActionPerformed
+
+    private void miProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProductoActionPerformed
+       fproducto pro= new  fproducto();
+        pro.setVisible(true);
+    }//GEN-LAST:event_miProductoActionPerformed
+
+    private void miProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProveedorActionPerformed
+        fproveedores proveedor= new  fproveedores();
+        proveedor.setVisible(true);
+    }//GEN-LAST:event_miProveedorActionPerformed
+
+    private void miRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRolActionPerformed
+        frol_1 rol= new  frol_1();
+        rol.setVisible(true);
+    }//GEN-LAST:event_miRolActionPerformed
+
+    private void miTipo_ProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miTipo_ProductoActionPerformed
+       ftipo_producto tipP= new  ftipo_producto();
+        tipP.setVisible(true);
+    }//GEN-LAST:event_miTipo_ProductoActionPerformed
+
+    private void miUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUsuarioActionPerformed
+       fusuario_1 us= new  fusuario_1();
+        us.setVisible(true);
+    }//GEN-LAST:event_miUsuarioActionPerformed
+
+    private void miVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miVentaActionPerformed
+       fventa_1 ve= new  fventa_1();
+        ve.setVisible(true);
+    }//GEN-LAST:event_miVentaActionPerformed
+
+    private void miVenta_detalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miVenta_detalleActionPerformed
+       fventa_detalle_1 veD= new  fventa_detalle_1();
+        veD.setVisible(true);
+    }//GEN-LAST:event_miVenta_detalleActionPerformed
+
+    private void miCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCompraActionPerformed
+       fcompra comp= new  fcompra();
+        comp.setVisible(true);
+    }//GEN-LAST:event_miCompraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,8 +348,22 @@ public class fPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem miAcceso;
+    private javax.swing.JMenuItem miAcceso_rol;
+    private javax.swing.JMenuItem miCliente;
+    private javax.swing.JMenuItem miCompra;
+    private javax.swing.JMenuItem miCompra_detalle;
+    private javax.swing.JMenuItem miEmpresa;
     private javax.swing.JMenuItem miEstadoCivil;
     private javax.swing.JMenuItem miGenero;
+    private javax.swing.JMenuItem miMarca_producto;
+    private javax.swing.JMenuItem miOferta;
     private javax.swing.JMenuItem miPersona;
+    private javax.swing.JMenuItem miProducto;
+    private javax.swing.JMenuItem miProveedor;
+    private javax.swing.JMenuItem miRol;
+    private javax.swing.JMenuItem miTipo_Producto;
+    private javax.swing.JMenuItem miUsuario;
+    private javax.swing.JMenuItem miVenta;
+    private javax.swing.JMenuItem miVenta_detalle;
     // End of variables declaration//GEN-END:variables
 }
