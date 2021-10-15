@@ -72,7 +72,11 @@ public class Util {
         int nuevoInt = 0;
         
         try{
-            nuevoInt = Integer.parseInt(str);
+            if((str==null) || (str.equals(""))){
+                nuevoInt =0;
+            }else{
+                nuevoInt = Integer.parseInt( str );
+            }
         }catch(Exception e){
             Util.printException("Util.str2int", e);
             nuevoInt = 0;

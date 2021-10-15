@@ -44,34 +44,34 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblfecha_inicio" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblfecha_final" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtfecha_final" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtfecha_inicio" min="-2" pref="114" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblid_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblid_marca_producto_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblid_tipo_producto_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblid_producto_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblporcentaje_descuento" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtid_oferta" alignment="0" pref="114" max="32767" attributes="0"/>
-                              <Component id="txtid_marca_producto_oferta" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtid_tipo_producto_oferta" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtid_producto_oferta" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtporcentaje_descuento" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblfecha_inicio" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblfecha_final" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="txtfecha_inicio" min="-2" pref="114" max="-2" attributes="0"/>
-                              <Component id="txtfecha_final" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtid_producto_oferta" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtporcentaje_descuento" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtid_tipo_producto_oferta" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtid_marca_producto_oferta" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                              <Component id="txtid_oferta" min="-2" pref="114" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="btnAgregar" min="-2" max="-2" attributes="0"/>
@@ -106,27 +106,27 @@
                       <Component id="lblid_marca_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtid_marca_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtid_tipo_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblid_tipo_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblid_producto_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtid_producto_oferta" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblporcentaje_descuento" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtporcentaje_descuento" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblfecha_inicio" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtfecha_inicio" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblid_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtid_producto_oferta" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblporcentaje_descuento" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtporcentaje_descuento" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblfecha_inicio" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtfecha_inicio" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -134,12 +134,9 @@
                               <Component id="txtfecha_final" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" min="-2" pref="183" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jScrollPane1" min="-2" pref="183" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="142" max="32767" attributes="0"/>
+                  <EmptySpace pref="43" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
