@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.chinautla.sabado.sistemasoperativos.jag.totito;
+package com.portales.domingo.progra2.jag.totito;
 
 
 import java.awt.Color;
