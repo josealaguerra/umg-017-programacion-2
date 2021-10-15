@@ -5,19 +5,13 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.ventaDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.venta;
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estado_civil;
-import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.estadoCivilItem;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,7 +39,6 @@ public class fventa_1 extends javax.swing.JFrame {
                 if(vDAO!=null)
                     vDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -228,6 +221,7 @@ public class fventa_1 extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed

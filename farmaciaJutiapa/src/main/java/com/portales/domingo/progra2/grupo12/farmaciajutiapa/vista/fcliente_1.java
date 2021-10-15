@@ -39,7 +39,6 @@ public class fcliente_1 extends javax.swing.JFrame {
                 if(cDAO!=null)
                     cDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -71,7 +70,7 @@ public class fcliente_1 extends javax.swing.JFrame {
         TablaDatosCliente = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Mantenimiento Cliente");
+        setTitle("Mantenimiento de cliente");
 
         lblid_cliente.setText("Id cliente ");
 
@@ -197,6 +196,7 @@ public class fcliente_1 extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed

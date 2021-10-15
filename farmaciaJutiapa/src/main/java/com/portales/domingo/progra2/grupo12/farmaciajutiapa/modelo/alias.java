@@ -24,6 +24,13 @@ public class alias {
         this.pass = "";
     }        
     
+    
+    public alias(String alias, String pass) {
+        this.id_alias = 0;        
+        this.alias = alias;
+        this.pass = pass;
+    }     
+    
 
     public alias(int id_alias, String alias, String pass) {
         this.id_alias = id_alias;

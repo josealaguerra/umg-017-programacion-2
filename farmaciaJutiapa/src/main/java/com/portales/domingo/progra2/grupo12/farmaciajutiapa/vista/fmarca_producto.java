@@ -39,7 +39,6 @@ public class fmarca_producto extends javax.swing.JFrame {
                 if(mpDAO!=null)
                     mpDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -184,6 +183,7 @@ public class fmarca_producto extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed

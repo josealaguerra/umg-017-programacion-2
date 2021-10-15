@@ -39,7 +39,6 @@ public class fcompra_detalle extends javax.swing.JFrame {
                 if(cdDAO!=null)
                     cdDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -237,6 +236,7 @@ public class fcompra_detalle extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TablaDatosCompraDetalleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosCompraDetalleMouseClicked

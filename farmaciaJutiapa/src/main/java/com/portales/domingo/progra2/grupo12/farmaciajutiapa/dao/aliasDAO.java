@@ -23,6 +23,7 @@ public class aliasDAO {
     private static final String cnSQLTabla="alias";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (alias,pass) values (?,?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_alias, alias, pass FROM "+cnSQLTabla+" WHERE id_alias = ? ";
+    private static final String cnSQLSeleccionaPorCredenciales=" SELECT id_alias, alias, pass FROM "+cnSQLTabla+" WHERE alias = ? and pass = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_alias, alias, pass FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_alias = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set alias = ?, pass = ? WHERE id_alias = ? ";
@@ -108,6 +109,34 @@ public class aliasDAO {
         }
         return nuevoAlias;
     }
+    
+/***
+     * Selecciona un alias, según sus credenciales
+     * @param IDAlias
+     * @return 
+     */
+    public boolean seleccionaPorCredenciales(alias paramAlias){
+        boolean encontroAlias=false;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorCredenciales);
+            ps.setString(1, paramAlias.getAlias());
+            ps.setString(2, paramAlias.getPass());
+            rs=ps.executeQuery();
+            while(rs.next()){
+                encontroAlias=true;
+                break;
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("aliasDAO.seleccionaPorCredenciales", ex);
+        } catch (Exception e) {
+            Util.printException("aliasDAO.seleccionaPorCredenciales", e);
+        }
+        return encontroAlias;
+    }    
+    
     
     /***
      * Elimina el alias con el ID enviado.

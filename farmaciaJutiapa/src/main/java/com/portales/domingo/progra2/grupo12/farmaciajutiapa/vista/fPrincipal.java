@@ -50,6 +50,7 @@ public class fPrincipal extends javax.swing.JFrame {
         miCompra = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menú principal Farmacia Jutiapa");
 
         jMenu1.setText("Mantenimientos Simples");
 
@@ -217,6 +218,7 @@ public class fPrincipal extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void miEstadoCivilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEstadoCivilActionPerformed

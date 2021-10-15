@@ -39,7 +39,6 @@ public class foferta_1 extends javax.swing.JFrame {
                 if(oDAO!=null)
                     oDAO.cierra();
                     dispose();
-                    System.exit(0);
             }
         });
 
@@ -242,6 +241,7 @@ public class foferta_1 extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtfecha_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtfecha_inicioActionPerformed
