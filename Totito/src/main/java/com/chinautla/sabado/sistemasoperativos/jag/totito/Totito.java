@@ -5,12 +5,22 @@
  */
 package com.chinautla.sabado.sistemasoperativos.jag.totito;
 
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author josea
  */
 public class Totito extends javax.swing.JFrame {
     private static boolean esJugador01=true;
+    private static final String cnStrInicial = ".";
+    private static final String cnTextoJ1 = "J1";
+    private static final String cnTextoJ2 = "J2";
+    private JButton [][] botones = null;
+    private int ganadoJ1=0;
+    private int ganadoJ2=0;
 
     public static boolean isEsJugador01() {
         return esJugador01;
@@ -25,7 +35,14 @@ public class Totito extends javax.swing.JFrame {
      */
     public Totito() {
         initComponents();
-        creaBotones(3, 3);
+        reiniciaTablero();
+    }
+    
+    private void reiniciaTablero(){
+        creaJButtones(3, 3);
+        this.turno.setText("1");
+        marcadorJ1.setText( Integer.toString( ganadoJ1 ) );
+        marcadorJ2.setText( Integer.toString( ganadoJ2 ) );
     }
 
     /**
@@ -47,11 +64,11 @@ public class Totito extends javax.swing.JFrame {
         txtJ2 = new javax.swing.JLabel();
         marcadorJ1 = new javax.swing.JLabel();
         marcadorJ2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        turno = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Totito");
-
-        tablero.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout tableroLayout = new javax.swing.GroupLayout(tablero);
         tablero.setLayout(tableroLayout);
@@ -64,10 +81,15 @@ public class Totito extends javax.swing.JFrame {
             .addGap(0, 221, Short.MAX_VALUE)
         );
 
-        Acciones.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Acciones.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Acciones.setToolTipText("Aquí se rrealizaran las acciones");
 
         btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout AccionesLayout = new javax.swing.GroupLayout(Acciones);
         Acciones.setLayout(AccionesLayout);
@@ -110,6 +132,12 @@ public class Totito extends javax.swing.JFrame {
         marcadorJ2.setForeground(new java.awt.Color(0, 153, 0));
         marcadorJ2.setText("MarcadorJugador #2:");
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setText("Turno actual:");
+
+        turno.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        turno.setText("jLabel2");
+
         javax.swing.GroupLayout MarcadorLayout = new javax.swing.GroupLayout(Marcador);
         Marcador.setLayout(MarcadorLayout);
         MarcadorLayout.setHorizontalGroup(
@@ -130,6 +158,12 @@ public class Totito extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                         .addComponent(marcadorJ2)))
                 .addGap(63, 63, 63))
+            .addGroup(MarcadorLayout.createSequentialGroup()
+                .addGap(81, 81, 81)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(turno)
+                .addGap(156, 156, 156))
         );
         MarcadorLayout.setVerticalGroup(
             MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,6 +180,10 @@ public class Totito extends javax.swing.JFrame {
                 .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(marcadorJ1)
                     .addComponent(marcadorJ2))
+                .addGap(83, 83, 83)
+                .addGroup(MarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(turno))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -172,11 +210,16 @@ public class Totito extends javax.swing.JFrame {
                         .addComponent(Acciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(tablero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        reiniciaTablero();
+    }//GEN-LAST:event_btnNuevoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -217,11 +260,13 @@ public class Totito extends javax.swing.JFrame {
     private javax.swing.JPanel Acciones;
     private javax.swing.JPanel Marcador;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblJ1;
     private javax.swing.JLabel lblJ2;
     private javax.swing.JLabel marcadorJ1;
     private javax.swing.JLabel marcadorJ2;
     private javax.swing.JPanel tablero;
+    private javax.swing.JLabel turno;
     private javax.swing.JLabel txtJ1;
     private javax.swing.JLabel txtJ2;
     // End of variables declaration//GEN-END:variables
@@ -233,7 +278,7 @@ public class Totito extends javax.swing.JFrame {
      * @param filas, botones ordenados en filas
      * @param columnas, botones ordenados en collumnas
      */
-    public void creaBotones(int filas, int columnas){
+    public void creaJButtones(int filas, int columnas){
     
         int ancho= 60*2;
         int alto= 30*2;
@@ -242,7 +287,7 @@ public class Totito extends javax.swing.JFrame {
         this.tablero.removeAll();
 
         //Se crea una matriz de botones segun las filas y columnas entrantes
-        Boton [][] botones = new Boton[ filas ][ columnas ];
+        botones = new JButton[ filas ][ columnas ];
         
         //Se recorren las filas
         for( int fila = 0 ; fila < filas; fila++ )
@@ -251,21 +296,103 @@ public class Totito extends javax.swing.JFrame {
             for( int columna = 0 ; columna < columnas; columna++ )
             {
                 //Se crea el boton y se agrega a las celda de la matriz
-                botones[fila][columna] = new Boton( ancho * columna, alto * fila, ancho, alto );
+                //botones[fila][columna] = new JButton( ancho * columna, alto * fila, ancho, alto );
+                JButton btn = new JButton(cnStrInicial);
+                btn.setBounds(60*fila, columna*60, 60, 60);
                 
                 //Se da el nombre en forma de coordenada enviando la fila y columna
-                botones[fila][columna].setNombre(fila, columna);
+                //botones[fila][columna].setNombre(fila, columna);
+                btn.setName("btn"+fila+columna);
+                btn.addActionListener(new java.awt.event.ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        boolean gano=false;
+                        if( btn.getText().equals(cnStrInicial)){
+                            if(turno.getText().equals(cnTextoJ1)){
+                                turno.setText(cnTextoJ2);
+                                btn.setText("O");
+                                gano= ( validaFilas() || validaColumnas() || validaDiagonales() );
+                            }else{
+                                turno.setText(cnTextoJ1);
+                                btn.setText("X");
+                                gano= ( validaFilas() || validaColumnas() || validaDiagonales() );
+                            }
+                            if( gano ){
+                                JOptionPane.showMessageDialog(null, "Gano " + turno.getText());
+                                if( turno.getText().equals(cnTextoJ1) ){
+                                    ganadoJ1++;
+                                    //marcadorJ1.setText( Integer.toString( ganadoJ1 ) );
+                                }else{
+                                    ganadoJ2++;
+                                    //marcadorJ2.setText( Integer.toString( ganadoJ2 ) );
+                                }
+                                reiniciaTablero();                                
+                            }
+
+                        }
+                        
+                    }
+                });
+                botones[fila][columna] = btn;
                 
-                //Se agrega el boton al PBotones
+                //Se agrega el boton al PJButtones
                 this.tablero.add( botones[fila][columna] );
+
+
             }
         }
         
-        //Se actualiza el PBotones para que se vean los botones
+        //Se actualiza el PJButtones para que se vean los botones
         this.tablero.updateUI();
     }
     
     
+    public boolean validaColumnas(){
+        boolean ganoColumna=false;
+        
+        for(int columnita=0; columnita<3; columnita++){
+            if( botones[0][columnita].getText().equals( botones[1][columnita].getText() ) 
+                    && botones[0][columnita].getText().equals( botones[2][columnita].getText() ) 
+                    && !botones[0][columnita].getText().equals( cnStrInicial )  ){
+                ganoColumna=true;
+                break;
+            }
+        }
 
+        return ganoColumna;
+    }
+
+    
+    public boolean validaFilas(){
+        boolean ganoFila=false;
+        
+        for(int filita=0; filita<3; filita++){
+            if( botones[filita][0].getText().equals( botones[filita][1].getText() ) 
+                    && botones[filita][0].getText().equals( botones[filita][2].getText() ) 
+                    && !botones[filita][0].getText().equals( cnStrInicial )  ){
+                ganoFila=true;
+                break;
+            }
+        }
+
+        return ganoFila;
+    }
+
+
+    public boolean validaDiagonales(){
+        boolean gano = false;
+        
+        if( botones[0][0].getText().equals( botones[1][1].getText() ) 
+                && botones[0][0].getText().equals( botones[2][2].getText() ) 
+                && !botones[0][0].getText().equals( cnStrInicial )  ){
+            gano = true;
+        }else if( botones[0][2].getText().equals( botones[1][1].getText() ) 
+                && botones[0][2].getText().equals( botones[2][0].getText() ) 
+                && !botones[0][2].getText().equals( cnStrInicial )  ){
+            gano = true;
+        }
+
+        return gano;
+    }
 
 }
