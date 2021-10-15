@@ -78,9 +78,12 @@ public class foferta_1 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosOferta = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de oferta");
 
         lblid_oferta.setText("Id oferta ");
+
+        txtid_oferta.setEditable(false);
 
         lblid_marca_producto_oferta.setText("Id marca producto");
 

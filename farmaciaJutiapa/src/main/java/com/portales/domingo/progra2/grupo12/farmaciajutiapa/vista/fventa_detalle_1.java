@@ -83,9 +83,12 @@ public class fventa_detalle_1 extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Mantenimiento de venta detalle");
 
         lblide_venta_detalle.setText("Id venta detalle");
+
+        txtide_venta_detalle.setEditable(false);
 
         lblid_venta.setText("Id venta");
 
