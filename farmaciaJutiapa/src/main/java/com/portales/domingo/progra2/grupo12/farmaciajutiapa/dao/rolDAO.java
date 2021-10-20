@@ -27,6 +27,7 @@ public class rolDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_rol, nombre_rol FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_rol = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_rol= ? WHERE id_rol = ? ";
+    private static final String cnSQLSeleccionaPorNombre=" SELECT id_rol, nombre_rol FROM "+cnSQLTabla+" WHERE nombre_rol = ? ";    
 
     /***
      * Constructor rolDAO
@@ -156,6 +157,26 @@ public class rolDAO {
         } catch (Exception e) {
             Util.printException("rolDAO.cierra", e);
         }        
+    }
+
+    public rol getRolByNombre(String nombreRol) {
+        rol nuevoRol=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
+            ps.setString(1, nombreRol);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevoRol = new rol( rs.getInt("id_rol"), rs.getString("nombre_rol")  );
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("rolDAO.getRolByNombre", ex);
+        } catch (Exception e) {
+            Util.printException("rolDAO.getRolByNombre", e);
+        }
+        return nuevoRol;
     }
   
 

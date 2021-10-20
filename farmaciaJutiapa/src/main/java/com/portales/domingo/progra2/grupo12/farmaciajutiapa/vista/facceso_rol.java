@@ -5,6 +5,7 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.acceso_rolDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.acceso_rol;
@@ -43,6 +44,8 @@ public class facceso_rol extends javax.swing.JFrame {
 
         llenaListado();
         limpiaCampos();
+        llenaComboBoxAcceso();
+        llenaComboBoxRol();        
     }
 
     /**
@@ -58,15 +61,15 @@ public class facceso_rol extends javax.swing.JFrame {
         lblid_acceso_rol = new javax.swing.JLabel();
         txtid_acceso_rol = new javax.swing.JTextField();
         lblid_acceso = new javax.swing.JLabel();
-        txtid_acceso = new javax.swing.JTextField();
         lblid_rol = new javax.swing.JLabel();
-        txtid_rol = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosAccesoRol = new javax.swing.JTable();
+        cbxId_acceso = new javax.swing.JComboBox<>();
+        cbxId_rol = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento Acceso Rol");
@@ -127,56 +130,53 @@ public class facceso_rol extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblid_acceso_rol)
                             .addComponent(lblid_acceso)
                             .addComponent(lblid_rol))
-                        .addGap(80, 80, 80)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtid_acceso_rol, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                            .addComponent(txtid_acceso)
-                            .addComponent(txtid_rol)))
+                        .addGap(43, 43, 43)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cbxId_acceso, 0, 151, Short.MAX_VALUE)
+                            .addComponent(cbxId_rol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtid_acceso_rol)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
                         .addComponent(btnAgregar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnModificar)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnNuevo))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNuevo)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblid_acceso_rol)
                     .addComponent(txtid_acceso_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblid_acceso)
-                    .addComponent(txtid_acceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxId_acceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtid_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblid_rol))
-                .addGap(54, 54, 54)
+                    .addComponent(lblid_rol)
+                    .addComponent(cbxId_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnNuevo))
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -191,7 +191,7 @@ public class facceso_rol extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addGap(0, 32, Short.MAX_VALUE))
         );
 
         pack();
@@ -224,8 +224,8 @@ public class facceso_rol extends javax.swing.JFrame {
                 String idAcceso=(String)TablaDatosAccesoRol.getValueAt(fila,1).toString();
                 String idRol=(String)TablaDatosAccesoRol.getValueAt(fila,2).toString();
                 this.txtid_acceso_rol.setText(idAccesoRol);
-                this.txtid_acceso.setText(idAcceso);
-                this.txtid_rol.setText(idRol);
+                this.cbxId_acceso.setSelectedIndex( Integer.parseInt(idAcceso) );
+                this.cbxId_rol.setSelectedIndex( Integer.parseInt(idRol) );
             }
         }catch(Exception e){
             Util.printException("facceso_rol.TablaDatosAccesoRolMouseClicked", e);
@@ -274,22 +274,22 @@ public class facceso_rol extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cbxId_acceso;
+    private javax.swing.JComboBox<String> cbxId_rol;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblid_acceso;
     private javax.swing.JLabel lblid_acceso_rol;
     private javax.swing.JLabel lblid_rol;
-    private javax.swing.JTextField txtid_acceso;
     private javax.swing.JTextField txtid_acceso_rol;
-    private javax.swing.JTextField txtid_rol;
     // End of variables declaration//GEN-END:variables
 
 
     private void limpiaCampos() {
         try{
             this.txtid_acceso_rol.setText("");
-            this.txtid_acceso.setText("");
-            this.txtid_rol.setText("");
+            //this.txtid_acceso.setText("");
+            //this.txtid_rol.setText("");
         }catch(Exception e){
             Util.printException("facceso_rol.limpiaCampos", e);
         }                
@@ -318,7 +318,7 @@ public class facceso_rol extends javax.swing.JFrame {
         try{
             arDAO = new acceso_rolDAO();
             listaAccesos = new ArrayList<>();
-            listaAccesos = arDAO.seleccionaTodo();
+            listaAccesos = arDAO.seleccionaTodoRelacionado();
 
             Object[]pObj=new Object[3];
 
@@ -326,8 +326,8 @@ public class facceso_rol extends javax.swing.JFrame {
 
             for(acceso_rol p:listaAccesos){
                 pObj[0] = p.getId_acceso_rol();
-                pObj[1] = p.getId_acceso();
-                pObj[2] = p.getId_rol();
+                pObj[1] = p.getNombre_acceso();
+                pObj[2] = p.getNombre_rol();
                 modelo.addRow(pObj);
             }
             TablaDatosAccesoRol.setModel(modelo);
@@ -342,8 +342,8 @@ public class facceso_rol extends javax.swing.JFrame {
         
         try{
             miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
-                                            Util.str2int(this.txtid_acceso.getText()),
-                                            Util.str2int(this.txtid_rol.getText()) );
+                                            arDAO.getAccesoByNombre( (String) this.cbxId_acceso.getSelectedItem() ),
+                                            arDAO.getRolByNombre( (String) this.cbxId_rol.getSelectedItem() ));
             
             if ( arDAO.inserta( miAccesoRol ) ){
                 JOptionPane.showMessageDialog(null, "Acceso Rol ingresado");
@@ -360,8 +360,8 @@ public class facceso_rol extends javax.swing.JFrame {
     private void modificar(){
         try{
             miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
-                                            Util.str2int(this.txtid_acceso.getText()),
-                                            Util.str2int(this.txtid_rol.getText() ));
+                                            arDAO.getAccesoByNombre( (String) this.cbxId_acceso.getSelectedItem() ),
+                                            arDAO.getRolByNombre( (String) this.cbxId_rol.getSelectedItem() ));
             
             if ( arDAO.actualiza( miAccesoRol ) ){
                 JOptionPane.showMessageDialog(null, "Acceso Rol actualizado");
@@ -393,6 +393,48 @@ public class facceso_rol extends javax.swing.JFrame {
         }catch(Exception e){
             Util.printException("facceso_rol.eliminar", e);
         }        
+    }    
+    
+    private void llenaComboBoxAcceso() {
+
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_acceso from acceso ");
+            this.cbxId_acceso.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxId_acceso.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaComboBoxAcceso, tabla acceso vacia");
+            
+        }catch(Exception e){
+            Util.printException("facceso_rol.llenaComboBoxAcceso", e);
+        }
+
+    }
+    
+    private void llenaComboBoxRol() {
+
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_rol from rol ");
+            this.cbxId_rol.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxId_rol.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaComboBoxRol, tabla rol vacia");
+            
+        }catch(Exception e){
+            Util.printException("facceso_rol.llenaComboBoxRol", e);
+        }
+
     }    
     
 }

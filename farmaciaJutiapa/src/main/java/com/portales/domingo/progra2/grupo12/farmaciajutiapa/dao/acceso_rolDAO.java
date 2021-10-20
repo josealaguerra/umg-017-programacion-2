@@ -28,6 +28,7 @@ public class acceso_rolDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_acceso = ?, id_rol = ? WHERE id_acceso_rol = ? ";
+    private static final String cnSQLSeleccionaTodoRelacionado=" SELECT ar.id_acceso_rol, a.nombre_acceso, r.nombre_rol FROM acceso_rol ar join acceso a on ar.id_acceso=a.id_acceso join rol r on ar.id_acceso=r.id_rol ";    
 
     /***
      * Constructor acceso_rolDAO
@@ -85,6 +86,33 @@ public class acceso_rolDAO {
         return listadoAccesoRol;
        
     }
+    
+    /***
+     * Selecciona todos los registros de la tabla acceso_rol
+     * @return 
+     */
+    public List<acceso_rol> seleccionaTodoRelacionado(){
+        List<acceso_rol> listadoAccesoRol=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            listadoAccesoRol=new ArrayList<>();
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodoRelacionado);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                listadoAccesoRol.add( new acceso_rol(   rs.getInt("id_acceso_rol"), 
+                                                        rs.getInt("id_acceso"), 
+                                                        rs.getInt("id_rol")) );
+            }
+            
+        } catch (SQLException ex) {
+            Util.printSQLException("acceso_rolDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.seleccionaTodo", e);
+        }
+        return listadoAccesoRol;
+    }    
     
     
     /***
@@ -171,4 +199,45 @@ public class acceso_rolDAO {
         }        
     }
 
+     /***
+     * Busca el ID Acceso por el nombre
+     * @param nombreAcceso
+     * @return 
+     */
+    public int getAccesoByNombre(String nombreAcceso){
+        int nuevoIDAcceso=0;
+        accesoDAO aDAO = null;
+        acceso aObj = null;
+        try {
+            aDAO = new accesoDAO();
+            aObj = aDAO.getAccesoByNombre( nombreAcceso );
+            nuevoIDAcceso=aObj.getId_acceso();
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getAccesoByNombre", e);
+        }finally{
+            aDAO.cierra();
+        }
+        return nuevoIDAcceso;
+    }
+    
+     /***
+     * Busca el ID Acceso por el nombre
+     * @param nombreAcceso
+     * @return 
+     */
+    public int getRolByNombre(String nombreRol){
+        int nuevoIDAcceso=0;
+        rolDAO rDAO = null;
+        rol rObj=null;
+        try {
+            rDAO = new rolDAO();
+            rObj = rDAO.getRolByNombre( nombreRol );
+            nuevoIDAcceso = rObj.getId_rol();
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getRolByNombre", e);
+        }finally{
+            rDAO.cierra();
+        }
+        return nuevoIDAcceso;
+    }    
 }

@@ -28,6 +28,7 @@ public class accesoDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_acceso = ?, pagina_acceso = ? WHERE id_acceso = ? ";
+    private static final String cnSQLSeleccionaPorNombre=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" WHERE nombre_acceso = ? ";    
 
     /***
      * Constructor accesoDAO
@@ -167,6 +168,28 @@ public class accesoDAO {
         } catch (Exception e) {
             Util.printException("accesoDAO.cierra", e);
         }        
+    }
+
+    public acceso getAccesoByNombre(String nombreAcceso) {
+        acceso nuevoAcceso=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
+            ps.setString(1, nombreAcceso);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevoAcceso = new acceso(   rs.getInt("id_acceso"), 
+                                            rs.getString("nombre_acceso"), 
+                                            rs.getString("pagina_acceso"));
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaPorID", e);
+        }
+        return nuevoAcceso;
     }
 
 }
