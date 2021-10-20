@@ -5,6 +5,9 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author josealaguerra
@@ -267,8 +270,14 @@ public class fPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_miOfertaActionPerformed
 
     private void miAcceso_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAcceso_rolActionPerformed
-        facceso_rol ar= new  facceso_rol();
-        ar.setVisible(true);
+        facceso_rol ar;
+        try {
+            ar = new  facceso_rol();
+            ar.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(fPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_miAcceso_rolActionPerformed
 
     private void miProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProductoActionPerformed

@@ -21,14 +21,16 @@ import java.util.logging.Logger;
  * @author josea
  */
 public class accesoDAO {
+
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="acceso";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_acceso, pagina_acceso) values (?, ?)";
-    private static final String cnSQLSeleccionaPorID=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
-    private static final String cnSQLSeleccionaTodo=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+"  ";
+    private static final String cnSQLSeleccionaPorID=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" WHERE id_acceso = ? order by nombre_acceso ";
+    private static final String cnSQLSeleccionaTodo=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" order by nombre_acceso ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_acceso = ?, pagina_acceso = ? WHERE id_acceso = ? ";
     private static final String cnSQLSeleccionaPorNombre=" SELECT id_acceso, nombre_acceso, pagina_acceso FROM "+cnSQLTabla+" WHERE nombre_acceso = ? ";    
+    private static final String cnSQLOrdenadoPorNombre=" select nombre_acceso from "+cnSQLTabla+" order by nombre_acceso  ";
 
     /***
      * Constructor accesoDAO
@@ -37,6 +39,11 @@ public class accesoDAO {
     public accesoDAO() throws Exception {
         cbd = new ConectaBD();
     }
+    
+    
+    public static String getAccesoOrdenadoSQL() {
+        return cnSQLOrdenadoPorNombre;
+    }    
 
     /***
      * Inserta un registro en la tabla acceso
@@ -178,6 +185,28 @@ public class accesoDAO {
         try {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
             ps.setString(1, nombreAcceso);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevoAcceso = new acceso(   rs.getInt("id_acceso"), 
+                                            rs.getString("nombre_acceso"), 
+                                            rs.getString("pagina_acceso"));
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+        } catch (Exception e) {
+            Util.printException("accesoDAO.seleccionaPorID", e);
+        }
+        return nuevoAcceso;
+    }
+
+    public acceso seleccionaPorNombre(String nombreRol) {
+        acceso nuevoAcceso=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
+            ps.setString(1, nombreRol);
             rs=ps.executeQuery();
             while(rs.next()){
                 nuevoAcceso = new acceso(   rs.getInt("id_acceso"), 
