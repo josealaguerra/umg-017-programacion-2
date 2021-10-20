@@ -46,9 +46,9 @@ public class facceso_rol extends javax.swing.JFrame {
         });
 
         llenaListado();
-        limpiaCampos();
         llenaComboBoxAcceso();
-        llenaComboBoxRol();        
+        llenaComboBoxRol();
+        limpiaCampos();
     }
 
     /**
@@ -347,19 +347,16 @@ public class facceso_rol extends javax.swing.JFrame {
     
     
     private void agregar(){
-        
         try{
             miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
                                             arDAO.getIDAccesoByCbxSelected( (String) this.cbxId_acceso.getSelectedItem() ),
                                             arDAO.getIDRolByCbxSelected( (String) this.cbxId_rol.getSelectedItem() ));
-            
             if ( arDAO.inserta( miAccesoRol ) ){
                 JOptionPane.showMessageDialog(null, "Acceso Rol ingresado");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
             }
-
         }catch(Exception e){
             Util.printException("facceso_rol.agregar", e);
         }

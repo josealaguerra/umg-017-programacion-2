@@ -198,25 +198,15 @@ public class accesoDAO {
         }
         return nuevoAcceso;
     }
+    
 
     public acceso seleccionaPorNombre(String nombreRol) {
         acceso nuevoAcceso=null;
-        PreparedStatement ps = null;
-        ResultSet rs=null;
         
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
-            ps.setString(1, nombreRol);
-            rs=ps.executeQuery();
-            while(rs.next()){
-                nuevoAcceso = new acceso(   rs.getInt("id_acceso"), 
-                                            rs.getString("nombre_acceso"), 
-                                            rs.getString("pagina_acceso"));
-            }
-        } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+            nuevoAcceso = getAccesoByNombre( nombreRol );
         } catch (Exception e) {
-            Util.printException("accesoDAO.seleccionaPorID", e);
+            Util.printException("accesoDAO.seleccionaPorNombre", e);
         }
         return nuevoAcceso;
     }

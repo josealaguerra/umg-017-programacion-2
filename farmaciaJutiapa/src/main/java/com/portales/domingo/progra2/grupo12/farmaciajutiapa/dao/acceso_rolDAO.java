@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -33,7 +31,7 @@ public class acceso_rolDAO {
                                                                 + "ar.id_rol as id_rol, r.nombre_rol as nombre_rol  "
                                                                 + "FROM acceso_rol ar "
                                                                 + "join acceso a on ar.id_acceso=a.id_acceso "
-                                                                + "join rol r on ar.id_acceso=r.id_rol "
+                                                                + "join rol r on ar.id_rol=r.id_rol "
                                                                 + "order by a.nombre_acceso, r.nombre_rol ";
 
     /***
@@ -344,13 +342,13 @@ public class acceso_rolDAO {
     
     public int getIDRolByCbxSelected(String nombreRol) {
         int nuevoIDRol = 0;
-        rolDAO aDAO = null;
-        rol aObj = null;
+        rolDAO rDAO = null;
+        rol rObj = null;
         
         try {
-            aDAO = new rolDAO();
-            aObj = aDAO.seleccionaPorNombre( nombreRol );
-            nuevoIDRol = aObj.getId_rol();
+            rDAO = new rolDAO();
+            rObj = rDAO.seleccionaPorNombre( nombreRol );
+            nuevoIDRol = rObj.getId_rol();
         } catch (SQLException ex) {
             Util.printSQLException("acceso_rolDAO.getIDRolByCbxSelected", ex);
         } catch (Exception e) {

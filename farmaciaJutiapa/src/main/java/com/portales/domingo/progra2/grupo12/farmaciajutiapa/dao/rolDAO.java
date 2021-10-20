@@ -185,6 +185,16 @@ public class rolDAO {
         }
         return nuevoRol;
     }
+
+    public rol seleccionaPorNombre(String nombreRol) {
+        rol nuevoRol=null;
+        try {
+            nuevoRol = getRolByNombre( nombreRol );
+        } catch (Exception e) {
+            Util.printException("rolDAO.seleccionaPorNombre", e);
+        }        
+        return nuevoRol;        
+    }
   
 
 }
