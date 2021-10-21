@@ -222,8 +222,8 @@ public class fcliente_1 extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Cliente no seleccionado");
             }else{
                 String idCliente=(String)TablaDatosCliente.getValueAt(fila,0).toString();
-                String idEmpresa=(String)TablaDatosCliente.getValueAt(fila,1).toString();
-                String idPersona=(String)TablaDatosCliente.getValueAt(fila,2).toString();
+                String idEmpresa=(String)TablaDatosCliente.getValueAt(fila,1);
+                String idPersona=(String)TablaDatosCliente.getValueAt(fila,2);
                 this.txtid_cliente.setText(idCliente);
                 this.txtid_empresa.setText(idEmpresa);
                 this.txtid_persona.setText(idPersona);

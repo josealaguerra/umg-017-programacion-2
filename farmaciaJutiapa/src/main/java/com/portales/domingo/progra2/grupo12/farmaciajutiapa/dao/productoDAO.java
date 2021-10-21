@@ -24,11 +24,11 @@ public class productoDAO {
     
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="producto";   
-    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?, ?, ?, ?, ?)";
+    private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nombre_producto, id_tipo_producto, id_marca_producto) values (?, ?, ?)";
     private static final String cnSQLSeleccionaPorID=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+" WHERE id_producto = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_producto, nombre_producto, id_tipo_producto, id_marca_producto FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_producto = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_producto= ?, nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set  nombre_producto = ?, id_tipo_producto = ?, id_marca_producto = ? WHERE id_producto = ? ";
 
     /***
      * Constructor productoDAO

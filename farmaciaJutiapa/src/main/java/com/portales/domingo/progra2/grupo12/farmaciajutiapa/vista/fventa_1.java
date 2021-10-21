@@ -244,13 +244,13 @@ public class fventa_1 extends javax.swing.JFrame {
                 String idCliente=(String)TablaDatosVenta.getValueAt(fila,1).toString();
                 Date fechaVenta=(Date)TablaDatosVenta.getValueAt(fila,2);
                 String numeroFactura=(String)TablaDatosVenta.getValueAt(fila,3);
-                String montoTotal=(String)TablaDatosVenta.getValueAt(fila,4);                
+                Double montoTotal=(Double)TablaDatosVenta.getValueAt(fila,4);                
                 this.txtid_venta.setText(idVenta);
                 this.txtid_cliente.setText(idCliente);
                  //Fecha
                 this.txtfecha_venta.setDate(fechaVenta);   
                 this.txtnumero_factura.setText(numeroFactura);
-                this.txtmonto_total.setText(montoTotal);
+                this.txtmonto_total.setText(montoTotal.toString());
             }
         }catch(Exception e){
             Util.printException("fventa_1.TablaDatosAccesoMouseClicked", e);

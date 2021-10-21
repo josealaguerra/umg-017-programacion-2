@@ -235,7 +235,7 @@ public class fproducto extends javax.swing.JFrame {
                 this.txtid_producto.setText(id);
                 this.txtnombre_producto.setText(nombre);
                 this.txtid_tipo_producto.setText(idTipoProd);
-                this.txtid_tipo_producto.setText(idMarcaProd);                
+                this.txtidmarca_producto.setText(idMarcaProd);                
             }
         }catch(Exception e){
             Util.printException("fproducto.TablaDatosProductoMouseClicked", e);

@@ -11,6 +11,7 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.oferta;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -67,15 +68,15 @@ public class foferta_1 extends javax.swing.JFrame {
         lblporcentaje_descuento = new javax.swing.JLabel();
         txtporcentaje_descuento = new javax.swing.JTextField();
         lblfecha_inicio = new javax.swing.JLabel();
-        txtfecha_inicio = new javax.swing.JTextField();
         lblfecha_final = new javax.swing.JLabel();
-        txtfecha_final = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosOferta = new javax.swing.JTable();
+        txtfecha_inicio = new com.toedter.calendar.JDateChooser();
+        txtfecha_final = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de oferta");
@@ -93,12 +94,6 @@ public class foferta_1 extends javax.swing.JFrame {
         lblporcentaje_descuento.setText("Porcentaje descuento");
 
         lblfecha_inicio.setText("Fecha inicio");
-
-        txtfecha_inicio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtfecha_inicioActionPerformed(evt);
-            }
-        });
 
         lblfecha_final.setText("Fecha final");
 
@@ -145,6 +140,10 @@ public class foferta_1 extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaDatosOferta);
 
+        txtfecha_inicio.setDateFormatString("dd/MM/yyyy");
+
+        txtfecha_final.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -157,9 +156,9 @@ public class foferta_1 extends javax.swing.JFrame {
                             .addComponent(lblfecha_inicio)
                             .addComponent(lblfecha_final))
                         .addGap(74, 74, 74)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtfecha_final, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtfecha_inicio, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtfecha_inicio, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                            .addComponent(txtfecha_final, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblid_oferta)
@@ -174,7 +173,7 @@ public class foferta_1 extends javax.swing.JFrame {
                             .addComponent(txtid_tipo_producto_oferta, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtid_marca_producto_oferta, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtid_oferta, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(66, 66, 66)
+                .addGap(69, 69, 69)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnAgregar)
@@ -221,10 +220,13 @@ public class foferta_1 extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblfecha_inicio)
                             .addComponent(txtfecha_inicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblfecha_final)
-                            .addComponent(txtfecha_final, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(lblfecha_final))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtfecha_final, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
@@ -243,10 +245,6 @@ public class foferta_1 extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtfecha_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtfecha_inicioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtfecha_inicioActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         agregar();
@@ -275,16 +273,16 @@ public class foferta_1 extends javax.swing.JFrame {
                 String idMarcaProducto=(String)TablaDatosOferta.getValueAt(fila,1).toString();
                 String idTipoProducto=(String)TablaDatosOferta.getValueAt(fila,2).toString();
                 String idProducto=(String)TablaDatosOferta.getValueAt(fila,3).toString();
-                String PorcentajeDescuento=(String)TablaDatosOferta.getValueAt(fila,4);
-                String fechaInicio=(String)TablaDatosOferta.getValueAt(fila,5);
-                String fechaFinal=(String)TablaDatosOferta.getValueAt(fila,6);                
+                Double PorcentajeDescuento=(Double)TablaDatosOferta.getValueAt(fila,4);
+                Date fechaInicio=(Date)TablaDatosOferta.getValueAt(fila,5);
+                Date fechaFinal=(Date)TablaDatosOferta.getValueAt(fila,6);                
                 this.txtid_oferta.setText(idOferta);
                 this.txtid_marca_producto_oferta.setText(idMarcaProducto);
                 this.txtid_tipo_producto_oferta.setText(idTipoProducto);
                 this.txtid_producto_oferta.setText(idProducto);
-                this.txtporcentaje_descuento.setText(PorcentajeDescuento);
-                this.txtfecha_inicio.setText(fechaInicio);
-                this.txtfecha_final.setText(fechaFinal);
+                this.txtporcentaje_descuento.setText(PorcentajeDescuento.toString());
+                this.txtfecha_inicio.setDate(fechaInicio);
+                this.txtfecha_final.setDate(fechaFinal);
             }
         }catch(Exception e){
             Util.printException("foferta_1.TablaDatosAccesoMouseClicked", e);
@@ -342,8 +340,8 @@ public class foferta_1 extends javax.swing.JFrame {
     private javax.swing.JLabel lblid_producto_oferta;
     private javax.swing.JLabel lblid_tipo_producto_oferta;
     private javax.swing.JLabel lblporcentaje_descuento;
-    private javax.swing.JTextField txtfecha_final;
-    private javax.swing.JTextField txtfecha_inicio;
+    private com.toedter.calendar.JDateChooser txtfecha_final;
+    private com.toedter.calendar.JDateChooser txtfecha_inicio;
     private javax.swing.JTextField txtid_marca_producto_oferta;
     private javax.swing.JTextField txtid_oferta;
     private javax.swing.JTextField txtid_producto_oferta;
@@ -359,8 +357,8 @@ public class foferta_1 extends javax.swing.JFrame {
             this.txtid_tipo_producto_oferta.setText("");
             this.txtid_producto_oferta.setText("");
             this.txtporcentaje_descuento.setText("");
-            this.txtfecha_inicio.setText("");
-            this.txtfecha_final.setText("");
+            this.txtfecha_inicio.setDate(new Date());
+            this.txtfecha_final.setDate(new Date());
         }catch(Exception e){
             Util.printException("foferta_1.limpiaCampos", e);
         }                
@@ -396,6 +394,7 @@ public class foferta_1 extends javax.swing.JFrame {
             modelo = (DefaultTableModel)TablaDatosOferta.getModel();
 
             for(oferta p:listaOfertas){
+                
                 pObj[0] = p.getId_oferta();
                 pObj[1] = p.getId_marca_producto();
                 pObj[2] = p.getId_tipo_producto();
@@ -421,8 +420,8 @@ public class foferta_1 extends javax.swing.JFrame {
                                     Util.str2int( this.txtid_tipo_producto_oferta.getText() ),
                                     Util.str2int( this.txtid_producto_oferta.getText() ),
                                     Util.str2double( this.txtporcentaje_descuento.getText() ),
-                                    Util.str2date( this.txtfecha_inicio.getText() ),
-                                    Util.str2date( this.txtfecha_final.getText() )  );
+                                    this.txtfecha_inicio.getDate(),
+                                    this.txtfecha_final.getDate());
             
             if ( oDAO.inserta(miOferta) ){
                 JOptionPane.showMessageDialog(null, "Oferta ingresada");
@@ -444,8 +443,8 @@ public class foferta_1 extends javax.swing.JFrame {
                                     Util.str2int( this.txtid_tipo_producto_oferta.getText() ),
                                     Util.str2int( this.txtid_producto_oferta.getText() ),
                                     Util.str2double( this.txtporcentaje_descuento.getText() ),
-                                    Util.str2date( this.txtfecha_inicio.getText() ),
-                                    Util.str2date( this.txtfecha_final.getText() )  );
+                                    this.txtfecha_inicio.getDate(),
+                                    this.txtfecha_final.getDate());
             
             if ( oDAO.actualiza(miOferta) ){
                 JOptionPane.showMessageDialog(null, "Oferta actualizada");
