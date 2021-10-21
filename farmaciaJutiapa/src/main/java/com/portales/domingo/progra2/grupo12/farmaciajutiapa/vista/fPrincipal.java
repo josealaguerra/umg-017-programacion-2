@@ -316,8 +316,14 @@ public class fPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_miVenta_detalleActionPerformed
 
     private void miCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCompraActionPerformed
-       fcompra comp= new  fcompra();
-        comp.setVisible(true);
+       fcompra comp;
+        try {
+            comp = new  fcompra();
+            comp.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(fPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_miCompraActionPerformed
 
     /**

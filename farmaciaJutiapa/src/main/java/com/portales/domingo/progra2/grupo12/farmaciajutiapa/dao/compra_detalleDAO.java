@@ -29,6 +29,7 @@ public class compra_detalleDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_compra_detalle, id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_compra_detalle = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra_detalle = ?, id_compra= ?, id_marca_producto= ?, id_tipo_producto= ?, id_producto= ?, precio_unitario_compra= ?, cantidad= ? WHERE id_compra_detalle = ? ";
+    private static final String cnSQLSeleccionaTodoPorIDCompra=" SELECT id_compra_detalle, id_compra, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_compra, cantidad FROM "+cnSQLTabla+" WHERE id_compra = ? ";
 
     /***
      * Constructor compra_detalleDAO
@@ -67,14 +68,15 @@ public class compra_detalleDAO {
      * Selecciona todos los registros de la tabla compra_detalle
      * @return 
      */    
-    public List<compra_detalle> seleccionaTodo(){
+    public List<compra_detalle> seleccionaTodo(int paramIDCompra){
         List<compra_detalle> listaCompraDet=null;
         PreparedStatement ps = null;
         ResultSet rs=null;
         
         try {
             listaCompraDet=new ArrayList<>();
-            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodo);
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodoPorIDCompra);
+            ps.setInt(1, paramIDCompra);
             rs=ps.executeQuery();
             while(rs.next()){
                 listaCompraDet.add( new compra_detalle( rs.getInt("id_compra_detalle"), 
@@ -83,7 +85,7 @@ public class compra_detalleDAO {
                                                         rs.getInt("id_tipo_producto"), 
                                                         rs.getInt("id_producto"), 
                                                         rs.getDouble("precio_unitario_compra"), 
-                                                        rs.getInt("cantidad ")));
+                                                        rs.getInt("cantidad")));
                                                     
             }
             

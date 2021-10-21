@@ -381,7 +381,7 @@ public class fcompra_detalle extends javax.swing.JFrame {
         try{
             cdDAO = new compra_detalleDAO();
             listaCompraDetalle = new ArrayList<>();
-            listaCompraDetalle = cdDAO.seleccionaTodo();
+//            listaCompraDetalle = cdDAO.seleccionaTodo();
 
             Object[]pObj=new Object[7];
 

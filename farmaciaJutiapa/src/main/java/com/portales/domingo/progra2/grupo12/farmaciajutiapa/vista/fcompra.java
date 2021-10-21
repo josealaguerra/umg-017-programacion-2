@@ -8,6 +8,7 @@ package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.compraDAO;
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.compra_detalleDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.compra;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.compra_detalle;
 import java.awt.event.WindowAdapter;
@@ -15,6 +16,8 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,12 +31,16 @@ public class fcompra extends javax.swing.JFrame {
     private compra miCompra=null;
     private DefaultTableModel modelo=null;
     private int fila = 0;
+    private compra_detalleDAO cdDAO = null;
+    private compra_detalle miCompraDetalle = null;
 
     /**
      * Creates new form fcompra
      */
-    public fcompra() {
+    public fcompra() throws Exception {
         initComponents();
+        cDAO = new compraDAO();
+        cdDAO = new compra_detalleDAO();
         
         //Permite cerrar la BD cuando se cierra la ventana
         addWindowListener(new WindowAdapter() {
@@ -76,7 +83,7 @@ public class fcompra extends javax.swing.JFrame {
         TablaDatosCompra = new javax.swing.JTable();
         txtfecha_compra = new com.toedter.calendar.JDateChooser();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaDatosCompraDetalle = new javax.swing.JTable();
         lblid_compra1 = new javax.swing.JLabel();
         txtdetid_compra = new javax.swing.JTextField();
         lblid_proveedor1 = new javax.swing.JLabel();
@@ -163,7 +170,7 @@ public class fcompra extends javax.swing.JFrame {
 
         txtfecha_compra.setDateFormatString("dd/MM/yyyy");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaDatosCompraDetalle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -171,12 +178,12 @@ public class fcompra extends javax.swing.JFrame {
                 "ID Compra detalle", "ID Compra", "ID Marca producto", "ID Tipo producto", "ID Producto", "Precio Unitario Compra", "Cantidad"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        TablaDatosCompraDetalle.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                TablaDatosCompraDetalleMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(TablaDatosCompraDetalle);
 
         lblid_compra1.setText("Id compra");
 
@@ -413,7 +420,8 @@ public class fcompra extends javax.swing.JFrame {
                 this.txtmonto_total.setText( montoTotal.toString() );
                 //Detalle
                 this.txtdetid_compra.setText(idCompra);
-                
+                limpiaTablaDetalle();
+                llenaListadoDetalle( Util.str2int(idCompra) );
             }
         }catch(Exception e){
             Util.printException("fcompra.TablaDatosCompraMouseClicked", e);
@@ -437,76 +445,46 @@ public class fcompra extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnDetAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetAgregarActionPerformed
-        try{
-            miCompraDetalle = new compra_detalle(   Util.str2int( this.txtide_compra_detalle.getText() ),
-                                                    Util.str2int( this.txtid_compra.getText() ),
-                                                    Util.str2int( this.txtid_marca_producto.getText() ),
-                                                    Util.str2int( this.txtid_tipo_producto.getText() ),
-                                                    Util.str2int( this.txtid_producto.getText() ),
-                                                    Util.str2double( this.txtprecio_unitario_compra.getText() ),
-                                                    Util.str2int( this.txtcantidad.getText() ) );
-            
-            
-            if ( cdDAO.inserta( miCompraDetalle ) ){
-                JOptionPane.showMessageDialog(null, "Compra detalle ingresada");
-                limpiaTabla();
-                limpiaCampos();
-                llenaListado();
-            }
-                    
-            
-        }catch(Exception e){
-            Util.printException("fcompra_detalle.agregar", e);
-        }
+        agregaDetalle();
     }//GEN-LAST:event_btnDetAgregarActionPerformed
 
     private void btnDetModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetModificarActionPerformed
-        try{
-            miCompraDetalle = new compra_detalle(   Util.str2int( this.txtide_compra_detalle.getText() ),
-                                                    Util.str2int( this.txtid_compra.getText() ),
-                                                    Util.str2int( this.txtid_marca_producto.getText() ),
-                                                    Util.str2int( this.txtid_tipo_producto.getText() ),
-                                                    Util.str2int( this.txtid_producto.getText() ),
-                                                    Util.str2double( this.txtprecio_unitario_compra.getText() ),
-                                                    Util.str2int( this.txtcantidad.getText() ) );
-            
-            if ( cdDAO.actualiza( miCompraDetalle ) ){
-                JOptionPane.showMessageDialog(null, "Compra detalle actualizada");
-                limpiaTabla();
-                limpiaCampos();
-                llenaListado();
-            }
-
-        }catch(Exception e){
-            Util.printException("fcompra_detalle.modificar", e);
-        }
+        modificaDetalle();
     }//GEN-LAST:event_btnDetModificarActionPerformed
 
     private void btnDetEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetEliminarActionPerformed
-        try{        
-            fila = TablaDatosCompraDetalle.getSelectedRow();
-            if(fila == -1){
-                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
-            }else{
-                if ( cdDAO.elimina( Util.str2int((String)TablaDatosCompraDetalle.getValueAt(fila,0).toString()) ) ){
-                    JOptionPane.showMessageDialog(null, "Compra detalle eliminada");
-                    limpiaTabla();
-                    limpiaCampos();
-                    llenaListado();
-                }
-            }
-        }catch(Exception e){
-            Util.printException("fcompra_detalle.eliminar", e);
-        }
+        eliminaDetalle();
     }//GEN-LAST:event_btnDetEliminarActionPerformed
 
     private void btnDetNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetNuevoActionPerformed
-        // TODO add your handling code here:
+        limpiaCamposDetalle();
     }//GEN-LAST:event_btnDetNuevoActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTable1MouseClicked
+    private void TablaDatosCompraDetalleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaDatosCompraDetalleMouseClicked
+        try{
+            fila = TablaDatosCompraDetalle.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Compra detalle no seleccionado");
+            }else{
+                String idCompraDetalle=(String)TablaDatosCompraDetalle.getValueAt(fila,0).toString();
+                String idCompra=(String)TablaDatosCompraDetalle.getValueAt(fila,1).toString();
+                String idMarcaProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,2).toString();
+                String idTipoProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,3).toString();
+                String idProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,4).toString();
+                Double PrecioUnitarioCompra=(Double)TablaDatosCompraDetalle.getValueAt(fila,5);
+                Integer cantidad=(Integer)TablaDatosCompraDetalle.getValueAt(fila,6);
+                this.txtdetid_compra_detalle.setText(idCompraDetalle);
+                this.txtdetid_compra.setText(idCompra);
+                this.txtdetid_marca_producto.setText(idMarcaProducto);
+                this.txtdetid_tipo_producto.setText(idTipoProducto);
+                this.txtdetid_producto.setText(idProducto);
+                this.txtdetprecio_unitario.setText(PrecioUnitarioCompra.toString());
+                this.txtdetcantidad.setText(cantidad.toString());
+            }
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.TablaDatosCompraDetalleMouseClicked", e);
+        }
+    }//GEN-LAST:event_TablaDatosCompraDetalleMouseClicked
 
     /**
      * @param args the command line arguments
@@ -539,13 +517,18 @@ public class fcompra extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new fcompra().setVisible(true);
+                try {
+                    new fcompra().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(fcompra.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TablaDatosCompra;
+    private javax.swing.JTable TablaDatosCompraDetalle;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnDetAgregar;
     private javax.swing.JButton btnDetEliminar;
@@ -557,7 +540,6 @@ public class fcompra extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblfecha_compra;
     private javax.swing.JLabel lblfecha_compra1;
     private javax.swing.JLabel lblid_compra;
@@ -600,19 +582,18 @@ public class fcompra extends javax.swing.JFrame {
 
     private void limpiaCamposDetalle() {
         try{
-            this.txtide_compra_detalle.setText("");
-            this.txtid_compra.setText("");
-            this.txtid_marca_producto.setText("");
-            this.txtid_tipo_producto.setText("");
-            this.txtid_producto.setText("");
-            this.txtprecio_unitario_compra.setText("");
-            this.txtcantidad.setText("");
+            this.txtdetid_compra_detalle.setText("");
+            this.txtdetid_compra.setText("");
+            this.txtdetid_marca_producto.setText("");
+            this.txtdetid_tipo_producto.setText("");
+            this.txtdetid_producto.setText("");
+            this.txtdetprecio_unitario.setText("");
+            this.txtdetcantidad.setText("");
         }catch(Exception e){
             Util.printException("fcompra_detalle.limpiaCampos", e);
         }                
     }
-        
-    
+
     
     public void limpiaTabla(){
         int filaRestante=0;
@@ -631,12 +612,30 @@ public class fcompra extends javax.swing.JFrame {
             Util.printException("fcompra.limpiaTabla", e);
         }        
     }
+    
+    public void limpiaTablaDetalle(){
+        int filaRestante=0;
+        try{
+            if( TablaDatosCompraDetalle.getRowCount() > 0 ){
+                for(int i=0;i<=TablaDatosCompraDetalle.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.limpiaTabla", e);
+        }        
+    }
+
 
     private void llenaListado() {
         List<compra> listaAccesos = null;
         
         try{
-            cDAO = new compraDAO();
             listaAccesos = new ArrayList<>();
             listaAccesos = cDAO.seleccionaTodo();
 
@@ -658,6 +657,33 @@ public class fcompra extends javax.swing.JFrame {
             Util.printException("fcompra.llenaListado", e);
         }
     }
+    
+    private void llenaListadoDetalle(int paramIDCompra) {
+        List<compra_detalle> listaCompraDetalle = null;
+        
+        try{
+            listaCompraDetalle = new ArrayList<>();
+            listaCompraDetalle = cdDAO.seleccionaTodo( paramIDCompra );
+
+            Object[]pObj=new Object[7];
+
+            modelo = (DefaultTableModel)TablaDatosCompraDetalle.getModel();
+
+            for(compra_detalle p:listaCompraDetalle){
+                pObj[0] = p.getId_compra_detalle();
+                pObj[1] = p.getId_compra();
+                pObj[2] = p.getId_marca_producto();
+                pObj[3] = p.getId_tipo_producto();
+                pObj[4] = p.getId_producto();
+                pObj[5] = p.getPrecio_unitario_compra();
+                pObj[6] = p.getCantidad();
+                modelo.addRow(pObj);
+            }
+            TablaDatosCompraDetalle.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.llenaListado", e);
+        }
+    }
 
     
     
@@ -674,11 +700,45 @@ public class fcompra extends javax.swing.JFrame {
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
+                //Detalle
+                limpiaTablaDetalle();
+                limpiaCamposDetalle();
+                llenaListadoDetalle( Util.str2int(this.txtid_compra.getText()) );
             }
          }catch(Exception e){
             Util.printException("fcompra.agregar", e);
         }
     }
+    
+    private void agregaDetalle(){
+        try{
+            miCompraDetalle = new compra_detalle(   Util.str2int( this.txtdetid_compra_detalle.getText() ),
+                                                    Util.str2int( this.txtdetid_compra.getText() ),
+                                                    Util.str2int( this.txtdetid_marca_producto.getText() ),
+                                                    Util.str2int( this.txtdetid_tipo_producto.getText() ),
+                                                    Util.str2int( this.txtdetid_producto.getText() ),
+                                                    Util.str2double( this.txtdetprecio_unitario.getText() ),
+                                                    Util.str2int( this.txtdetcantidad.getText() ) );
+            
+            
+            if ( cdDAO.inserta( miCompraDetalle ) ){
+                JOptionPane.showMessageDialog(null, "Compra detalle ingresada");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+                //Detalle
+                limpiaTablaDetalle();
+                limpiaCamposDetalle();
+                llenaListadoDetalle( Util.str2int( this.txtdetid_compra.getText() ) );
+            }
+                    
+            
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.agregar", e);
+        }
+    }
+    
+    
     
     private void modificar(){
         try{
@@ -693,6 +753,10 @@ public class fcompra extends javax.swing.JFrame {
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
+                //Detalle
+                limpiaTablaDetalle();
+                limpiaCamposDetalle();
+                llenaListadoDetalle( Util.str2int( this.txtdetid_compra.getText() ) );                
             }
 
         }catch(Exception e){
@@ -700,7 +764,31 @@ public class fcompra extends javax.swing.JFrame {
         }
     }
     
-    
+    private void modificaDetalle(){
+        try{
+            miCompraDetalle = new compra_detalle(   Util.str2int( this.txtdetid_compra_detalle.getText() ),
+                                                    Util.str2int( this.txtdetid_compra.getText() ),
+                                                    Util.str2int( this.txtdetid_marca_producto.getText() ),
+                                                    Util.str2int( this.txtdetid_tipo_producto.getText() ),
+                                                    Util.str2int( this.txtdetid_producto.getText() ),
+                                                    Util.str2double( this.txtdetprecio_unitario.getText() ),
+                                                    Util.str2int( this.txtdetcantidad.getText() ) );
+            
+            if ( cdDAO.actualiza( miCompraDetalle ) ){
+                JOptionPane.showMessageDialog(null, "Compra detalle actualizada");
+                limpiaTabla();
+                limpiaCampos();
+                llenaListado();
+                //Detalle
+                limpiaTablaDetalle();
+                limpiaCamposDetalle();
+                llenaListadoDetalle( Util.str2int( this.txtdetid_compra.getText() ) );                
+            }
+
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.modificar", e);
+        }
+    }
 
     private void eliminar(){
         try{        
@@ -713,6 +801,10 @@ public class fcompra extends javax.swing.JFrame {
                     limpiaTabla();
                     limpiaCampos();
                     llenaListado();
+                    //Detalle
+                    limpiaTablaDetalle();
+                    limpiaCamposDetalle();
+                    llenaListadoDetalle( Util.str2int( this.txtdetid_compra.getText() ) );                    
                 }
             }
         }catch(Exception e){
@@ -720,4 +812,26 @@ public class fcompra extends javax.swing.JFrame {
         }        
     }    
  
+    
+    private void eliminaDetalle(){
+        try{        
+            fila = TablaDatosCompraDetalle.getSelectedRow();
+            if(fila == -1){
+                JOptionPane.showMessageDialog(null, "Debe seleccionar fila");
+            }else{
+                if ( cdDAO.elimina( Util.str2int((String)TablaDatosCompraDetalle.getValueAt(fila,0).toString()) ) ){
+                    JOptionPane.showMessageDialog(null, "Compra detalle eliminada");
+                    limpiaTabla();
+                    limpiaCampos();
+                    llenaListado();
+                    //Detalle
+                    limpiaTablaDetalle();
+                    limpiaCamposDetalle();
+                    llenaListadoDetalle( Util.str2int( this.txtdetid_compra.getText() ) );
+                }
+            }
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.eliminar", e);
+        }
+    }
 }
