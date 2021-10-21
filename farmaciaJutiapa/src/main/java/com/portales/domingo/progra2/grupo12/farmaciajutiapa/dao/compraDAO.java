@@ -195,9 +195,9 @@ public class compraDAO {
                 JOptionPane.showMessageDialog(null, "FECHA DE COMPRA no debe ir vacio o a cero");
             }*/else if( com.getNumero_factura().toString().trim().equals("") ) {
                 JOptionPane.showMessageDialog(null, "NUMERO FACTURA no debe ir vacio o a cero");
-            }else if( com.getMonto_total() <= 0 ) {
+            }/*else if( com.getMonto_total() <= 0 ) {
                 JOptionPane.showMessageDialog(null, "MONTO TOTAL no debe ir vacio o a cero");
-            }else 
+            }*/else 
                 camposValidos = true;
 
         } catch (Exception e) {
