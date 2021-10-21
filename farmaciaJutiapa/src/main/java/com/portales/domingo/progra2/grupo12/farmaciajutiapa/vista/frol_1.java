@@ -279,13 +279,15 @@ public class frol_1 extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
-            for(int i=0;i<=TablaDatosRol.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
+        try{
+            if(TablaDatosRol.getRowCount() > 0){
+                for(int i=0;i<=TablaDatosRol.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
                 }
             }
         }catch(Exception e){
