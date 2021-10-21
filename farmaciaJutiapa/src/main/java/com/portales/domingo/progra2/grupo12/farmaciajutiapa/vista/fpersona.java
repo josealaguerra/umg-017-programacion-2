@@ -466,16 +466,14 @@ public class fpersona extends javax.swing.JFrame {
         int filaRestante=0;        
         try{   
             if (TablaDatosPersona.getRowCount()> 0) {
-                
-            
-            for(int i=0;i<=TablaDatosPersona.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
-                }                
-            }
+                for(int i=0;i<=TablaDatosPersona.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }                
+                }
             }
         }catch(Exception e){
             Util.printException("fpersona.limpiaTabla", e);
