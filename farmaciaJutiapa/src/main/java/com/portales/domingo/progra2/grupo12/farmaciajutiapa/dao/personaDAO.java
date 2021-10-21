@@ -29,7 +29,7 @@ public class personaDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla;
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_persona = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
-    boolean actualizaSinFecha=true;
+    boolean actualizaSinFecha=false;
     private static final String cnSQLActualizaPorIDSinFecha=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, id_estado_civil= ? WHERE id_persona = ? ";    
 
     /***

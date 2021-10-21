@@ -12,6 +12,7 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.persona;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -72,13 +73,13 @@ public class fpersona extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         cbxid_genero = new javax.swing.JComboBox<>();
-        txtfecha_de_nacimiento = new javax.swing.JFormattedTextField();
         cbxid_estado_civil = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosPersona = new javax.swing.JTable();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
+        txtfecha_de_nacimiento = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de persona");
@@ -123,8 +124,6 @@ public class fpersona extends javax.swing.JFrame {
                 btnModificarActionPerformed(evt);
             }
         });
-
-        txtfecha_de_nacimiento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd-MM-yyyy"))));
 
         TablaDatosPersona.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -177,6 +176,8 @@ public class fpersona extends javax.swing.JFrame {
             }
         });
 
+        txtfecha_de_nacimiento.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -208,10 +209,10 @@ public class fpersona extends javax.swing.JFrame {
                                 .addComponent(lblfecha_de_nacimiento)))
                         .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtfecha_de_nacimiento)
                             .addComponent(cbxid_estado_civil, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbxid_genero, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtsegundo_apellido, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(txtfecha_de_nacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addComponent(btnAgregar)
@@ -297,8 +298,8 @@ public class fpersona extends javax.swing.JFrame {
                 this.cbxid_genero.setSelectedIndex( generoID );
                 
                 //Fecha
-                String fecha=(String)TablaDatosPersona.getValueAt(fila,6).toString();
-                this.txtfecha_de_nacimiento.setText(fecha);
+                Date fecha=(Date)TablaDatosPersona.getValueAt(fila,6);
+                this.txtfecha_de_nacimiento.setDate(fecha);
                 
                 //Obtiene el verdadero ID
                 int estadoCivilID = convertStr2Cbx( (String)TablaDatosPersona.getValueAt(fila,7).toString(), 
@@ -398,7 +399,7 @@ public class fpersona extends javax.swing.JFrame {
     private javax.swing.JLabel lblprimer_nombre;
     private javax.swing.JLabel lblsegundo_apellido;
     private javax.swing.JLabel lblsegundo_nombre;
-    private javax.swing.JFormattedTextField txtfecha_de_nacimiento;
+    private com.toedter.calendar.JDateChooser txtfecha_de_nacimiento;
     private javax.swing.JTextField txtid_persona;
     private javax.swing.JTextField txtprimer_apellido;
     private javax.swing.JTextField txtprimer_nombre;
@@ -454,7 +455,7 @@ public class fpersona extends javax.swing.JFrame {
             this.txtsegundo_nombre.setText("");
             this.txtprimer_apellido.setText("");
             this.txtsegundo_apellido.setText("");
-            this.txtfecha_de_nacimiento.setText( Util.obtieneFechaNac() );
+            this.txtfecha_de_nacimiento.setDate( new Date() );
         }catch(Exception e){
             Util.printException("fpersona.limpiaCampos", e);
         }                
@@ -517,7 +518,7 @@ public class fpersona extends javax.swing.JFrame {
                                     this.txtprimer_apellido.getText(),
                                     this.txtsegundo_apellido.getText(),
                                     Util.int2cbx( this.cbxid_genero.getSelectedIndex() ),
-                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
+                                    this.txtfecha_de_nacimiento.getDate(),
                                     Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ));
             
             if ( pDAO.inserta(miPersona) ){
@@ -540,7 +541,7 @@ public class fpersona extends javax.swing.JFrame {
                                     this.txtprimer_apellido.getText(),
                                     this.txtsegundo_apellido.getText(),
                                     Util.int2cbx( this.cbxid_genero.getSelectedIndex() ),
-                                    Util.str2date(this.txtfecha_de_nacimiento.getText()),
+                                    this.txtfecha_de_nacimiento.getDate(),
                                     Util.int2cbx( this.cbxid_estado_civil.getSelectedIndex() ) );
             
             if ( pDAO.actualiza(miPersona) ){

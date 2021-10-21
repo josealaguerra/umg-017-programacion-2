@@ -72,6 +72,11 @@ public class fgenero extends javax.swing.JFrame {
         lblid_genero.setText("Id genero");
 
         txtid_genero.setEditable(false);
+        txtid_genero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtid_generoActionPerformed(evt);
+            }
+        });
 
         lblnombre_genero.setText("Nombre genero");
 
@@ -215,6 +220,10 @@ public class fgenero extends javax.swing.JFrame {
             Util.printException("fgenero.TablaDatosGeneroMouseClicked", e);
         }                
     }//GEN-LAST:event_TablaDatosGeneroMouseClicked
+
+    private void txtid_generoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtid_generoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtid_generoActionPerformed
 
     /**
      * @param args the command line arguments
