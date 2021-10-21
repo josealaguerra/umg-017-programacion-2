@@ -40,25 +40,26 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblid_compra" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblid_proveedor" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblfecha_compra" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblnumero_facctura" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblmonto_total" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtid_compra" alignment="0" pref="114" max="32767" attributes="0"/>
-                              <Component id="txtid_proveedor" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtfecha_compra" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtnumero_factura" max="32767" attributes="0"/>
-                              <Component id="txtmonto_total" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="lblid_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblid_proveedor" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblfecha_compra" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblnumero_facctura" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblmonto_total" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="txtid_compra" max="32767" attributes="0"/>
+                      <Component id="txtfecha_compra" pref="164" max="32767" attributes="0"/>
+                      <Component id="txtid_proveedor" max="32767" attributes="0"/>
+                      <Component id="txtnumero_factura" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtmonto_total" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Component id="btnAgregar" min="-2" max="-2" attributes="0"/>
@@ -74,7 +75,7 @@
                           <Component id="jScrollPane1" min="-2" pref="707" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="36" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -91,10 +92,10 @@
                       <Component id="lblid_proveedor" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtid_proveedor" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtfecha_compra" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblfecha_compra" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblfecha_compra" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtfecha_compra" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -115,7 +116,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="231" max="-2" attributes="0"/>
-                  <EmptySpace pref="196" max="32767" attributes="0"/>
+                  <EmptySpace pref="199" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -142,8 +143,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Fecha compra"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtfecha_compra">
         </Component>
         <Component class="javax.swing.JLabel" name="lblnumero_facctura">
           <Properties>
@@ -249,6 +248,11 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="com.toedter.calendar.JDateChooser" name="txtfecha_compra">
+          <Properties>
+            <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

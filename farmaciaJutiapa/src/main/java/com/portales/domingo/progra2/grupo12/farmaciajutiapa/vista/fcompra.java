@@ -12,6 +12,7 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.compra;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -62,7 +63,6 @@ public class fcompra extends javax.swing.JFrame {
         lblid_proveedor = new javax.swing.JLabel();
         txtid_proveedor = new javax.swing.JTextField();
         lblfecha_compra = new javax.swing.JLabel();
-        txtfecha_compra = new javax.swing.JTextField();
         lblnumero_facctura = new javax.swing.JLabel();
         txtnumero_factura = new javax.swing.JTextField();
         lblmonto_total = new javax.swing.JLabel();
@@ -73,6 +73,7 @@ public class fcompra extends javax.swing.JFrame {
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosCompra = new javax.swing.JTable();
+        txtfecha_compra = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de compra");
@@ -135,27 +136,30 @@ public class fcompra extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaDatosCompra);
 
+        txtfecha_compra.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblid_compra)
-                            .addComponent(lblid_proveedor)
-                            .addComponent(lblfecha_compra)
-                            .addComponent(lblnumero_facctura)
-                            .addComponent(lblmonto_total))
-                        .addGap(72, 72, 72)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtid_compra, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                            .addComponent(txtid_proveedor)
-                            .addComponent(txtfecha_compra)
-                            .addComponent(txtnumero_factura)
-                            .addComponent(txtmonto_total)))
+                    .addComponent(lblid_compra)
+                    .addComponent(lblid_proveedor)
+                    .addComponent(lblfecha_compra)
+                    .addComponent(lblnumero_facctura)
+                    .addComponent(lblmonto_total))
+                .addGap(72, 72, 72)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtid_compra)
+                    .addComponent(txtfecha_compra, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                    .addComponent(txtid_proveedor)
+                    .addComponent(txtnumero_factura)
+                    .addComponent(txtmonto_total))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(btnAgregar)
@@ -168,7 +172,7 @@ public class fcompra extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(36, 36, 36))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,10 +185,10 @@ public class fcompra extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblid_proveedor)
                     .addComponent(txtid_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtfecha_compra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblfecha_compra))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblfecha_compra)
+                    .addComponent(txtfecha_compra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblnumero_facctura)
@@ -201,7 +205,7 @@ public class fcompra extends javax.swing.JFrame {
                     .addComponent(btnNuevo))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(196, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -229,16 +233,16 @@ public class fcompra extends javax.swing.JFrame {
             if(fila == -1){
                 JOptionPane.showMessageDialog(null, "Compra no seleccionado");
             }else{
-                String idCompra=(String)TablaDatosCompra.getValueAt(fila,0).toString();
-                String idProveedor=(String)TablaDatosCompra.getValueAt(fila,1);
-                String fechaCompra=(String)TablaDatosCompra.getValueAt(fila,2);
-                String numeroFactura=(String)TablaDatosCompra.getValueAt(fila,3);
-                String montoTotal=(String)TablaDatosCompra.getValueAt(fila,4);                
+                String idCompra = (String)TablaDatosCompra.getValueAt(fila,0).toString();
+                String idProveedor = (String)TablaDatosCompra.getValueAt(fila,1).toString();
+                Date fechaCompra = (Date)TablaDatosCompra.getValueAt(fila,2);
+                String numeroFactura = (String)TablaDatosCompra.getValueAt(fila,3);
+                Double montoTotal = (Double)TablaDatosCompra.getValueAt(fila,4);
                 this.txtid_compra.setText(idCompra);
                 this.txtid_proveedor.setText(idProveedor);
-                this.txtfecha_compra.setText(fechaCompra);
+                this.txtfecha_compra.setDate(fechaCompra);
                 this.txtnumero_factura.setText(numeroFactura);
-                this.txtmonto_total.setText(montoTotal);                
+                this.txtmonto_total.setText( montoTotal.toString() );
             }
         }catch(Exception e){
             Util.printException("fcompra.TablaDatosCompraMouseClicked", e);
@@ -310,7 +314,7 @@ public class fcompra extends javax.swing.JFrame {
     private javax.swing.JLabel lblid_proveedor;
     private javax.swing.JLabel lblmonto_total;
     private javax.swing.JLabel lblnumero_facctura;
-    private javax.swing.JTextField txtfecha_compra;
+    private com.toedter.calendar.JDateChooser txtfecha_compra;
     private javax.swing.JTextField txtid_compra;
     private javax.swing.JTextField txtid_proveedor;
     private javax.swing.JTextField txtmonto_total;
@@ -322,7 +326,7 @@ public class fcompra extends javax.swing.JFrame {
         try{
             this.txtid_compra.setText("");
             this.txtid_proveedor.setText("");
-            this.txtfecha_compra.setText("");
+            this.txtfecha_compra.setDate( new Date() );
             this.txtnumero_factura.setText("");
             this.txtmonto_total.setText("");
         }catch(Exception e){
@@ -377,11 +381,10 @@ public class fcompra extends javax.swing.JFrame {
     
     
     private void agregar(){
-        
         try{
             miCompra = new compra(  Util.str2int(this.txtid_compra.getText()),
                                     Util.str2int(this.txtid_proveedor.getText()),
-                                    Util.str2date(this.txtfecha_compra.getText()),
+                                    this.txtfecha_compra.getDate(),
                                     this.txtnumero_factura.getText(),
                                     Util.str2double(this.txtmonto_total.getText() ) );
             
@@ -391,8 +394,7 @@ public class fcompra extends javax.swing.JFrame {
                 limpiaCampos();
                 llenaListado();
             }
- 
-        }catch(Exception e){
+         }catch(Exception e){
             Util.printException("fcompra.agregar", e);
         }
     }
@@ -401,7 +403,7 @@ public class fcompra extends javax.swing.JFrame {
         try{
             miCompra = new compra(  Util.str2int(this.txtid_compra.getText()),
                                     Util.str2int(this.txtid_proveedor.getText()),
-                                    Util.str2date(this.txtfecha_compra.getText()),
+                                    this.txtfecha_compra.getDate(),
                                     this.txtnumero_factura.getText(),
                                     Util.str2double(this.txtmonto_total.getText() ) );
             
