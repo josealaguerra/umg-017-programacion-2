@@ -72,6 +72,11 @@ public class fgenero extends javax.swing.JFrame {
         lblid_genero.setText("Id genero");
 
         txtid_genero.setEditable(false);
+        txtid_genero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtid_generoActionPerformed(evt);
+            }
+        });
 
         lblnombre_genero.setText("Nombre genero");
 
@@ -216,6 +221,10 @@ public class fgenero extends javax.swing.JFrame {
         }                
     }//GEN-LAST:event_TablaDatosGeneroMouseClicked
 
+    private void txtid_generoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtid_generoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtid_generoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,13 +288,15 @@ public class fgenero extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
-            for(int i=0;i<=TablaDatosGenero.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
+        try{
+            if( TablaDatosGenero.getRowCount() > 0 ){
+                for(int i=0;i<=TablaDatosGenero.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
                 }
             }
         }catch(Exception e){

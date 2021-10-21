@@ -57,10 +57,10 @@
                       </Group>
                       <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="txtfecha_de_nacimiento" alignment="0" max="32767" attributes="0"/>
                           <Component id="cbxid_estado_civil" alignment="0" max="32767" attributes="0"/>
                           <Component id="cbxid_genero" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtsegundo_apellido" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="txtsegundo_apellido" alignment="0" pref="90" max="32767" attributes="0"/>
+                          <Component id="txtfecha_de_nacimiento" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -118,7 +118,7 @@
                       <Component id="txtsegundo_apellido" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="cbxid_genero" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Component id="txtfecha_de_nacimiento" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="cbxid_estado_civil" min="-2" max="-2" attributes="0"/>
@@ -230,13 +230,6 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
-    </Component>
-    <Component class="javax.swing.JFormattedTextField" name="txtfecha_de_nacimiento">
-      <Properties>
-        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="dd-MM-yyyy" subtype="-1" type="1"/>
-        </Property>
-      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="cbxid_estado_civil">
       <Properties>
@@ -363,6 +356,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="com.toedter.calendar.JDateChooser" name="txtfecha_de_nacimiento">
+      <Properties>
+        <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

@@ -173,7 +173,14 @@ public class Util {
         return int2cbx( str2int( id_genero ) );
     }            
 
-    public static double str2double(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static double str2double(String numeroAModificar) {
+        double nuevoDoble=0.00;
+        try{
+            nuevoDoble = Double.parseDouble(numeroAModificar); 
+        }catch(Exception e){
+            Util.printException("str2double", e);
+            nuevoDoble=0.00;
+        }
+        return nuevoDoble;
     }
 }

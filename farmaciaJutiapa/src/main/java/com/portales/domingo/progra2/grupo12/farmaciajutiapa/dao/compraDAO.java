@@ -12,10 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,7 +30,7 @@ public class compraDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_compra= ?, id_proveedor= ?, fecha_compra= ?, numero_factura= ?, monto_total= ? WHERE id_compra = ? ";
 
     /***
-     * Constructor accesoDAO
+     * Constructor compraDAO
      * @throws Exception 
      */    
     public compraDAO() throws Exception {
@@ -48,16 +46,18 @@ public class compraDAO {
         boolean filaInsertada=false;
         PreparedStatement ps = null;
         try {
-            ps = cbd.getConexion().prepareStatement(cnSQLInserta);
-            ps.setInt(1, com.getId_proveedor());
-            ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
-            ps.setString(3, com.getNumero_factura());
-            ps.setDouble(4, com.getMonto_total());
-            filaInsertada= ( ps.executeUpdate() >0) ;          
+            if ( validaCampos(com) ){
+                ps = cbd.getConexion().prepareStatement(cnSQLInserta);
+                ps.setInt(1, com.getId_proveedor());
+                ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
+                ps.setString(3, com.getNumero_factura());
+                ps.setDouble(4, com.getMonto_total());
+                filaInsertada= ( ps.executeUpdate() >0) ;
+            }
         } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.inserta", ex);
+            Util.printSQLException("compraDAO.inserta", ex);
         } catch (Exception e) {
-            Util.printException("accesoDAO.inserta", e);
+            Util.printException("compraDAO.inserta", e);
         }
         return filaInsertada;
     }
@@ -83,9 +83,9 @@ public class compraDAO {
                                                 rs.getDouble("monto_total")));
             }
         } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.seleccionaTodo", ex);
+            Util.printSQLException("compraDAO.seleccionaTodo", ex);
         } catch (Exception e) {
-            Util.printException("accesoDAO.seleccionaTodo", e);
+            Util.printException("compraDAO.seleccionaTodo", e);
         }
         return listaCompra;
        
@@ -113,9 +113,9 @@ public class compraDAO {
                                             rs.getDouble("monto_total"));
             }
         } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.seleccionaPorID", ex);
+            Util.printSQLException("compraDAO.seleccionaPorID", ex);
         } catch (Exception e) {
-            Util.printException("accesoDAO.seleccionaPorID", e);
+            Util.printException("compraDAO.seleccionaPorID", e);
         }
         return nuevaCompra;
        
@@ -137,9 +137,9 @@ public class compraDAO {
             filaEliminada=( ps.executeUpdate() > 0);
             
         } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.elimina", ex);
+            Util.printSQLException("compraDAO.elimina", ex);
         } catch (Exception e) {
-            Util.printException("accesoDAO.elimina", e);
+            Util.printException("compraDAO.elimina", e);
         }
         return filaEliminada;
        
@@ -154,15 +154,19 @@ public class compraDAO {
         boolean filaActualizada=false;
         PreparedStatement ps = null;
         try {
-           ps.setInt(1, com.getId_proveedor());
-            ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra())); 
-            ps.setString(3, com.getNumero_factura());
-            ps.setDouble(4, com.getMonto_total());
-            ps.setInt(5, com.getId_compra());
+            if ( validaCampos(com) ){
+                ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
+                ps.setInt(1, com.getId_proveedor());
+                ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra()));
+                ps.setString(3, com.getNumero_factura());
+                ps.setDouble(4, com.getMonto_total());
+                ps.setInt(5, com.getId_compra());
+                filaActualizada=( ps.executeUpdate() > 0);                
+            }            
         } catch (SQLException ex) {
-            Util.printSQLException("accesoDAO.actualiza", ex);
+            Util.printSQLException("compraDAO.actualiza", ex);
         } catch (Exception e) {
-            Util.printException("accesoDAO.actualiza", e);
+            Util.printException("compraDAO.actualiza", e);
         }
         
         return filaActualizada;
@@ -177,9 +181,28 @@ public class compraDAO {
             if(cbd!=null)
                 cbd.closeDB();
         } catch (Exception e) {
-            Util.printException("accesoDAO.cierra", e);
+            Util.printException("compraDAO.cierra", e);
         }        
     }
   
 
+    public boolean validaCampos(compra com) {
+        boolean camposValidos=false;
+        try {
+            if( com.getId_proveedor() <= 0 ) {
+                JOptionPane.showMessageDialog(null, "PROVEEDOR no debe ir vacio o a cero");
+            }/*else if( com.getFecha_compra() <= 0 ) {
+                JOptionPane.showMessageDialog(null, "FECHA DE COMPRA no debe ir vacio o a cero");
+            }*/else if( com.getNumero_factura().toString().trim().equals("") ) {
+                JOptionPane.showMessageDialog(null, "NUMERO FACTURA no debe ir vacio o a cero");
+            }/*else if( com.getMonto_total() <= 0 ) {
+                JOptionPane.showMessageDialog(null, "MONTO TOTAL no debe ir vacio o a cero");
+            }*/else 
+                camposValidos = true;
+
+        } catch (Exception e) {
+            Util.printException("compraDAO.validaCampos", e);
+        }
+        return camposValidos;
+    }
 }

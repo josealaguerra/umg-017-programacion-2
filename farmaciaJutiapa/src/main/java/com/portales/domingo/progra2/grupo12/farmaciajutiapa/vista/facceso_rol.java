@@ -13,6 +13,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -29,8 +31,9 @@ public class facceso_rol extends javax.swing.JFrame {
     /**
      * Creates new form facceso_rol
      */
-    public facceso_rol() {
+    public facceso_rol() throws Exception {
         initComponents();
+        arDAO = new acceso_rolDAO();        
         
         //Permite cerrar la BD cuando se cierra la ventana
         addWindowListener(new WindowAdapter() {
@@ -43,9 +46,9 @@ public class facceso_rol extends javax.swing.JFrame {
         });
 
         llenaListado();
-        limpiaCampos();
         llenaComboBoxAcceso();
-        llenaComboBoxRol();        
+        llenaComboBoxRol();
+        limpiaCampos();
     }
 
     /**
@@ -218,18 +221,20 @@ public class facceso_rol extends javax.swing.JFrame {
         try{
             fila = TablaDatosAccesoRol.getSelectedRow();
             if(fila == -1){
-                JOptionPane.showMessageDialog(null, "Acceso no seleccionado");
+                JOptionPane.showMessageDialog(null, "Acceso-Rol no seleccionado");
             }else{
-                String idAccesoRol=(String)TablaDatosAccesoRol.getValueAt(fila,0).toString();
-                String idAcceso=(String)TablaDatosAccesoRol.getValueAt(fila,1).toString();
-                String idRol=(String)TablaDatosAccesoRol.getValueAt(fila,2).toString();
+                String idAccesoRol  = (String)TablaDatosAccesoRol.getValueAt(fila,0).toString();
+                String nombreAcceso = (String)TablaDatosAccesoRol.getValueAt(fila,1).toString();
+                String nombreRol    = (String)TablaDatosAccesoRol.getValueAt(fila,2).toString();
+                int idAccesoCbx = arDAO.getAccesoSelectedByName4Cbx( nombreAcceso );
+                int idRolCbx = arDAO.getRolSelectedByName4Cbx( nombreRol );
                 this.txtid_acceso_rol.setText(idAccesoRol);
-                this.cbxId_acceso.setSelectedIndex( Integer.parseInt(idAcceso) );
-                this.cbxId_rol.setSelectedIndex( Integer.parseInt(idRol) );
+                this.cbxId_acceso.setSelectedIndex( idAccesoCbx );
+                this.cbxId_rol.setSelectedIndex( idRolCbx );
             }
         }catch(Exception e){
             Util.printException("facceso_rol.TablaDatosAccesoRolMouseClicked", e);
-        }     
+        }
     }//GEN-LAST:event_TablaDatosAccesoRolMouseClicked
 
     /**
@@ -263,7 +268,11 @@ public class facceso_rol extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new facceso_rol().setVisible(true);
+                try {
+                    new facceso_rol().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(facceso_rol.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -288,8 +297,8 @@ public class facceso_rol extends javax.swing.JFrame {
     private void limpiaCampos() {
         try{
             this.txtid_acceso_rol.setText("");
-            //this.txtid_acceso.setText("");
-            //this.txtid_rol.setText("");
+            this.cbxId_acceso.setSelectedIndex(0);
+            this.cbxId_rol.setSelectedIndex(0);
         }catch(Exception e){
             Util.printException("facceso_rol.limpiaCampos", e);
         }                
@@ -298,15 +307,17 @@ public class facceso_rol extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
-            for(int i=0;i<=TablaDatosAccesoRol.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
+        try{
+            if( TablaDatosAccesoRol.getRowCount() > 0 ){
+                for(int i=0;i<=TablaDatosAccesoRol.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
                 }
-            }
+            }            
         }catch(Exception e){
             Util.printException("facceso_rol.limpiaTabla", e);
         }        
@@ -316,7 +327,6 @@ public class facceso_rol extends javax.swing.JFrame {
         List<acceso_rol> listaAccesos = null;
         
         try{
-            arDAO = new acceso_rolDAO();
             listaAccesos = new ArrayList<>();
             listaAccesos = arDAO.seleccionaTodoRelacionado();
 
@@ -339,19 +349,16 @@ public class facceso_rol extends javax.swing.JFrame {
     
     
     private void agregar(){
-        
         try{
             miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
-                                            arDAO.getAccesoByNombre( (String) this.cbxId_acceso.getSelectedItem() ),
-                                            arDAO.getRolByNombre( (String) this.cbxId_rol.getSelectedItem() ));
-            
+                                            arDAO.getIDAccesoByCbxSelected( (String) this.cbxId_acceso.getSelectedItem() ),
+                                            arDAO.getIDRolByCbxSelected( (String) this.cbxId_rol.getSelectedItem() ));
             if ( arDAO.inserta( miAccesoRol ) ){
                 JOptionPane.showMessageDialog(null, "Acceso Rol ingresado");
                 limpiaTabla();
                 limpiaCampos();
                 llenaListado();
             }
-
         }catch(Exception e){
             Util.printException("facceso_rol.agregar", e);
         }
@@ -360,8 +367,8 @@ public class facceso_rol extends javax.swing.JFrame {
     private void modificar(){
         try{
             miAccesoRol = new acceso_rol(   Util.str2int(this.txtid_acceso_rol.getText()),
-                                            arDAO.getAccesoByNombre( (String) this.cbxId_acceso.getSelectedItem() ),
-                                            arDAO.getRolByNombre( (String) this.cbxId_rol.getSelectedItem() ));
+                                            arDAO.getIDAccesoByCbxSelected( (String) this.cbxId_acceso.getSelectedItem() ),
+                                            arDAO.getIDRolByCbxSelected( (String) this.cbxId_rol.getSelectedItem() ));
             
             if ( arDAO.actualiza( miAccesoRol ) ){
                 JOptionPane.showMessageDialog(null, "Acceso Rol actualizado");
@@ -401,11 +408,11 @@ public class facceso_rol extends javax.swing.JFrame {
         
         try{
             cbd = new ConectaBD();
-            cbd.getData(" select nombre_acceso from acceso ");
+            cbd.getData( arDAO.getAccesoOrdenadoSQL() );
             this.cbxId_acceso.removeAll();
             if(cbd.getRs().next()){
                 do{
-                    this.cbxId_acceso.addItem( cbd.getRs().getString(1) );
+                    this.cbxId_acceso.addItem( cbd.getRs().getString( 1 ) );
                 }while(cbd.getRs().next());
             }else
                 throw new Exception("llenaComboBoxAcceso, tabla acceso vacia");
@@ -422,11 +429,11 @@ public class facceso_rol extends javax.swing.JFrame {
         
         try{
             cbd = new ConectaBD();
-            cbd.getData(" select nombre_rol from rol ");
+            cbd.getData( arDAO.getRolOrdenadoSQL() );
             this.cbxId_rol.removeAll();
             if(cbd.getRs().next()){
                 do{
-                    this.cbxId_rol.addItem( cbd.getRs().getString(1) );
+                    this.cbxId_rol.addItem( cbd.getRs().getString( 1 ) );
                 }while(cbd.getRs().next());
             }else
                 throw new Exception("llenaComboBoxRol, tabla rol vacia");
@@ -436,5 +443,4 @@ public class facceso_rol extends javax.swing.JFrame {
         }
 
     }    
-    
 }

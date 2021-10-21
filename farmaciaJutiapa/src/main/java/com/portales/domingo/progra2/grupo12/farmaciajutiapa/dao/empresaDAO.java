@@ -152,7 +152,8 @@ public class empresaDAO {
             ps.setString(1, em.getNit());
             ps.setString(2, em.getRazonSocial());
             ps.setDate(3, Util.utilDate2sqlDate(em.getFechaDeConstitucion()));
-            ps.setInt(4, em.getId_empresa());        
+            ps.setInt(4, em.getId_empresa());
+            filaActualizada = ( ps.executeUpdate() > 0);
         } catch (SQLException ex) {
             Util.printSQLException("empresaDAO.actualiza", ex);
         } catch (Exception e) {

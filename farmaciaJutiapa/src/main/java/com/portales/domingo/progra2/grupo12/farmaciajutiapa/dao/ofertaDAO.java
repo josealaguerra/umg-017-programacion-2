@@ -28,7 +28,7 @@ public class ofertaDAO {
     private static final String cnSQLSeleccionaPorID=" SELECT id_oferta, id_marca_producto, id_tipo_producto, id_producto,porcentaje_descuento,fecha_inicio,fecha_final FROM "+cnSQLTabla+" WHERE id_oferta = ? ";
     private static final String cnSQLSeleccionaTodo=" SELECT id_oferta, id_marca_producto, id_tipo_producto, id_producto,porcentaje_descuento,fecha_inicio,fecha_final FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_oferta = ? ";
-    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_oferta = ?, id_marca_producto = ?, id_tipo_producto = ?, id_producto = ?,porcentaje_descuento = ?, fecha_inicio = ?, fecha_final = ? WHERE id_oferta= ? ";
+    private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_marca_producto = ?, id_tipo_producto = ?, id_producto = ?,porcentaje_descuento = ?, fecha_inicio = ?, fecha_final = ? WHERE id_oferta= ? ";
 
     /***
      * Constructor ofertaDAO
@@ -78,10 +78,10 @@ public class ofertaDAO {
             rs=ps.executeQuery();
             while(rs.next()){
                 listaOferta.add( new oferta(       rs.getInt("id_oferta"),
-                                                   rs.getInt(" id_marca_producto"), 
+                                                   rs.getInt("id_marca_producto"), 
                                                    rs.getInt("id_tipo_producto"), 
                                                    rs.getInt("id_producto"), 
-                                                   rs.getDouble("porcentaje_descuent"), 
+                                                   rs.getDouble("porcentaje_descuento"), 
                                                    rs.getDate("fecha_inicio"), 
                                                    rs.getDate("fecha_final")));
             }

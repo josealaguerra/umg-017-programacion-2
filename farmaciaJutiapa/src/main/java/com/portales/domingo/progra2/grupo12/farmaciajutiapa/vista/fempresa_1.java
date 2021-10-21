@@ -10,7 +10,9 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.empresaDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.empresa;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -62,13 +64,13 @@ public class fempresa_1 extends javax.swing.JFrame {
         lblrazon_social = new javax.swing.JLabel();
         txtrazon_social = new javax.swing.JTextField();
         lblfecha_constitucion = new javax.swing.JLabel();
-        txtfecha_constitucion = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosEmpresa = new javax.swing.JTable();
+        txtfecha_constitucion = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento Empresa");
@@ -126,6 +128,8 @@ public class fempresa_1 extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaDatosEmpresa);
 
+        txtfecha_constitucion.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -139,12 +143,12 @@ public class fempresa_1 extends javax.swing.JFrame {
                             .addComponent(lblnit)
                             .addComponent(lblrazon_social)
                             .addComponent(lblfecha_constitucion))
-                        .addGap(72, 72, 72)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtid_empresa, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                            .addComponent(txtnit)
+                        .addGap(67, 67, 67)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtfecha_constitucion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtrazon_social)
-                            .addComponent(txtfecha_constitucion)))
+                            .addComponent(txtnit)
+                            .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(btnAgregar)
@@ -162,23 +166,25 @@ public class fempresa_1 extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblid_empresa)
-                    .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblnit)
-                    .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtrazon_social, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblrazon_social))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblfecha_constitucion)
-                    .addComponent(txtfecha_constitucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblid_empresa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblnit)
+                        .addGap(20, 20, 20)
+                        .addComponent(lblrazon_social)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblfecha_constitucion))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(txtrazon_social, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtfecha_constitucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnModificar)
@@ -229,11 +235,11 @@ public class fempresa_1 extends javax.swing.JFrame {
                 String id_empresa=(String)TablaDatosEmpresa.getValueAt(fila,0).toString();
                 String nit=(String)TablaDatosEmpresa.getValueAt(fila,1);
                 String razonSocial=(String)TablaDatosEmpresa.getValueAt(fila,2);
-                String fechaDeConstitucion=(String)TablaDatosEmpresa.getValueAt(fila,3);
+                Date fechaDeConstitucion=(Date)TablaDatosEmpresa.getValueAt(fila,3);
                 this.txtid_empresa.setText(id_empresa);
                 this.txtnit.setText(nit);
                 this.txtrazon_social.setText(razonSocial);
-                this.txtfecha_constitucion.setText(fechaDeConstitucion);
+                this.txtfecha_constitucion.setDate(fechaDeConstitucion);
             }
         }catch(Exception e){
             Util.printException("fempresa_1.TablaDatosEmpresaMouseClicked", e);
@@ -288,7 +294,7 @@ public class fempresa_1 extends javax.swing.JFrame {
     private javax.swing.JLabel lblid_empresa;
     private javax.swing.JLabel lblnit;
     private javax.swing.JLabel lblrazon_social;
-    private javax.swing.JTextField txtfecha_constitucion;
+    private com.toedter.calendar.JDateChooser txtfecha_constitucion;
     private javax.swing.JTextField txtid_empresa;
     private javax.swing.JTextField txtnit;
     private javax.swing.JTextField txtrazon_social;
@@ -300,7 +306,7 @@ public class fempresa_1 extends javax.swing.JFrame {
             this.txtid_empresa.setText("");
             this.txtnit.setText("");
             this.txtrazon_social.setText("");
-            this.txtfecha_constitucion.setText("");
+            this.txtfecha_constitucion.setDate( new Date() );
         }catch(Exception e){
             Util.printException("fempresa_1.limpiaCampos", e);
         }                
@@ -309,7 +315,10 @@ public class fempresa_1 extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
+        try{  
+            if (TablaDatosEmpresa.getRowCount() > 0) {
+                
+            
             for(int i=0;i<=TablaDatosEmpresa.getRowCount();i++){
                 modelo.removeRow(i);
                 i = i - 1;
@@ -317,6 +326,7 @@ public class fempresa_1 extends javax.swing.JFrame {
                 if(filaRestante==0){
                     break;
                 }
+            }
             }
         }catch(Exception e){
             Util.printException("fempresa_1.limpiaTabla", e);
@@ -356,7 +366,7 @@ public class fempresa_1 extends javax.swing.JFrame {
             miEmpresa = new empresa(Util.str2int( this.txtid_empresa.getText() ),
                                     this.txtnit.getText(),
                                     this.txtrazon_social.getText(),
-                                    Util.str2date(this.txtfecha_constitucion.getText()) );
+                                    this.txtfecha_constitucion.getDate() );
             
             if ( eDAO.inserta( miEmpresa ) ){
                 JOptionPane.showMessageDialog(null, "Empresa ingresado");
@@ -376,7 +386,7 @@ public class fempresa_1 extends javax.swing.JFrame {
             miEmpresa = new empresa(Util.str2int( this.txtid_empresa.getText() ),
                                     this.txtnit.getText(),
                                     this.txtrazon_social.getText(),
-                                    Util.str2date(this.txtfecha_constitucion.getText()) );
+                                    this.txtfecha_constitucion.getDate());
             
             if ( eDAO.actualiza(miEmpresa) ){
                 JOptionPane.showMessageDialog(null, "Empresa actualizado");

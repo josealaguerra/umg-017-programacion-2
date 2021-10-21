@@ -28,6 +28,7 @@ public class rolDAO {
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_rol = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nombre_rol= ? WHERE id_rol = ? ";
     private static final String cnSQLSeleccionaPorNombre=" SELECT id_rol, nombre_rol FROM "+cnSQLTabla+" WHERE nombre_rol = ? ";    
+    private static final String cnSQLOrdenadoPorNombre=" select nombre_rol from "+cnSQLTabla+" order by nombre_rol  ";    
 
     /***
      * Constructor rolDAO
@@ -37,6 +38,12 @@ public class rolDAO {
         cbd = new ConectaBD();
     }
 
+    public static String getRolOrdenadoSQL() {
+        return cnSQLOrdenadoPorNombre;
+    }    
+    
+    
+    
     /***
      * Inserta un registro en la tabla rol
      * @param paramRol - objeto de la clase "rol"
@@ -177,6 +184,16 @@ public class rolDAO {
             Util.printException("rolDAO.getRolByNombre", e);
         }
         return nuevoRol;
+    }
+
+    public rol seleccionaPorNombre(String nombreRol) {
+        rol nuevoRol=null;
+        try {
+            nuevoRol = getRolByNombre( nombreRol );
+        } catch (Exception e) {
+            Util.printException("rolDAO.seleccionaPorNombre", e);
+        }        
+        return nuevoRol;        
     }
   
 

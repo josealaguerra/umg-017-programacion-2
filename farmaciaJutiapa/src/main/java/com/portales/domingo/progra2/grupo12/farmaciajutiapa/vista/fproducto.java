@@ -235,7 +235,7 @@ public class fproducto extends javax.swing.JFrame {
                 this.txtid_producto.setText(id);
                 this.txtnombre_producto.setText(nombre);
                 this.txtid_tipo_producto.setText(idTipoProd);
-                this.txtid_tipo_producto.setText(idMarcaProd);                
+                this.txtidmarca_producto.setText(idMarcaProd);                
             }
         }catch(Exception e){
             Util.printException("fproducto.TablaDatosProductoMouseClicked", e);
@@ -311,13 +311,15 @@ public class fproducto extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
-            for(int i=0;i<=TablaDatosProducto.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
+        try{
+            if (TablaDatosProducto.getRowCount()> 0) {
+                for(int i=0;i<=TablaDatosProducto.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
                 }
             }
         }catch(Exception e){

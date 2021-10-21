@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +26,13 @@ public class acceso_rolDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_acceso_rol, id_acceso, id_rol FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_acceso_rol = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_acceso = ?, id_rol = ? WHERE id_acceso_rol = ? ";
-    private static final String cnSQLSeleccionaTodoRelacionado=" SELECT ar.id_acceso_rol, a.nombre_acceso, r.nombre_rol FROM acceso_rol ar join acceso a on ar.id_acceso=a.id_acceso join rol r on ar.id_acceso=r.id_rol ";    
+    private static final String cnSQLSeleccionaTodoRelacionado=   " SELECT ar.id_acceso_rol as id_acceso_rol, "
+                                                                + "ar.id_acceso as id_acceso, a.nombre_acceso as nombre_acceso, "
+                                                                + "ar.id_rol as id_rol, r.nombre_rol as nombre_rol  "
+                                                                + "FROM acceso_rol ar "
+                                                                + "join acceso a on ar.id_acceso=a.id_acceso "
+                                                                + "join rol r on ar.id_rol=r.id_rol "
+                                                                + "order by a.nombre_acceso, r.nombre_rol ";
 
     /***
      * Constructor acceso_rolDAO
@@ -101,9 +105,11 @@ public class acceso_rolDAO {
             ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodoRelacionado);
             rs=ps.executeQuery();
             while(rs.next()){
-                listadoAccesoRol.add( new acceso_rol(   rs.getInt("id_acceso_rol"), 
+                listadoAccesoRol.add( new acceso_rol(   rs.getInt("id_acceso_rol"),
                                                         rs.getInt("id_acceso"), 
-                                                        rs.getInt("id_rol")) );
+                                                        rs.getInt("id_rol"), 
+                                                        rs.getString("nombre_acceso"), 
+                                                        rs.getString("nombre_rol")) );
             }
             
         } catch (SQLException ex) {
@@ -204,40 +210,152 @@ public class acceso_rolDAO {
      * @param nombreAcceso
      * @return 
      */
-    public int getAccesoByNombre(String nombreAcceso){
+    public int getAccesoSelectedByName(String nombreAcceso){
         int nuevoIDAcceso=0;
-        accesoDAO aDAO = null;
-        acceso aObj = null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        boolean encontro=false;
+        
         try {
-            aDAO = new accesoDAO();
-            aObj = aDAO.getAccesoByNombre( nombreAcceso );
-            nuevoIDAcceso=aObj.getId_acceso();
+            ps = cbd.getConexion().prepareStatement( getAccesoOrdenadoSQL() );
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevoIDAcceso++;
+                if ( rs.getString("nombre_acceso").toString().trim().equals( nombreAcceso ) ){
+                    encontro=true;
+                    break;
+                }
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("acceso_rolDAO.getAccesoSelectedByName", ex);
         } catch (Exception e) {
-            Util.printException("acceso_rolDAO.getAccesoByNombre", e);
+            Util.printException("acceso_rolDAO.getAccesoSelectedByName", e);
         }finally{
-            aDAO.cierra();
+            if(!encontro){
+                nuevoIDAcceso=0;
+            }
         }
-        return nuevoIDAcceso;
+        return nuevoIDAcceso;        
     }
     
-     /***
-     * Busca el ID Acceso por el nombre
+    
+ /***
+     * Busca el ID Acceso por el nombre para un combobox (resta 1)
      * @param nombreAcceso
      * @return 
      */
-    public int getRolByNombre(String nombreRol){
+    public int getAccesoSelectedByName4Cbx(String nombreAcceso){
         int nuevoIDAcceso=0;
-        rolDAO rDAO = null;
-        rol rObj=null;
         try {
-            rDAO = new rolDAO();
-            rObj = rDAO.getRolByNombre( nombreRol );
-            nuevoIDAcceso = rObj.getId_rol();
+            nuevoIDAcceso = getAccesoSelectedByName(nombreAcceso);
+            if( nuevoIDAcceso > 0 ){
+                nuevoIDAcceso--;
+            }
         } catch (Exception e) {
-            Util.printException("acceso_rolDAO.getRolByNombre", e);
-        }finally{
-            rDAO.cierra();
+            Util.printException("acceso_rolDAO.getAccesoSelectedByName4Cbx", e);
         }
         return nuevoIDAcceso;
     }    
+    
+    
+     /***
+     * Busca el ID Acceso por el nombre
+     * @param nombreRol
+     * @return 
+     */
+    public int getRolSelectedByName(String nombreRol){
+        int nuevoIDRol=0;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        boolean encontro=false;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement( getRolOrdenadoSQL() );
+            rs = ps.executeQuery();
+            while(rs.next()){
+                nuevoIDRol++;
+                if ( rs.getString("nombre_rol").toString().trim().equals( nombreRol ) ){
+                    encontro=true;
+                    break;
+                }
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("acceso_rolDAO.getRolSelectedByName", ex);
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getRolSelectedByName", e);
+        }finally{
+            if(!encontro){
+                nuevoIDRol=0;
+            }
+        }
+        return nuevoIDRol; 
+    }    
+    
+    
+
+    
+     /***
+     * Busca el ID Acceso por el nombre
+     * @param nombreRol
+     * @return 
+     */
+    public int getRolSelectedByName4Cbx(String nombreRol){
+        int nuevoIDRol = 0;
+        try {
+            nuevoIDRol = getRolSelectedByName( nombreRol );
+            if(nuevoIDRol > 0){
+                nuevoIDRol--;
+            }
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getRolSelectedByName4Cbx", e);
+        }
+        return nuevoIDRol;
+    }        
+
+    public String getAccesoOrdenadoSQL() {
+        return accesoDAO.getAccesoOrdenadoSQL();
+    }
+
+    public String getRolOrdenadoSQL() {
+        return rolDAO.getRolOrdenadoSQL();
+    }
+    
+
+
+    public int getIDAccesoByCbxSelected(String nombreRol){
+        int nuevoIDAcceso = 0;
+        accesoDAO aDAO = null;
+        acceso aObj = null;
+        
+        try {
+            aDAO = new accesoDAO();
+            aObj = aDAO.seleccionaPorNombre( nombreRol );
+            nuevoIDAcceso = aObj.getId_acceso();
+        } catch (SQLException ex) {
+            Util.printSQLException("acceso_rolDAO.getIDAccesoByCbxSelected", ex);
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getIDAccesoByCbxSelected", e);
+        }
+        return nuevoIDAcceso;
+    }
+
+    
+    public int getIDRolByCbxSelected(String nombreRol) {
+        int nuevoIDRol = 0;
+        rolDAO rDAO = null;
+        rol rObj = null;
+        
+        try {
+            rDAO = new rolDAO();
+            rObj = rDAO.seleccionaPorNombre( nombreRol );
+            nuevoIDRol = rObj.getId_rol();
+        } catch (SQLException ex) {
+            Util.printSQLException("acceso_rolDAO.getIDRolByCbxSelected", ex);
+        } catch (Exception e) {
+            Util.printException("acceso_rolDAO.getIDRolByCbxSelected", e);
+        }
+        return nuevoIDRol;
+    }
+
+    
 }

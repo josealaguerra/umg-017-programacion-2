@@ -222,8 +222,8 @@ public class fcliente_1 extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Cliente no seleccionado");
             }else{
                 String idCliente=(String)TablaDatosCliente.getValueAt(fila,0).toString();
-                String idEmpresa=(String)TablaDatosCliente.getValueAt(fila,1).toString();
-                String idPersona=(String)TablaDatosCliente.getValueAt(fila,2).toString();
+                String idEmpresa=(String)TablaDatosCliente.getValueAt(fila,1);
+                String idPersona=(String)TablaDatosCliente.getValueAt(fila,2);
                 this.txtid_cliente.setText(idCliente);
                 this.txtid_empresa.setText(idEmpresa);
                 this.txtid_persona.setText(idPersona);
@@ -299,13 +299,15 @@ public class fcliente_1 extends javax.swing.JFrame {
     
     public void limpiaTabla(){
         int filaRestante=0;
-        try{        
-            for(int i=0;i<=TablaDatosCliente.getRowCount();i++){
-                modelo.removeRow(i);
-                i = i - 1;
-                filaRestante=modelo.getRowCount();
-                if(filaRestante==0){
-                    break;
+        try{
+            if( TablaDatosCliente.getRowCount() > 0 ){
+                for(int i=0;i<=TablaDatosCliente.getRowCount();i++){
+                    modelo.removeRow(i);
+                    i = i - 1;
+                    filaRestante=modelo.getRowCount();
+                    if(filaRestante==0){
+                        break;
+                    }
                 }
             }
         }catch(Exception e){

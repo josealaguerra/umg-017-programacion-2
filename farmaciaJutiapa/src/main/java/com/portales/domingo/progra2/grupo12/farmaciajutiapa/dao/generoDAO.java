@@ -109,7 +109,7 @@ public class generoDAO {
             Util.printSQLException("generoDAO.seleccionaPorID", ex);
         } catch (Exception e) {
             Util.printException("generoDAO.seleccionaPorID", e);
-        }
+        }   
         return nuevap;
        
     }
