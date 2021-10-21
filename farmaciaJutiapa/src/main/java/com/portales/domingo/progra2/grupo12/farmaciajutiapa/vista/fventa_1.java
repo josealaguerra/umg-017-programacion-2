@@ -11,6 +11,7 @@ import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.venta;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -62,7 +63,6 @@ public class fventa_1 extends javax.swing.JFrame {
         lblmonto_total = new javax.swing.JLabel();
         txtid_venta = new javax.swing.JTextField();
         txtid_cliente = new javax.swing.JTextField();
-        txtfecha_venta = new javax.swing.JTextField();
         txtnumero_factura = new javax.swing.JTextField();
         txtmonto_total = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -71,6 +71,7 @@ public class fventa_1 extends javax.swing.JFrame {
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
+        txtfecha_venta = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de venta");
@@ -86,15 +87,6 @@ public class fventa_1 extends javax.swing.JFrame {
         lblmonto_total.setText("Monto Total");
 
         txtid_venta.setEditable(false);
-        txtid_venta.setText("jTextField1");
-
-        txtid_cliente.setText("jTextField2");
-
-        txtfecha_venta.setText("jTextField3");
-
-        txtnumero_factura.setText("jTextField4");
-
-        txtmonto_total.setText("jTextField5");
 
         TablaDatosVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -139,6 +131,8 @@ public class fventa_1 extends javax.swing.JFrame {
             }
         });
 
+        txtfecha_venta.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,15 +155,8 @@ public class fventa_1 extends javax.swing.JFrame {
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtfecha_venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtid_venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtid_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtnumero_factura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtmonto_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addComponent(txtmonto_total)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(btnModificar)
@@ -177,10 +164,17 @@ public class fventa_1 extends javax.swing.JFrame {
                         .addComponent(btnEliminar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnNuevo)
-                        .addGap(22, 22, 22))))
+                        .addGap(22, 22, 22))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtid_venta)
+                            .addComponent(txtid_cliente)
+                            .addComponent(txtfecha_venta, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                            .addComponent(txtnumero_factura))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -195,7 +189,7 @@ public class fventa_1 extends javax.swing.JFrame {
                     .addComponent(lblid_cliente)
                     .addComponent(txtid_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblfecha_venta)
                     .addComponent(txtfecha_venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -248,12 +242,13 @@ public class fventa_1 extends javax.swing.JFrame {
             }else{
                 String idVenta=(String)TablaDatosVenta.getValueAt(fila,0).toString();
                 String idCliente=(String)TablaDatosVenta.getValueAt(fila,1).toString();
-                String fechaVenta=(String)TablaDatosVenta.getValueAt(fila,2);
-                String numeroFactura=(String)TablaDatosVenta.getValueAt(fila,1);
-                String montoTotal=(String)TablaDatosVenta.getValueAt(fila,2);                
+                Date fechaVenta=(Date)TablaDatosVenta.getValueAt(fila,2);
+                String numeroFactura=(String)TablaDatosVenta.getValueAt(fila,3);
+                String montoTotal=(String)TablaDatosVenta.getValueAt(fila,4);                
                 this.txtid_venta.setText(idVenta);
                 this.txtid_cliente.setText(idCliente);
-                this.txtfecha_venta.setText(fechaVenta);
+                 //Fecha
+                this.txtfecha_venta.setDate(fechaVenta);   
                 this.txtnumero_factura.setText(numeroFactura);
                 this.txtmonto_total.setText(montoTotal);
             }
@@ -310,7 +305,7 @@ public class fventa_1 extends javax.swing.JFrame {
     private javax.swing.JLabel lblid_venta;
     private javax.swing.JLabel lblmonto_total;
     private javax.swing.JLabel lblnumero_factura;
-    private javax.swing.JTextField txtfecha_venta;
+    private com.toedter.calendar.JDateChooser txtfecha_venta;
     private javax.swing.JTextField txtid_cliente;
     private javax.swing.JTextField txtid_venta;
     private javax.swing.JTextField txtmonto_total;
@@ -322,7 +317,7 @@ public class fventa_1 extends javax.swing.JFrame {
         try{
             this.txtid_venta.setText("");
             this.txtid_cliente.setText("");
-            this.txtfecha_venta.setText("");
+            this.txtfecha_venta.setDate(new Date());
             this.txtnumero_factura.setText("");
             this.txtmonto_total.setText("");
         }catch(Exception e){
@@ -380,7 +375,7 @@ public class fventa_1 extends javax.swing.JFrame {
         try{
             miVenta = new venta(Util.str2int( this.txtid_venta.getText() ),
                                 Util.str2int( this.txtid_cliente.getText() ),
-                                Util.str2date( this.txtfecha_venta.getText() ),
+                                this.txtfecha_venta.getDate() ,
                                 this.txtnumero_factura.getText(),
                                 Util.str2double( this.txtmonto_total.getText() ) );
 
@@ -401,7 +396,7 @@ public class fventa_1 extends javax.swing.JFrame {
         try{
             miVenta = new venta(Util.str2int( this.txtid_venta.getText() ),
                                 Util.str2int( this.txtid_cliente.getText() ),
-                                Util.str2date( this.txtfecha_venta.getText() ),
+                                this.txtfecha_venta.getDate() ,
                                 this.txtnumero_factura.getText(),
                                 Util.str2double( this.txtmonto_total.getText() ) );
             
