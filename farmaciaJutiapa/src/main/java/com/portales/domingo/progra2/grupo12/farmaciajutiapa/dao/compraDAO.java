@@ -155,11 +155,13 @@ public class compraDAO {
         PreparedStatement ps = null;
         try {
             if ( validaCampos(com) ){
+                ps = cbd.getConexion().prepareStatement(cnSQLActualizaPorID);
                 ps.setInt(1, com.getId_proveedor());
                 ps.setDate(2, Util.utilDate2sqlDate(com.getFecha_compra()));
                 ps.setString(3, com.getNumero_factura());
                 ps.setDouble(4, com.getMonto_total());
                 ps.setInt(5, com.getId_compra());
+                filaActualizada=( ps.executeUpdate() > 0);                
             }            
         } catch (SQLException ex) {
             Util.printSQLException("compraDAO.actualiza", ex);
