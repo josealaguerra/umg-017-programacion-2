@@ -51,7 +51,7 @@
                           </Group>
                           <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="txtFechaC" max="32767" attributes="0"/>
+                              <Component id="txtfecha_constitucion" max="32767" attributes="0"/>
                               <Component id="txtrazon_social" alignment="1" max="32767" attributes="0"/>
                               <Component id="txtnit" alignment="1" max="32767" attributes="0"/>
                               <Component id="txtid_empresa" alignment="1" min="-2" pref="142" max="-2" attributes="0"/>
@@ -97,7 +97,7 @@
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Component id="txtrazon_social" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="txtFechaC" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtfecha_constitucion" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
@@ -227,7 +227,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="com.toedter.calendar.JDateChooser" name="txtFechaC">
+        <Component class="com.toedter.calendar.JDateChooser" name="txtfecha_constitucion">
           <Properties>
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
           </Properties>
