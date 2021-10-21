@@ -62,13 +62,13 @@ public class fempresa_1 extends javax.swing.JFrame {
         lblrazon_social = new javax.swing.JLabel();
         txtrazon_social = new javax.swing.JTextField();
         lblfecha_constitucion = new javax.swing.JLabel();
-        txtfecha_constitucion = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosEmpresa = new javax.swing.JTable();
+        txtFechaC = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento Empresa");
@@ -126,6 +126,8 @@ public class fempresa_1 extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(TablaDatosEmpresa);
 
+        txtFechaC.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -139,12 +141,12 @@ public class fempresa_1 extends javax.swing.JFrame {
                             .addComponent(lblnit)
                             .addComponent(lblrazon_social)
                             .addComponent(lblfecha_constitucion))
-                        .addGap(72, 72, 72)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtid_empresa, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                            .addComponent(txtnit)
+                        .addGap(67, 67, 67)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtFechaC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtrazon_social)
-                            .addComponent(txtfecha_constitucion)))
+                            .addComponent(txtnit)
+                            .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(btnAgregar)
@@ -162,23 +164,25 @@ public class fempresa_1 extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblid_empresa)
-                    .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblnit)
-                    .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtrazon_social, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblrazon_social))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblfecha_constitucion)
-                    .addComponent(txtfecha_constitucion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblid_empresa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblnit)
+                        .addGap(20, 20, 20)
+                        .addComponent(lblrazon_social)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblfecha_constitucion))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(txtrazon_social, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtFechaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnModificar)
@@ -288,7 +292,7 @@ public class fempresa_1 extends javax.swing.JFrame {
     private javax.swing.JLabel lblid_empresa;
     private javax.swing.JLabel lblnit;
     private javax.swing.JLabel lblrazon_social;
-    private javax.swing.JTextField txtfecha_constitucion;
+    private com.toedter.calendar.JDateChooser txtFechaC;
     private javax.swing.JTextField txtid_empresa;
     private javax.swing.JTextField txtnit;
     private javax.swing.JTextField txtrazon_social;
