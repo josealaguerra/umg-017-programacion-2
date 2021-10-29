@@ -353,3 +353,5 @@ alias varchar(30) NOT NULL,
 pass varchar(30) NOT NULL,
 primary key (id_alias),
 );
+
+
