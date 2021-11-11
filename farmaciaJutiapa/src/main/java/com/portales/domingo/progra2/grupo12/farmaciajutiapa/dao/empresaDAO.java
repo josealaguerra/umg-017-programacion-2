@@ -23,10 +23,6 @@ import java.util.logging.Logger;
  */
 public class empresaDAO {
 
-    static int getIDEmpresaByName4Cbx(String empresaNombre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="empresa";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nit, razonSocial, fechaDeConstitucion) values (?, ?, ?)";
@@ -228,7 +224,32 @@ public class empresaDAO {
         return cnCbxEmpresa;
     }
 
-    
+    public int getIDEmpresaByName4Cbx(String empresaNombre) {
+        int IDEmpresa=0;
+        boolean encontreEmpresaPorNombre = false;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        try {
+            ps = cbd.getConexion().prepareStatement(cnCbxEmpresa);
+            ps.setString(1, empresaNombre);
+            rs = ps.executeQuery();
+            empresaNombre = empresaNombre.toString().trim().toUpperCase();
+            while(rs.next()){
+                IDEmpresa++;
+                if (rs.getString("razonSocial").toString().trim().toUpperCase().equals( empresaNombre ) ){
+                    encontreEmpresaPorNombre = true;
+                    break;
+                }
+            }
+            if(!encontreEmpresaPorNombre)
+                IDEmpresa=0;
+        } catch (SQLException ex) {
+            Util.printSQLException("empresaDAO.getIDEmpresaByName4Cbx", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.getIDEmpresaByName4Cbx", e);
+        }
+        return IDEmpresa;
+    }    
     
     
 }

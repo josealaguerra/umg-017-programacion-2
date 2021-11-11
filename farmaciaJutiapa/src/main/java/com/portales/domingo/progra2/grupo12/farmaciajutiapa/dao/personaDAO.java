@@ -266,13 +266,12 @@ public class personaDAO {
         return cnCbxPersona;
     }
 
-    public int getIDEmpresaByName4Cbx(String personaNombre) {
+    public int getIDPersonaByName4Cbx(String personaNombre) {
         int IDPersona=0;
         String nombreCompleto="";
-        boolean encontreEmpresaPorNombre = false;
+        boolean encontrePersonaPorNombre = false;
         PreparedStatement ps = null;
         ResultSet rs=null;
-
         try {
             ps = cbd.getConexion().prepareStatement(cnCbxPersona);
             rs=ps.executeQuery();
@@ -281,19 +280,18 @@ public class personaDAO {
                 nombreCompleto = rs.getString("primer_nombre").toString() + " " + rs.getString("segundo_nombre").toString() + " " + rs.getString("primer_apellido").toString() + " " + rs.getString("segundo_apellido").toString();
 
                 if( nombreCompleto.toString().trim().toUpperCase().equals(personaNombre.toString().trim().toUpperCase() ) ){
-                    encontreEmpresaPorNombre = true;
+                    encontrePersonaPorNombre = true;
                     break;
                 }
             }
-            if(!encontreEmpresaPorNombre)
+            if(!encontrePersonaPorNombre)
                 IDPersona=0;
-            
         } catch (SQLException ex) {
             IDPersona=0;
-            Util.printSQLException("personaDAO.seleccionaTodo", ex);
+            Util.printSQLException("personaDAO.getIDPersonaByName4Cbx", ex);
         } catch (Exception e) {
             IDPersona=0;
-            Util.printException("personaDAO.seleccionaTodo", e);
+            Util.printException("personaDAO.getIDPersonaByName4Cbx", e);
         }
         return IDPersona;        
     }

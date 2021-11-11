@@ -22,6 +22,8 @@ import java.util.logging.Logger;
  */
 public class proveedorDAO {
 
+    personaDAO perDAO = null;
+    empresaDAO empDAO = null;
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="proveedor";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (id_empresa,id_persona) values (?, ?)";
@@ -45,6 +47,8 @@ public class proveedorDAO {
      */
     public proveedorDAO() throws Exception {
         cbd = new ConectaBD();
+        perDAO = new personaDAO();
+        empDAO = new empresaDAO();
     }
 
     /***
@@ -206,10 +210,8 @@ public class proveedorDAO {
     
     public int getIDEmpresaByName(String nameEmpresa) {
         int IDEmpresa=0;
-        empresaDAO empDAO = null;        
         try {
-            empDAO = new empresaDAO();
-            IDEmpresa=empDAO.getIDEmpresaByName(nameEmpresa);
+            IDEmpresa = empDAO.getIDEmpresaByName(nameEmpresa);
         } catch (Exception e) {
             IDEmpresa=0;
             Util.printException("proveedorDAO.getIDEmpresaByName", e);
@@ -219,10 +221,8 @@ public class proveedorDAO {
     
     public int getIDPersonaByName(String namePersona) {
         int IDPersona=0;
-        personaDAO perDAO = null;
         try {
-            perDAO = new personaDAO();
-            IDPersona=perDAO.getIDPersonaByName(namePersona);
+            IDPersona = perDAO.getIDPersonaByName(namePersona);
         } catch (Exception e) {
             IDPersona=0;
             Util.printException("proveedorDAO.getIDPersonaByName", e);
@@ -239,10 +239,9 @@ public class proveedorDAO {
     }
 
     public int getIDPersonaByName4Cbx(String personaNombre) {
-        return personaDAO.getIDEmpresaByName4Cbx( personaNombre );
+        return perDAO.getIDPersonaByName4Cbx( personaNombre );
     }
 
-    
     public static String getCbxDefaultSelectionEmpresa(){
         return empresaDAO.getCbxDefaultSelectionEmpresa();
     }
@@ -252,7 +251,6 @@ public class proveedorDAO {
     }
     
     public int getIDEmpresaByName4Cbx(String empresaNombre) {
-        return empresaDAO.getIDEmpresaByName4Cbx( empresaNombre );
+        return empDAO.getIDEmpresaByName4Cbx( empresaNombre );
     }
-    
 }

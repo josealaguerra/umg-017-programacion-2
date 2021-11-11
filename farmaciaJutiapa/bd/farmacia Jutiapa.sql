@@ -394,3 +394,65 @@ constraint fk_inventario_lote foreign key (id_lote) references lote(id_lote) on 
 constraint fk_inventario_producto foreign key (id_producto) references producto(id_producto) on delete cascade on update cascade
 );
 
+
+
+
+
+
+DELIMITER $$
+drop procedure if exists sp_createProductList $$
+CREATE PROCEDURE sp_createProductList (IN parNombreProd varchar(20), IN parTipoProd int)
+BEGIN
+	DECLARE finished INTEGER DEFAULT 0;
+	DECLARE marcaProd integer DEFAULT 0;
+
+	-- declare cursor for employee email
+	DEClARE curMarcaProd 
+		CURSOR FOR 
+			SELECT id_marca_producto FROM marca_producto;
+
+	-- declare NOT FOUND handler
+	DECLARE CONTINUE HANDLER 
+        FOR NOT FOUND SET finished = 1;
+
+	OPEN curMarcaProd;
+
+	getMarcaProd: LOOP
+		FETCH curMarcaProd INTO marcaProd;
+		IF finished = 1 THEN 
+			LEAVE getMarcaProd;
+		END IF;
+		-- build email list
+		--SET parNombreProd = CONCAT(marcaProd,";",parNombreProd);
+		
+		insert into producto (nombre_producto, id_tipo_producto, id_marca_producto) values (parNombreProd, parTipoProd, marcaProd);
+		
+		
+	END LOOP getMarcaProd;
+	CLOSE curMarcaProd;
+
+END$$
+DELIMITER ;
+
+
+
+
+
+SET @parNombreProd = "Suero de uva"; 
+SET @parTipoProd = 1; 
+CALL sp_createProductList (@parNombreProd, @parTipoProd); 
+
+
+SET @parNombreProd = "Suero de limon"; 
+SET @parTipoProd = 1; 
+CALL sp_createProductList (@parNombreProd, @parTipoProd); 
+
+
+SET @parNombreProd = "Suero de fresa"; 
+SET @parTipoProd = 1; 
+CALL sp_createProductList (@parNombreProd, @parTipoProd); 
+
+
+SET @parNombreProd = "Suero de durazno"; 
+SET @parTipoProd = 1; 
+CALL sp_createProductList (@parNombreProd, @parTipoProd); 
