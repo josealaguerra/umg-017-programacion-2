@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class personaDAO {
 
+
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="persona";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil) values (?, ?, ?, ?, ?, ?, ?)";
@@ -31,6 +32,11 @@ public class personaDAO {
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, fecha_de_nacimiento= ?, id_estado_civil= ? WHERE id_persona = ? ";
     boolean actualizaSinFecha=false;
     private static final String cnSQLActualizaPorIDSinFecha=" update "+cnSQLTabla+" set primer_nombre= ?, segundo_nombre= ?, primer_apellido= ?, segundo_apellido= ?, id_genero= ?, id_estado_civil= ? WHERE id_persona = ? ";    
+    private static final String cnSQLSeleccionaPorNombre=" SELECT id_persona, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, id_genero, fecha_de_nacimiento, id_estado_civil FROM "+cnSQLTabla+" WHERE concat(primer_nombre, \" \", segundo_nombre, \" \", primer_apellido, \" \", segundo_apellido) = ? ";    
+    private static final String cnCbxDefaultSelectionPersona=" -- Selecciona persona --";
+    private static final String cnCbxPersona=" select concat(primer_nombre, \" \", segundo_nombre, \" \", primer_apellido, \" \", segundo_apellido) as nombre_persona "
+                                            + "from persona "
+                                            + "order by primer_nombre, segundo_nombre, primer_apellido, segundo_apellido ";
 
     /***
      * Constructor personaDAO
@@ -209,5 +215,90 @@ public class personaDAO {
         }        
     }
 
+    public persona getPersonaByName(String namePersona) {
+        persona nuevap=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
+            ps.setString(1, namePersona);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevap = new persona(   rs.getInt("id_persona"), 
+                                        rs.getString("primer_nombre"), 
+                                        rs.getString("segundo_nombre"), 
+                                        rs.getString("primer_apellido"), 
+                                        rs.getString("segundo_apellido"), 
+                                        rs.getInt("id_genero"), 
+                                        rs.getDate("Date fecha_de_nacimiento"), 
+                                        rs.getInt("id_estado_civil") );
+            }
+            
+        } catch (SQLException ex) {
+            Util.printSQLException("personaDAO.getPersonaByName", ex);
+        } catch (Exception e) {
+            Util.printException("personaDAO.getPersonaByName", e);
+        }
+        return nuevap;
+    }
+    
+    
+    
+    public int getIDPersonaByName(String namePersona) {
+        persona nuevap=null;
+        int IDPersona=0;
+        try {
+            nuevap = getPersonaByName( namePersona );
+            IDPersona=nuevap.getId_persona();
+        } catch (Exception e) {
+            IDPersona=0;
+            Util.printException("personaDAO.getIDPersonaByName", e);
+        }
+        return IDPersona;
+    }
+
+    
+    public static String getCbxDefaultSelectionPersona() {
+        return cnCbxDefaultSelectionPersona;
+    }
+    
+    public static String getCbxPersona(){
+        return cnCbxPersona;
+    }
+
+    public int getIDEmpresaByName4Cbx(String personaNombre) {
+        int IDPersona=0;
+        String nombreCompleto="";
+        boolean encontreEmpresaPorNombre = false;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+
+        try {
+            ps = cbd.getConexion().prepareStatement(cnCbxPersona);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                IDPersona++;
+                nombreCompleto = rs.getString("primer_nombre").toString() + " " + rs.getString("segundo_nombre").toString() + " " + rs.getString("primer_apellido").toString() + " " + rs.getString("segundo_apellido").toString();
+
+                if( nombreCompleto.toString().trim().toUpperCase().equals(personaNombre.toString().trim().toUpperCase() ) ){
+                    encontreEmpresaPorNombre = true;
+                    break;
+                }
+            }
+            if(!encontreEmpresaPorNombre)
+                IDPersona=0;
+            
+        } catch (SQLException ex) {
+            IDPersona=0;
+            Util.printSQLException("personaDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            IDPersona=0;
+            Util.printException("personaDAO.seleccionaTodo", e);
+        }
+        return IDPersona;        
+    }
+
+
+    
 }
     

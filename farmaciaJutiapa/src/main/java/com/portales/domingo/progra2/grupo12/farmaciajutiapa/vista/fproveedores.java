@@ -5,6 +5,7 @@
  */
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.proveedorDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.modelo.proveedor;
@@ -12,7 +13,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -41,6 +44,8 @@ public class fproveedores extends javax.swing.JFrame {
             }
         });
 
+        llenaEmpresa();
+        llenaPersona();
         llenaListado();
         limpiaCampos();
     }
@@ -67,6 +72,8 @@ public class fproveedores extends javax.swing.JFrame {
         btnNuevo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaDatosProveedores = new javax.swing.JTable();
+        cbxid_empresa = new javax.swing.JComboBox<>();
+        cbxid_persona = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de proveedores");
@@ -112,7 +119,7 @@ public class fproveedores extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id Porveedor", "Id Empresa", "Id Empleado"
+                "Id Proveedor", "Id Empresa", "Nombre empresa", "Id Persona", "Nombre persona"
             }
         ));
         TablaDatosProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -139,7 +146,11 @@ public class fproveedores extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtid_empresa, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                             .addComponent(txtid_proveedores)
-                            .addComponent(txtid_persona)))
+                            .addComponent(txtid_persona))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxid_empresa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxid_persona, 0, 171, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,11 +175,13 @@ public class fproveedores extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblid_empresa)
-                    .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxid_empresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblid_persona)
-                    .addComponent(txtid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxid_persona, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
@@ -203,7 +216,6 @@ public class fproveedores extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         modificar();
-
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -220,12 +232,9 @@ public class fproveedores extends javax.swing.JFrame {
             if(fila == -1){
                 JOptionPane.showMessageDialog(null, "Proveedor no seleccionado");
             }else{
-                String idProv=(String)TablaDatosProveedores.getValueAt(fila,0).toString();
-                String idEmpresa=(String)TablaDatosProveedores.getValueAt(fila,1);
-                String idPersona=(String)TablaDatosProveedores.getValueAt(fila,2);
-                this.txtid_proveedores.setText(idProv);
-                this.txtid_empresa.setText(idEmpresa);
-                this.txtid_persona.setText(idPersona);
+                this.txtid_proveedores.setText( (String)TablaDatosProveedores.getValueAt(fila,0).toString() );
+                this.cbxid_empresa.setSelectedIndex( pDAO.getIDEmpresaByName4Cbx( (String)TablaDatosProveedores.getValueAt(fila,2).toString() ) );
+                this.cbxid_persona.setSelectedIndex( pDAO.getIDPersonaByName4Cbx( (String)TablaDatosProveedores.getValueAt(fila,4).toString() ) );
             }
         }catch(Exception e){
             Util.printException("fproveedores.TablaDatosProveedoresMouseClicked", e);
@@ -274,6 +283,8 @@ public class fproveedores extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cbxid_empresa;
+    private javax.swing.JComboBox<String> cbxid_persona;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblid_empresa;
@@ -289,7 +300,9 @@ public class fproveedores extends javax.swing.JFrame {
         try{
             this.txtid_proveedores.setText("");
             this.txtid_empresa.setText("");
-            this.txtid_persona.setText("");        
+            this.txtid_persona.setText("");
+            this.cbxid_empresa.setSelectedIndex(0);
+            this.cbxid_persona.setSelectedIndex(0);
         }catch(Exception e){
             Util.printException("fproveedores.limpiaCampos", e);
         }                
@@ -320,16 +333,18 @@ public class fproveedores extends javax.swing.JFrame {
         try{
             pDAO = new proveedorDAO();
             listaProveedor = new ArrayList<>();
-            listaProveedor = pDAO.seleccionaTodo();
+            listaProveedor = pDAO.seleccionaTodoPorCbx();
 
-            Object[]pObj=new Object[3];
+            Object[]pObj=new Object[5];
 
             modelo = (DefaultTableModel)TablaDatosProveedores.getModel();
 
             for(proveedor p:listaProveedor){
                 pObj[0] = p.getId_proveedor();
                 pObj[1] = p.getId_empresa();
-                pObj[2] = p.getId_persona();
+                pObj[2] = p.getNombreEmpresa();
+                pObj[3] = p.getId_persona();
+                pObj[4] = p.getNombrePersona();
                 modelo.addRow(pObj);
             }
             TablaDatosProveedores.setModel(modelo);
@@ -344,8 +359,8 @@ public class fproveedores extends javax.swing.JFrame {
         
         try{
             miProveedor = new proveedor(Util.str2int( this.txtid_proveedores.getText() ),
-                                        Util.str2int( this.txtid_empresa.getText() ),
-                                        Util.str2int( this.txtid_persona.getText() ) );           
+                                        pDAO.getIDEmpresaByName( this.cbxid_empresa.getSelectedItem().toString() ), "",
+                                        pDAO.getIDPersonaByName( this.cbxid_persona.getSelectedItem().toString() ), "" );
             
             if ( pDAO.inserta(miProveedor) ){
                 JOptionPane.showMessageDialog(null, "Proveedor ingresado");
@@ -363,8 +378,8 @@ public class fproveedores extends javax.swing.JFrame {
     private void modificar(){
         try{
             miProveedor = new proveedor(Util.str2int( this.txtid_proveedores.getText() ),
-                                        Util.str2int( this.txtid_empresa.getText() ),
-                                        Util.str2int( this.txtid_persona.getText() ) );  
+                                        pDAO.getIDEmpresaByName( this.cbxid_empresa.getSelectedItem().toString() ), "",
+                                        pDAO.getIDPersonaByName( this.cbxid_persona.getSelectedItem().toString() ), "" );
             
             if ( pDAO.actualiza(miProveedor) ){
                 JOptionPane.showMessageDialog(null, "Proveedor actualizado");
@@ -396,6 +411,71 @@ public class fproveedores extends javax.swing.JFrame {
         }catch(Exception e){
             Util.printException("fproveedores.eliminar", e);
         }        
+    }    
+
+    private void llenaEmpresa() {
+        ConectaBD cbd = null;
+        try{
+            cbd = new ConectaBD();
+            cbd.getData( pDAO.getCbxEmpresa() );
+            this.cbxid_empresa.removeAll();
+            this.cbxid_empresa.addItem( pDAO.getCbxDefaultSelectionEmpresa());
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxid_empresa.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaEmpresa, tabla empresa vacia");
+            
+        }catch(Exception e){
+            Util.printException("fproveedores.llenaEmpresa", e);
+        }
+    }
+
+    private void llenaPersona() {
+        ConectaBD cbd = null;
+        try{
+            cbd = new ConectaBD();
+            cbd.getData( pDAO.getCbxPersona() );
+            this.cbxid_persona.removeAll();
+            this.cbxid_persona.addItem( pDAO.getCbxDefaultSelectionPersona() );
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxid_persona.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaPersona, tabla persona vacia");
+            
+        }catch(Exception e){
+            Util.printException("fproveedores.llenaPersona", e);
+        }
+    }
+    
+    
+    private int getIDProveedor(String nombreEmpresa) {
+        List<proveedor> listaProveedor = null;
+        
+        try{
+            pDAO = new proveedorDAO();
+            listaProveedor = new ArrayList<>();
+            listaProveedor = pDAO.seleccionaTodoPorCbx();
+
+            Object[]pObj=new Object[5];
+
+            modelo = (DefaultTableModel)TablaDatosProveedores.getModel();
+
+            for(proveedor p:listaProveedor){
+                pObj[0] = p.getId_proveedor();
+                pObj[1] = p.getId_empresa();
+                pObj[2] = p.getNombreEmpresa();
+                pObj[3] = p.getId_persona();
+                pObj[4] = p.getNombrePersona();
+                modelo.addRow(pObj);
+            }
+            TablaDatosProveedores.setModel(modelo);
+        }catch(Exception e){
+            Util.printException("fproveedores.llenaListado", e);
+        }
     }    
   
 }

@@ -29,6 +29,15 @@ public class proveedorDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_proveedor, id_empresa,id_persona FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_proveedor = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_proveedor= ?, id_empresa= ?, id_persona= ? WHERE id_proveedor = ? ";
+    private static final String cnSQLSeleccionaPorNombre=" SELECT id_proveedor, id_empresa,id_persona FROM "+cnSQLTabla+" WHERE id_proveedor = ? ";
+    private static final String cnSQLSeleccionaTodoCbx=" SELECT prov.id_proveedor, prov.id_empresa, e.razonSocial, 0 as id_persona, '' as nombreCompleto "
+                                                        + "FROM "+cnSQLTabla+" prov "
+                                                        + "JOIN empresa e on prov.id_empresa=e.id_empresa "
+                                                        + "union "
+                                                        + "SELECT prov.id_proveedor, 0 as id_empresa, '' as razonSocial, prov.id_persona, concat(p.primer_nombre, \" \", p.segundo_nombre, \" \", p.primer_apellido, \" \", p.segundo_apellido) as nombreCompleto "
+                                                        + "FROM "+cnSQLTabla+" prov "            
+                                                        + "JOIN persona p on p.id_persona=prov.id_persona "
+                                                        + "order by 3,5 ";
 
     /***
      * Constructor proveedorDAO
@@ -73,8 +82,8 @@ public class proveedorDAO {
             rs=ps.executeQuery();
             while(rs.next()){
                 listaProveedor.add( new proveedor(  rs.getInt("id_proveedor"), 
-                                                    rs.getInt("id_empresa"), 
-                                                    rs.getInt("id_persona")));
+                                                    rs.getInt("id_empresa"), "",
+                                                    rs.getInt("id_persona"), ""));
                                                    
             }           
         } catch (SQLException ex) {
@@ -84,6 +93,34 @@ public class proveedorDAO {
         }
         return listaProveedor;       
     }
+    
+    /***
+     * Selecciona todos los registros de la tabla proveedor
+     * @return 
+     */
+    public List<proveedor> seleccionaTodoPorCbx(){
+        List<proveedor> listaProveedor=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;        
+        try {
+            listaProveedor=new ArrayList<>();
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodoCbx);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                listaProveedor.add( new proveedor(  rs.getInt("id_proveedor"), 
+                                                    rs.getInt("id_empresa"), 
+                                                    rs.getString("razonSocial"), 
+                                                    rs.getInt("id_persona"), 
+                                                    rs.getString("nombreCompleto")));
+                                                   
+            }           
+        } catch (SQLException ex) {
+            Util.printSQLException("proveedorDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("proveedorDAO.seleccionaTodo", e);
+        }
+        return listaProveedor;       
+    }    
     
     /***
      * Selecciona un proveedor, según su ID
@@ -100,8 +137,8 @@ public class proveedorDAO {
             rs=ps.executeQuery();
             while(rs.next()){
                 nuevoProveedor = new proveedor( rs.getInt("id_proveedor"), 
-                                                rs.getInt("id_empresa"), 
-                                                rs.getInt("id_persona"));
+                                                rs.getInt("id_empresa"), "",
+                                                rs.getInt("id_persona"), "");
             }
         } catch (SQLException ex) {
             Util.printSQLException("proveedorDAO.seleccionaPorID", ex);
@@ -165,6 +202,57 @@ public class proveedorDAO {
             Util.printException("proveedorDAO.cierra", e);
         }        
     }
-  
 
+    
+    public int getIDEmpresaByName(String nameEmpresa) {
+        int IDEmpresa=0;
+        empresaDAO empDAO = null;        
+        try {
+            empDAO = new empresaDAO();
+            IDEmpresa=empDAO.getIDEmpresaByName(nameEmpresa);
+        } catch (Exception e) {
+            IDEmpresa=0;
+            Util.printException("proveedorDAO.getIDEmpresaByName", e);
+        }        
+        return IDEmpresa;
+    }
+    
+    public int getIDPersonaByName(String namePersona) {
+        int IDPersona=0;
+        personaDAO perDAO = null;
+        try {
+            perDAO = new personaDAO();
+            IDPersona=perDAO.getIDPersonaByName(namePersona);
+        } catch (Exception e) {
+            IDPersona=0;
+            Util.printException("proveedorDAO.getIDPersonaByName", e);
+        }
+        return IDPersona;        
+    }    
+    
+    public static String getCbxDefaultSelectionPersona(){
+        return personaDAO.getCbxDefaultSelectionPersona();
+    }    
+
+    public static String getCbxPersona(){
+        return personaDAO.getCbxPersona();
+    }
+
+    public int getIDPersonaByName4Cbx(String personaNombre) {
+        return personaDAO.getIDEmpresaByName4Cbx( personaNombre );
+    }
+
+    
+    public static String getCbxDefaultSelectionEmpresa(){
+        return empresaDAO.getCbxDefaultSelectionEmpresa();
+    }
+
+    public static String getCbxEmpresa(){
+        return empresaDAO.getCbxEmpresa();
+    }
+    
+    public int getIDEmpresaByName4Cbx(String empresaNombre) {
+        return empresaDAO.getIDEmpresaByName4Cbx( empresaNombre );
+    }
+    
 }

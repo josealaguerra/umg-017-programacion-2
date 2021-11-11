@@ -183,4 +183,26 @@ public class Util {
         }
         return nuevoDoble;
     }
+    
+    
+    
+    
+    public static int convertStr2Cbx(String cbxValue, int maxIDCbx){
+        int newID = 0;
+        int newMaxID = 0;
+
+        try{            
+            newID   = Util.str2int( cbxValue ) - 1;
+            newMaxID= maxIDCbx - 1;
+            if(newID < 0){
+                newID = 0;
+            }else if(newID >newMaxID){
+                newID = newMaxID;
+            }        
+        }catch(Exception e){
+            Util.printException("Util.convertStr2Cbx", e);
+        }                
+        
+        return newID;
+    }
 }

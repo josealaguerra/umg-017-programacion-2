@@ -351,7 +351,46 @@ create table alias(
 id_alias int NOT NULL AUTO_INCREMENT,
 alias varchar(30) NOT NULL,
 pass varchar(30) NOT NULL,
-primary key (id_alias),
+primary key (id_alias)
 );
 
+
+
+
+
+ALTER TABLE proveedor ADD CONSTRAINT proveedor_unique UNIQUE (id_empresa, id_persona);
+ALTER TABLE alias ADD CONSTRAINT alias_unique UNIQUE (alias);
+ALTER TABLE acceso_rol ADD CONSTRAINT acceso_rol_unique UNIQUE (id_acceso, id_rol);
+ALTER TABLE producto ADD CONSTRAINT producto_unique UNIQUE (nombre_producto, id_tipo_producto, id_marca_producto);
+ALTER TABLE genero ADD CONSTRAINT genero_unique UNIQUE (nombre_genero);
+ALTER TABLE estado_civil ADD CONSTRAINT estado_civil_unique UNIQUE (nombre_estado_civil);
+ALTER TABLE persona ADD CONSTRAINT persona_unique UNIQUE (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido);
+ALTER TABLE empresa ADD CONSTRAINT empresa_unique UNIQUE (razonSocial);
+
+
+
+
+
+
+/*lote*/
+create table lote(
+id_lote int NOT NULL AUTO_INCREMENT,
+nombre_lote varchar(20) NOT NULL,
+fecha_vencimiento datetime NOT NULL, 
+primary key (id_lote)
+);
+
+
+/*inventario */
+create table inventario(
+id_inventario int NOT NULL AUTO_INCREMENT,
+id_producto int NOT NULL,
+id_lote int NOT NULL,
+precio_unitario decimal(18,2) NOT NULL,
+cantidad_ingreso int NOT NULL,
+cantidad_egreso int NOT NULL,
+primary key (id_inventario),
+constraint fk_inventario_lote foreign key (id_lote) references lote(id_lote) on delete cascade on update cascade,
+constraint fk_inventario_producto foreign key (id_producto) references producto(id_producto) on delete cascade on update cascade
+);
 

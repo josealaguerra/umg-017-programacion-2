@@ -6,6 +6,7 @@
 package com.portales.domingo.progra2.grupo12.farmaciajutiapa.vista;
 
 
+import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.ConectaBD;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.controlador.Util;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.compraDAO;
 import com.portales.domingo.progra2.grupo12.farmaciajutiapa.dao.compra_detalleDAO;
@@ -51,6 +52,11 @@ public class fcompra extends javax.swing.JFrame {
                     dispose();
             }
         });
+        
+        llenaProveedor();
+        llenaTipoProducto();
+        llenaMarcaProducto();
+        llenaProducto();
 
         llenaListado();
         limpiaCampos();
@@ -102,6 +108,10 @@ public class fcompra extends javax.swing.JFrame {
         btnDetModificar = new javax.swing.JButton();
         btnDetEliminar = new javax.swing.JButton();
         btnDetNuevo = new javax.swing.JButton();
+        cbxid_proveedor = new javax.swing.JComboBox<>();
+        cbxdetid_marca_producto = new javax.swing.JComboBox<>();
+        cbxdetid_tipo_producto = new javax.swing.JComboBox<>();
+        cbxdetid_producto = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Mantenimiento de compra");
@@ -259,7 +269,9 @@ public class fcompra extends javax.swing.JFrame {
                                     .addComponent(txtfecha_compra, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                                     .addComponent(txtid_proveedor)
                                     .addComponent(txtnumero_factura)
-                                    .addComponent(txtmonto_total)))
+                                    .addComponent(txtmonto_total))
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxid_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
                                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,12 +295,21 @@ public class fcompra extends javax.swing.JFrame {
                                     .addComponent(txtdetid_compra_detalle, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(10, 10, 10)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtdetid_tipo_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtdetid_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(txtdetid_tipo_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbxdetid_tipo_producto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(txtdetid_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbxdetid_producto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addComponent(txtdetprecio_unitario, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtdetcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                            .addComponent(txtdetcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(txtdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbxdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                         .addGap(122, 122, 122)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,7 +337,8 @@ public class fcompra extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblid_proveedor)
-                            .addComponent(txtid_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtid_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxid_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(11, 11, 11)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblfecha_compra)
@@ -351,15 +373,18 @@ public class fcompra extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblid_proveedor1)
-                            .addComponent(txtdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxdetid_marca_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtdetid_tipo_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblfecha_compra1))
+                            .addComponent(lblfecha_compra1)
+                            .addComponent(cbxdetid_tipo_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtdetid_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblnumero_facctura1))
+                            .addComponent(lblnumero_facctura1)
+                            .addComponent(cbxdetid_producto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtdetprecio_unitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -409,12 +434,19 @@ public class fcompra extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Compra no seleccionado");
             }else{
                 String idCompra = (String)TablaDatosCompra.getValueAt(fila,0).toString();
-                String idProveedor = (String)TablaDatosCompra.getValueAt(fila,1).toString();
+                //String idProveedor = (String)TablaDatosCompra.getValueAt(fila,1).toString();
+                //Obtiene el verdadero ID
+                int proveedorID = Util.convertStr2Cbx((String)TablaDatosCompra.getValueAt(fila,1).toString(), 
+                                                        this.cbxid_proveedor.getItemCount() );
+                this.cbxid_proveedor.setSelectedIndex( proveedorID );
+                
+                
+                
                 Date fechaCompra = (Date)TablaDatosCompra.getValueAt(fila,2);
                 String numeroFactura = (String)TablaDatosCompra.getValueAt(fila,3);
                 Double montoTotal = (Double)TablaDatosCompra.getValueAt(fila,4);
                 this.txtid_compra.setText(idCompra);
-                this.txtid_proveedor.setText(idProveedor);
+                //this.txtid_proveedor.setText(idProveedor);
                 this.txtfecha_compra.setDate(fechaCompra);
                 this.txtnumero_factura.setText(numeroFactura);
                 this.txtmonto_total.setText( montoTotal.toString() );
@@ -468,16 +500,31 @@ public class fcompra extends javax.swing.JFrame {
             }else{
                 String idCompraDetalle=(String)TablaDatosCompraDetalle.getValueAt(fila,0).toString();
                 String idCompra=(String)TablaDatosCompraDetalle.getValueAt(fila,1).toString();
-                String idMarcaProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,2).toString();
-                String idTipoProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,3).toString();
-                String idProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,4).toString();
+                //String idMarcaProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,2).toString();
+                //String idTipoProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,3).toString();
+                //String idProducto=(String)TablaDatosCompraDetalle.getValueAt(fila,4).toString();
+                //Obtiene el verdadero ID
+                int MarcaProductoID = Util.convertStr2Cbx((String)TablaDatosCompraDetalle.getValueAt(fila,2).toString(), 
+                                                        this.cbxid_proveedor.getItemCount() );
+                this.cbxdetid_marca_producto.setSelectedIndex( MarcaProductoID );                
+
+                int TipoProductoID = Util.convertStr2Cbx((String)TablaDatosCompraDetalle.getValueAt(fila,3).toString(), 
+                                                        this.cbxid_proveedor.getItemCount() );
+                this.cbxdetid_tipo_producto.setSelectedIndex( TipoProductoID );                
+                
+                int ProductoID = Util.convertStr2Cbx((String)TablaDatosCompraDetalle.getValueAt(fila,4).toString(), 
+                                                        this.cbxid_proveedor.getItemCount() );
+                this.cbxdetid_producto.setSelectedIndex( ProductoID );                
+                
+                
+                
                 Double PrecioUnitarioCompra=(Double)TablaDatosCompraDetalle.getValueAt(fila,5);
                 Integer cantidad=(Integer)TablaDatosCompraDetalle.getValueAt(fila,6);
                 this.txtdetid_compra_detalle.setText(idCompraDetalle);
                 this.txtdetid_compra.setText(idCompra);
-                this.txtdetid_marca_producto.setText(idMarcaProducto);
-                this.txtdetid_tipo_producto.setText(idTipoProducto);
-                this.txtdetid_producto.setText(idProducto);
+                //this.txtdetid_marca_producto.setText(idMarcaProducto);
+                //this.txtdetid_tipo_producto.setText(idTipoProducto);
+                //this.txtdetid_producto.setText(idProducto);
                 this.txtdetprecio_unitario.setText(PrecioUnitarioCompra.toString());
                 this.txtdetcantidad.setText(cantidad.toString());
             }
@@ -537,6 +584,10 @@ public class fcompra extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox<String> cbxdetid_marca_producto;
+    private javax.swing.JComboBox<String> cbxdetid_producto;
+    private javax.swing.JComboBox<String> cbxdetid_tipo_producto;
+    private javax.swing.JComboBox<String> cbxid_proveedor;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -832,6 +883,82 @@ public class fcompra extends javax.swing.JFrame {
             }
         }catch(Exception e){
             Util.printException("fcompra_detalle.eliminar", e);
+        }
+    }
+
+    private void llenaProveedor() {
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_proveedor from proveedor ");
+            this.cbxid_proveedor.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxid_proveedor.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaProveedor, tabla proveedor vacia");
+            
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.llenaProveedor", e);
+        }
+    }
+
+    private void llenaTipoProducto() {
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_tipo_producto from tipo_producto ");
+            this.cbxdetid_tipo_producto.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxdetid_tipo_producto.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaTipoProducto, tabla tipo_producto vacia");
+            
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.llenaTipoProducto", e);
+        }
+    }
+
+    private void llenaMarcaProducto() {
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_marca_producto from marca_producto ");
+            this.cbxdetid_marca_producto.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxdetid_marca_producto.addItem( cbd.getRs().getString(1) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaMarcaProducto, tabla marca_producto vacia");
+            
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.llenaMarcaProducto", e);
+        }
+    }
+
+    private void llenaProducto() {
+        ConectaBD cbd = null;
+        
+        try{
+            cbd = new ConectaBD();
+            cbd.getData(" select nombre_producto from producto ");
+            this.cbxdetid_producto.removeAll();
+            if(cbd.getRs().next()){
+                do{
+                    this.cbxdetid_producto.addItem( cbd.getRs().getString(2) );
+                }while(cbd.getRs().next());
+            }else
+                throw new Exception("llenaProducto, tabla producto vacia");
+            
+        }catch(Exception e){
+            Util.printException("fcompra_detalle.llenaProducto", e);
         }
     }
 }

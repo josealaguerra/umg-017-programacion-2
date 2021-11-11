@@ -13,6 +13,24 @@ public class proveedor {
     private int id_proveedor;
     private int id_empresa;
     private int id_persona;
+    private String nombreEmpresa;
+    private String nombrePersona;
+
+    public String getNombreEmpresa() {
+        return nombreEmpresa;
+    }
+
+    public void setNombreEmpresa(String nombreEmpresa) {
+        this.nombreEmpresa = nombreEmpresa;
+    }
+
+    public String getNombrePersona() {
+        return nombrePersona;
+    }
+
+    public void setNombrePersona(String nombrePersona) {
+        this.nombrePersona = nombrePersona;
+    }
 
     public int getId_proveedor() {
         return id_proveedor;
@@ -38,10 +56,12 @@ public class proveedor {
         this.id_persona = id_persona;
     }
 
-    public proveedor(int id_proveedor, int id_empresa, int id_persona) {
+    public proveedor(int id_proveedor, int id_empresa, String nombreEmpresa, int id_persona, String nombrePersona) {
         this.id_proveedor = id_proveedor;
         this.id_empresa = id_empresa;
         this.id_persona = id_persona;
+        this.nombreEmpresa=nombreEmpresa;
+        this.nombrePersona=nombrePersona;
     }
     
     

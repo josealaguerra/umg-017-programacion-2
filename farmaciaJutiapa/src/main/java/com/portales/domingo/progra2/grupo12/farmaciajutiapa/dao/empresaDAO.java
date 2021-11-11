@@ -23,6 +23,10 @@ import java.util.logging.Logger;
  */
 public class empresaDAO {
 
+    static int getIDEmpresaByName4Cbx(String empresaNombre) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private ConectaBD cbd = null;
     private static final String cnSQLTabla="empresa";   
     private static final String cnSQLInserta=" INSERT INTO "+cnSQLTabla+" (nit, razonSocial, fechaDeConstitucion) values (?, ?, ?)";
@@ -30,6 +34,10 @@ public class empresaDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_empresa, nit, razonSocial, fechaDeConstitucion FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_empresa = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set nit = ?,razonSocial = ?, fechaDeConstitucion = ? WHERE id_empresa = ? ";
+    private static final String cnSQLSeleccionaPorNombre=" SELECT id_empresa, nit, razonSocial, fechaDeConstitucion FROM "+cnSQLTabla+" WHERE razonSocial = ? ";  
+    private static final String cnCbxDefaultSelectionEmpresa=" -- Selecciona empresa --";
+    private static final String cnCbxEmpresa=" select razonSocial from empresa order by razonSocial ";
+    
 
     /***
      * Constructor empresaDAO
@@ -174,4 +182,53 @@ public class empresaDAO {
         }        
     }
 
+    public empresa getEmpresaByName(String nameEmpresa) {
+        empresa nuevaEmpresa=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaPorNombre);
+            ps.setString(1, nameEmpresa);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                nuevaEmpresa = new empresa( rs.getInt("id_empresa"), 
+                                            rs.getString("nit"), 
+                                            rs.getString("razonSocial"),
+                                            rs.getDate("fechaDeConstitucion"));
+            }
+        } catch (SQLException ex) {
+            Util.printSQLException("empresaDAO.getEmpresaByName", ex);
+        } catch (Exception e) {
+            Util.printException("empresaDAO.getEmpresaByName", e);
+        }
+        return nuevaEmpresa;
+    }    
+    
+    
+    public int getIDEmpresaByName(String nameEmpresa) {
+        empresa nuevaEmpresa=null;
+        int IDEmpresa=0;
+        try {
+            nuevaEmpresa = getEmpresaByName( nameEmpresa );
+            IDEmpresa=nuevaEmpresa.getId_empresa();
+        } catch (Exception e) {
+            IDEmpresa=0;
+            Util.printException("personaDAO.getIDEmpresaByName", e);
+        }
+        return IDEmpresa;
+    }
+    
+    public static String getCbxDefaultSelectionEmpresa(){
+        return cnCbxDefaultSelectionEmpresa;
+    }
+
+    
+    public static String getCbxEmpresa(){
+        return cnCbxEmpresa;
+    }
+
+    
+    
+    
 }
