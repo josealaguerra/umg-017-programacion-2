@@ -452,7 +452,7 @@ public class fproveedores extends javax.swing.JFrame {
     }
     
     
-    private int getIDProveedor(String nombreEmpresa) {
+    private void getIDProveedor(String nombreEmpresa) {
         List<proveedor> listaProveedor = null;
         
         try{
