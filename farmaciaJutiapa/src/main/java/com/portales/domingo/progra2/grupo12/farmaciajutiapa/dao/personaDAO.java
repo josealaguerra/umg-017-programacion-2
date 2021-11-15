@@ -230,7 +230,7 @@ public class personaDAO {
                                         rs.getString("primer_apellido"), 
                                         rs.getString("segundo_apellido"), 
                                         rs.getInt("id_genero"), 
-                                        rs.getDate("Date fecha_de_nacimiento"), 
+                                        rs.getDate("fecha_de_nacimiento"), 
                                         rs.getInt("id_estado_civil") );
             }
             

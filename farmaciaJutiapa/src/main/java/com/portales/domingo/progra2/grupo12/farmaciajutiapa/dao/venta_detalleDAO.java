@@ -29,6 +29,7 @@ public class venta_detalleDAO {
     private static final String cnSQLSeleccionaTodo=" SELECT id_venta_detalle, id_venta, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_venta, cantidad FROM "+cnSQLTabla+"  ";
     private static final String cnSQLEliminaPorID=" delete FROM "+cnSQLTabla+" WHERE id_venta_detalle = ? ";
     private static final String cnSQLActualizaPorID=" update "+cnSQLTabla+" set id_venta= ?,id_marca_producto= ?, id_tipo_producto= ?, id_producto= ?, precio_unitario_venta = ?, cantidad= ? WHERE id_venta_detalle = ? ";
+    private static final String cnSQLSeleccionaTodoPorIDCompra=" SELECT id_venta_detalle, id_venta, id_marca_producto, id_tipo_producto, id_producto, precio_unitario_venta, cantidad FROM "+cnSQLTabla+" WHERE id_venta = ? ";    
 
     /***
      * Constructor venta_detalleDAO
@@ -183,6 +184,35 @@ public class venta_detalleDAO {
         } catch (Exception e) {
             Util.printException("venta_detalleDAO.cierra", e);
         }        
+    }
+    
+    public List<venta_detalle> seleccionaTodo(int paramIDVenta){
+        List<venta_detalle> listaVentaDet=null;
+        PreparedStatement ps = null;
+        ResultSet rs=null;
+        
+        try {
+            listaVentaDet=new ArrayList<>();
+            ps = cbd.getConexion().prepareStatement(cnSQLSeleccionaTodoPorIDCompra);
+            ps.setInt(1, paramIDVenta);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                listaVentaDet.add( new venta_detalle( rs.getInt("id_venta_detalle"), 
+                                                        rs.getInt("id_venta"), 
+                                                        rs.getInt("id_marca_producto"), 
+                                                        rs.getInt("id_tipo_producto"), 
+                                                        rs.getInt("id_producto"), 
+                                                        rs.getDouble("precio_unitario_venta"), 
+                                                        rs.getInt("cantidad")));
+                                                    
+            }
+            
+        } catch (SQLException ex) {
+            Util.printSQLException("compra_detalleDAO.seleccionaTodo", ex);
+        } catch (Exception e) {
+            Util.printException("compra_detalleDAO.seleccionaTodo", e);
+        }
+        return listaVentaDet;
     }
 
 }
